@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FRC Simplified</title>
+<title><abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr> Simplified</title>
 <style>
   :root {
     --red: #d64545;
@@ -129,6 +129,12 @@
   .photos figcaption { font-size: 13px; margin-top: 6px; }
   .credit { color: var(--muted); font-size: 13px; margin-top: 16px; }
 
+  /* Acronym tooltips */
+  .acro { text-decoration: underline dotted #5b6770; text-underline-offset: 3px; cursor: help; }
+  .acro-tip { position: absolute; z-index: 50; max-width: 300px; background: #1f2933; color: #fff; padding: 8px 11px; border-radius: 8px; font-size: 14px; line-height: 1.4; box-shadow: 0 6px 18px rgba(0,0,0,0.25); pointer-events: none; }
+  .acro-tip strong { display: block; margin-bottom: 2px; }
+  .acro-tip[hidden] { display: none; }
+
   /* Interactive robot simulation */
   .sim { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 12px; }
   .sim-toggles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
@@ -196,30 +202,30 @@
 <nav class="side" aria-label="Topics">
   <h2>Topics</h2>
   <ul>
-    <li><a href="#what-is-frc" class="active">What is FRC?</a></li>
+    <li><a href="#what-is-frc" class="active">What is <abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr>?</a></li>
     <li><a href="#what-is-the-game">What is the Game?</a></li>
     <li><a href="#how-the-robot-changes">How the Robot Changes</a></li>
     <li><a href="#robot-parts">Robot Parts</a></li>
-    <li><a href="#cad-and-mechanical">CAD and Mechanical</a></li>
+    <li><a href="#cad-and-mechanical"><abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> and Mechanical</a></li>
   </ul>
 </nav>
 
 <main>
   <header class="hero">
-    <h1>FRC, Simplified</h1>
-    <p>A plain-language guide to the FIRST Robotics Competition.</p>
+    <h1><abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr>, Simplified</h1>
+    <p>A plain-language guide to the <abbr class="acro" tabindex="0" data-full="For Inspiration and Recognition of Science and Technology" data-desc="The nonprofit that runs FIRST Robotics Competition and other programs for students.">FIRST</abbr> Robotics Competition.</p>
   </header>
 
   <!-- ============ TOPIC 1 ============ -->
   <section id="what-is-frc">
-    <h2>What is FRC?</h2>
-    <p class="lead">The FIRST Robotics Competition (FRC) is a high school robot sport. Teams of students design, build, and program big robots, then compete with them.</p>
+    <h2>What is <abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr>?</h2>
+    <p class="lead">The <abbr class="acro" tabindex="0" data-full="For Inspiration and Recognition of Science and Technology" data-desc="The nonprofit that runs FIRST Robotics Competition and other programs for students.">FIRST</abbr> Robotics Competition (<abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr>) is a high school robot sport. Teams of students design, build, and program big robots, then compete with them.</p>
 
     <h3>The short version</h3>
-    <p>Every January, FRC releases a new game. Every team gets the same starter kit of parts. Teams have about six weeks to design and build a robot that can play that game, then they compete at events around the world.</p>
+    <p>Every January, <abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr> releases a new game. Every team gets the same starter kit of parts. Teams have about six weeks to design and build a robot that can play that game, then they compete at events around the world.</p>
 
     <h3>Who takes part?</h3>
-    <p>FRC is for students in grades 9 to 12, usually ages 14 to 18. Each team has students who do most of the work, plus adult mentors who guide them. Mentors teach, but students make the decisions.</p>
+    <p><abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr> is for students in grades 9 to 12, usually ages 14 to 18. Each team has students who do most of the work, plus adult mentors who guide them. Mentors teach, but students make the decisions.</p>
 
     <h3>The life of a season</h3>
     <figure>
@@ -257,7 +263,7 @@
       <div class="term"><strong>Coopertition</strong><span>Compete hard, but help each other, because you need your rivals to succeed too.</span></div>
     </div>
 
-    <div class="tip"><strong>Remember:</strong> FRC is less about the robot and more about learning engineering, teamwork, and problem solving.</div>
+    <div class="tip"><strong>Remember:</strong> <abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr> is less about the robot and more about learning engineering, teamwork, and problem solving.</div>
   </section>
 
   <!-- ============ TOPIC 2 ============ -->
@@ -406,7 +412,7 @@
     </div>
 
     <h3>The control system change</h3>
-    <p>The control system is the robot's brain and wiring. It was roboRIO-based through 2026. For 2027, every team must use the new SystemCore controller.</p>
+    <p>The control system is the robot's brain and wiring. It was <abbr class="acro" tabindex="0" data-full="robot Reconfigurable Input/Output" data-desc="The robot controller from National Instruments. It runs the team&#x27;s code, and it is used through the 2026 season.">roboRIO</abbr>-based through 2026. For 2027, every team must use the new SystemCore controller.</p>
     <figure>
       <svg viewBox="0 0 720 170" role="img" aria-label="Control system changes from roboRIO-based system to SystemCore in 2027">
         <defs>
@@ -419,7 +425,7 @@
         <rect x="45" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
         <rect x="120" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
         <rect x="195" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
-        <text x="75" y="103" text-anchor="middle" font-size="11" fill="#fff">roboRIO</text>
+        <text x="75" y="103" text-anchor="middle" font-size="11" fill="#fff">roboRIO<title>robot Reconfigurable Input/Output: The robot controller from National Instruments. It runs the team's code, and it is used through the 2026 season.</title></text>
         <text x="150" y="103" text-anchor="middle" font-size="11" fill="#fff">Power</text>
         <text x="225" y="103" text-anchor="middle" font-size="11" fill="#fff">Pneumatics</text>
         <line x1="305" y1="85" x2="405" y2="85" stroke="#5b6770" stroke-width="4" marker-end="url(#arr2)"/>
@@ -445,7 +451,7 @@
       <img src="https://www.nasa.gov/wp-content/uploads/2023/03/653196main_ED12-0161-14-full_full.jpg"
            alt="Student-built FIRST Robotics Competition robots demonstrate basketball-shooting skill"
            style="width:100%; height:auto; border-radius:12px; display:block;">
-      <figcaption>Photo: NASA, 2012 FIRST Robotics Competition. Robots from three high school teams. Each team's robot is different.</figcaption>
+      <figcaption>Photo: <abbr class="acro" tabindex="0" data-full="National Aeronautics and Space Administration" data-desc="The US space agency. Its photo credit appears on this page.">NASA</abbr>, 2012 <abbr class="acro" tabindex="0" data-full="For Inspiration and Recognition of Science and Technology" data-desc="The nonprofit that runs FIRST Robotics Competition and other programs for students.">FIRST</abbr> Robotics Competition. Robots from three high school teams. Each team's robot is different.</figcaption>
     </figure>
 
     <h3>The robot and its electronics, labeled</h3>
@@ -515,12 +521,12 @@
           <text x="580" y="306">Bumpers</text>
         </g>
       </svg>
-      <figcaption>Common parts found on most FRC robots. The mechanism is left out because it changes with each game.</figcaption>
+      <figcaption>Common parts found on most <abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr> robots. The mechanism is left out because it changes with each game.</figcaption>
     </figure>
 
     <h3>What each part does</h3>
     <div class="terms">
-      <div class="term"><strong>Controller</strong><span>Runs the team's code. roboRIO through 2026, SystemCore from 2027.</span></div>
+      <div class="term"><strong>Controller</strong><span>Runs the team's code. <abbr class="acro" tabindex="0" data-full="robot Reconfigurable Input/Output" data-desc="The robot controller from National Instruments. It runs the team&#x27;s code, and it is used through the 2026 season.">roboRIO</abbr> through 2026, SystemCore from 2027.</span></div>
       <div class="term"><strong>Power distribution</strong><span>Splits battery power safely to every motor and part.</span></div>
       <div class="term"><strong>Battery</strong><span>The power source for the whole robot.</span></div>
       <div class="term"><strong>Radio</strong><span>Connects the robot to the driver station, wirelessly.</span></div>
@@ -543,7 +549,7 @@
       <div class="photos">
         <figure>
           <img src="https://docs.wpilib.org/en/stable/_images/roborio.png" alt="NI roboRIO robot controller">
-          <figcaption>Controller: roboRIO (through 2026)</figcaption>
+          <figcaption>Controller: <abbr class="acro" tabindex="0" data-full="robot Reconfigurable Input/Output" data-desc="The robot controller from National Instruments. It runs the team&#x27;s code, and it is used through the 2026 season.">roboRIO</abbr> (through 2026)</figcaption>
         </figure>
         <figure>
           <img src="https://docs.wpilib.org/en/stable/_images/power-distribution-hub.png" alt="REV Power Distribution Hub">
@@ -632,7 +638,7 @@
         <!-- CAN bus: a twisted yellow and green pair to the motor controllers -->
         <path d="M450 54 H478 V142 H580 V160" stroke="#e6d43a" stroke-width="3" fill="none"/>
         <path d="M450 62 H472 V148 H588 V160" stroke="#2e9b57" stroke-width="3" fill="none"/>
-        <text x="520" y="132" text-anchor="middle" font-size="12" fill="#1f2933">CAN bus</text>
+        <text x="520" y="132" text-anchor="middle" font-size="12" fill="#1f2933">CAN bus<title>Controller Area Network: A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.</title></text>
 
         <!-- Parts -->
         <rect x="30" y="170" width="110" height="60" rx="6" fill="#b5bcc3" stroke="#5d656c" stroke-width="2"/>
@@ -641,7 +647,7 @@
         <text x="230" y="205" text-anchor="middle" font-size="13" fill="#ffffff">Main breaker</text>
         <rect x="320" y="160" width="130" height="110" rx="6" fill="#22272d"/>
         <text x="385" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Power hub</text>
-        <text x="385" y="234" text-anchor="middle" font-size="13" fill="#ffffff">(PDH)</text>
+        <text x="385" y="234" text-anchor="middle" font-size="13" fill="#ffffff">(PDH)<title>Power Distribution Hub: The board that splits battery power into numbered, protected channels for each motor and device.</title></text>
         <rect x="320" y="20" width="130" height="60" rx="6" fill="#2a4d8a"/>
         <text x="385" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Controller</text>
         <rect x="510" y="18" width="170" height="50" rx="6" fill="#e9edf1" stroke="#5d656c" stroke-width="2"/>
@@ -660,11 +666,11 @@
         <text x="248" y="367" font-size="13" fill="#1f2933">ground (black)</text>
         <line x1="380" y1="356" x2="420" y2="356" stroke="#e6d43a" stroke-width="3"/>
         <line x1="380" y1="364" x2="420" y2="364" stroke="#2e9b57" stroke-width="3"/>
-        <text x="428" y="367" font-size="13" fill="#1f2933">CAN pair (yellow + green)</text>
+        <text x="428" y="367" font-size="13" fill="#1f2933">CAN pair (yellow + green)<title>Controller Area Network: A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.</title></text>
         <line x1="30" y1="386" x2="70" y2="386" stroke="#2f6fd6" stroke-width="2.5" stroke-dasharray="6 4"/>
         <text x="78" y="391" font-size="13" fill="#1f2933">Ethernet (blue dashed)</text>
       </svg>
-      <figcaption>A simplified wiring diagram. Real robots have more wires, but the same paths: power from the battery, through the breaker and hub, then out to each part; and signals on the CAN bus and Ethernet.</figcaption>
+      <figcaption>A simplified wiring diagram. Real robots have more wires, but the same paths: power from the battery, through the breaker and hub, then out to each part; and signals on the <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> bus and Ethernet.</figcaption>
     </figure>
 
     <h3>Wire connectors</h3>
@@ -673,9 +679,9 @@
       <div class="term"><strong>Large power connector</strong><span>Carries heavy current between the battery, main breaker, and power hub. The pink connector in the photos is one example.</span></div>
       <div class="term"><strong>Push-in terminal blocks</strong><span>Click a wire in without a screw. The orange blocks on the power hub are an example.</span></div>
       <div class="term"><strong>Screw and ring terminals</strong><span>Bolted connections for heavy wires, such as the main breaker and the battery posts.</span></div>
-      <div class="term"><strong>CAN connectors</strong><span>Small 4-pin locking connectors. The key shape stops them from going in the wrong way round.</span></div>
-      <div class="term"><strong>Ethernet (RJ45)</strong><span>The same plug as home network cable. It links the controller to the radio and other network devices.</span></div>
-      <div class="term"><strong>USB and SD slots</strong><span>On the controller and coprocessor, for loading code and saving logs.</span></div>
+      <div class="term"><strong><abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> connectors</strong><span>Small 4-pin locking connectors. The key shape stops them from going in the wrong way round.</span></div>
+      <div class="term"><strong>Ethernet (<abbr class="acro" tabindex="0" data-full="Registered Jack 45" data-desc="An 8-pin plug for Ethernet network cable, the same kind used for home internet. It links the controller and the radio.">RJ45</abbr>)</strong><span>The same plug as home network cable. It links the controller to the radio and other network devices.</span></div>
+      <div class="term"><strong><abbr class="acro" tabindex="0" data-full="Universal Serial Bus" data-desc="A standard plug for connecting devices, such as a laptop to the controller for loading code.">USB</abbr> and <abbr class="acro" tabindex="0" data-full="Secure Digital" data-desc="A memory card format. On the controller, it stores logs and files.">SD</abbr> slots</strong><span>On the controller and coprocessor, for loading code and saving logs.</span></div>
     </div>
 
     <h3>Labeling wires</h3>
@@ -684,7 +690,7 @@
       <li><strong>Label both ends</strong> of every wire and cable, so you can trace it from either side.</li>
       <li><strong>Use a number system</strong> that matches a wiring diagram. The photos show numbered wire flags, such as 20, 46, 70, 71, 83, and 52, on the cables.</li>
       <li><strong>Make labels readable after the robot is closed up.</strong> Put them where you can see them without moving the robot apart. Heat-shrink tags and printed flags last longer than marker.</li>
-      <li><strong>Use color with a purpose.</strong> Red for +power, black for ground, and a yellow and green twisted pair for CAN. Keep the same colors in the diagram.</li>
+      <li><strong>Use color with a purpose.</strong> Red for +power, black for ground, and a yellow and green twisted pair for <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr>. Keep the same colors in the diagram.</li>
       <li><strong>Keep the diagram current.</strong> Update it whenever a wire changes, and keep it in the team notebook.</li>
     </ol>
 
@@ -699,15 +705,15 @@
       <div class="term"><strong>Mounting and hold-downs</strong><span>Standoffs, bolts, and hook-and-loop straps hold the controller, hub, and battery in place. The orange strap across the battery in the photos is one example.</span></div>
     </div>
 
-    <p class="credit">Part photos are from the WPILib documentation (docs.wpilib.org), which shows manufacturer product images. Check each image's license before reusing it outside this page.</p>
+    <p class="credit">Part photos are from the <abbr class="acro" tabindex="0" data-full="WPI Library" data-desc="Free software for writing FRC robot code. It comes from Worcester Polytechnic Institute.">WPILib</abbr> documentation (docs.wpilib.org), which shows manufacturer product images. Check each image's license before reusing it outside this page.</p>
 
     <div class="tip"><strong>Remember:</strong> The parts are the same in most robots. How teams arrange them, and which mechanism they choose, is what makes each robot unique.</div>
   </section>
 
   <!-- ============ TOPIC 5 ============ -->
   <section id="cad-and-mechanical">
-    <h2>CAD and Mechanical</h2>
-    <p class="lead">Every robot part starts as a model on a computer. This section follows a part from CAD design to a physical piece, then to a robot.</p>
+    <h2><abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> and Mechanical</h2>
+    <p class="lead">Every robot part starts as a model on a computer. This section follows a part from <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> design to a physical piece, then to a robot.</p>
 
     <h3>The frame: the robot's skeleton</h3>
     <p>The frame is the robot's skeleton. It holds every part, and it has to be light, stiff, and tough enough to survive a match.</p>
@@ -774,7 +780,7 @@
     <h3>How a frame is designed</h3>
     <ol>
       <li><strong>Set the goals:</strong> size, weight, and what the game needs the robot to reach.</li>
-      <li><strong>Draw it in CAD:</strong> sketch the flat outline first, then extrude it into 3D. Design one side of a symmetric drive base and mirror it.</li>
+      <li><strong>Draw it in <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr>:</strong> sketch the flat outline first, then extrude it into 3D. Design one side of a symmetric drive base and mirror it.</li>
       <li><strong>Check the rules:</strong> the frame must be fixed (no moving parts in the frame perimeter) and fit inside the bumper zone. Weight limits apply too. The 2026 limit was 115 lb, not counting bumpers and battery. Check the current manual.</li>
       <li><strong>Plan clearance:</strong> on a flat floor, only the wheels should touch the carpet.</li>
       <li><strong>Keep the weight low and centered:</strong> heavy parts like motors and batteries go low so the robot stays balanced.</li>
@@ -837,15 +843,15 @@
     </figure>
     <ol>
       <li><strong>Raw stock:</strong> Teams buy aluminum as sheets, plates, or tube. Tube often comes in 47-inch lengths.</li>
-      <li><strong>Cut:</strong> CNC routers, mills, waterjets, and laser cutters cut the shapes from CAD files. Hand saws work for rough cuts, but they are less accurate.</li>
-      <li><strong>Bend:</strong> A hand brake or CNC press brake folds sheet metal. Softer alloys like 3003 or 5052 bend better than 6061, which can crack.</li>
+      <li><strong>Cut:</strong> <abbr class="acro" tabindex="0" data-full="Computer Numerical Control" data-desc="Machines, such as mills and lathes, that cut metal or plastic by following a programmed file.">CNC</abbr> routers, mills, waterjets, and laser cutters cut the shapes from <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> files. Hand saws work for rough cuts, but they are less accurate.</li>
+      <li><strong>Bend:</strong> A hand brake or <abbr class="acro" tabindex="0" data-full="Computer Numerical Control" data-desc="Machines, such as mills and lathes, that cut metal or plastic by following a programmed file.">CNC</abbr> press brake folds sheet metal. Softer alloys like 3003 or 5052 bend better than 6061, which can crack.</li>
       <li><strong>Drill and mill:</strong> Holes and pockets are added. Some tubing comes with bolt holes already punched.</li>
       <li><strong>Assemble:</strong> Parts are bolted, riveted, or joined with brackets and gussets.</li>
       <li><strong>Inspect:</strong> Measure the frame perimeter, weigh the robot, and check it against the inspection checklist before the event.</li>
     </ol>
 
-    <h3>CAD: designing before cutting</h3>
-    <p>Almost every part starts as a 3D model in CAD software. Many teams use Onshape, a cloud-based tool where the whole team can work on one model at the same time. Others use Inventor or SolidWorks. Designers sketch a flat outline, extrude it into 3D, then add holes, bends, and mounting points.</p>
+    <h3><abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr>: designing before cutting</h3>
+    <p>Almost every part starts as a 3D model in <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> software. Many teams use Onshape, a cloud-based tool where the whole team can work on one model at the same time. Others use Inventor or SolidWorks. Designers sketch a flat outline, extrude it into 3D, then add holes, bends, and mounting points.</p>
     <figure>
       <svg viewBox="0 0 460 320" role="img" aria-label="CAD drawing of an L-shaped bracket with holes and a dashed bend line">
         <!-- Bracket body -->
@@ -870,11 +876,11 @@
         <text x="340" y="226" font-size="14" fill="#1f2933">Mounting hole</text>
         <text x="208" y="106" font-size="13" fill="#d64545">bend line</text>
       </svg>
-      <figcaption>A simple bracket in CAD. The dashed red line marks where the sheet will bend. The circles are mounting holes.</figcaption>
+      <figcaption>A simple bracket in <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr>. The dashed red line marks where the sheet will bend. The circles are mounting holes.</figcaption>
     </figure>
 
-    <h3>From CAD to a physical part</h3>
-    <p>The CAD model is turned into instructions that machines can follow.</p>
+    <h3>From <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> to a physical part</h3>
+    <p>The <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> model is turned into instructions that machines can follow.</p>
     <figure>
       <svg viewBox="0 0 720 150" role="img" aria-label="Pipeline from CAD model to finished part">
         <g stroke="#2f6fd6" stroke-width="3">
@@ -903,9 +909,9 @@
         <circle cx="660" cy="60" r="38" fill="#eaf7ee" stroke="#2e9b57" stroke-width="3"/>
         <g transform="translate(660,60)"><path d="M-14,0 L-4,10 L14,-10" fill="none" stroke="#2e9b57" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
         <g font-size="13" font-weight="700" fill="#1f2933" text-anchor="middle">
-          <text x="60" y="122">CAD model</text>
+          <text x="60" y="122">CAD model<title>Computer-Aided Design: Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.</title></text>
           <text x="180" y="122">Flat pattern</text>
-          <text x="300" y="122">CAM toolpath</text>
+          <text x="300" y="122">CAM toolpath<title>Computer-Aided Manufacturing: Software that turns a CAD design into instructions for the machines that cut or shape the part.</title></text>
           <text x="420" y="122">Cut and bend</text>
           <text x="540" y="122">Finished part</text>
           <text x="660" y="122">Check fit</text>
@@ -914,17 +920,17 @@
       <figcaption>From a 3D model to a checked part. Sheet metal is unfolded flat before it is cut and bent.</figcaption>
     </figure>
     <ol>
-      <li><strong>CAD model:</strong> the part is drawn in 3D with its exact size and holes.</li>
-      <li><strong>Flat pattern (sheet metal):</strong> the part is unfolded into a flat shape and exported, often as a DXF file, for cutting.</li>
-      <li><strong>CAM toolpath:</strong> CAM software turns the shape into the path a CNC machine follows. Some teams convert CAD files into G-code this way.</li>
+      <li><strong><abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> model:</strong> the part is drawn in 3D with its exact size and holes.</li>
+      <li><strong>Flat pattern (sheet metal):</strong> the part is unfolded into a flat shape and exported, often as a <abbr class="acro" tabindex="0" data-full="Drawing Exchange Format" data-desc="A common 2D file format that lets CAD programs share drawings, often for cutting parts.">DXF</abbr> file, for cutting.</li>
+      <li><strong><abbr class="acro" tabindex="0" data-full="Computer-Aided Manufacturing" data-desc="Software that turns a CAD design into instructions for the machines that cut or shape the part.">CAM</abbr> toolpath:</strong> <abbr class="acro" tabindex="0" data-full="Computer-Aided Manufacturing" data-desc="Software that turns a CAD design into instructions for the machines that cut or shape the part.">CAM</abbr> software turns the shape into the path a <abbr class="acro" tabindex="0" data-full="Computer Numerical Control" data-desc="Machines, such as mills and lathes, that cut metal or plastic by following a programmed file.">CNC</abbr> machine follows. Some teams convert <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> files into G-code this way.</li>
       <li><strong>Setup:</strong> the stock is clamped flat on the machine, and the right cutting tools are loaded.</li>
-      <li><strong>Cut and machine:</strong> a CNC router, mill, waterjet, or laser cuts the outline, and the mill adds pockets and holes.</li>
+      <li><strong>Cut and machine:</strong> a <abbr class="acro" tabindex="0" data-full="Computer Numerical Control" data-desc="Machines, such as mills and lathes, that cut metal or plastic by following a programmed file.">CNC</abbr> router, mill, waterjet, or laser cuts the outline, and the mill adds pockets and holes.</li>
       <li><strong>Bend:</strong> a brake folds sheet metal along the bend lines. Bends are less precise than cuts, so designers leave a little room for variation.</li>
-      <li><strong>Check fit:</strong> measure holes and bends against the drawing. If something is off, fix the CAD and make the part again.</li>
+      <li><strong>Check fit:</strong> measure holes and bends against the drawing. If something is off, fix the <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> and make the part again.</li>
     </ol>
 
     <h3>Assembly: putting the robot together</h3>
-    <p>In CAD, parts are locked together with "mates," such as a fastened mate for bolts or a cylindrical mate for a shaft in a hole. On the real robot, the same parts are joined with bolts, rivets, brackets, and standoffs. Teams usually build in this order:</p>
+    <p>In <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr>, parts are locked together with "mates," such as a fastened mate for bolts or a cylindrical mate for a shaft in a hole. On the real robot, the same parts are joined with bolts, rivets, brackets, and standoffs. Teams usually build in this order:</p>
     <figure>
       <svg viewBox="0 0 720 170" role="img" aria-label="Four assembly stages: frame, drivetrain, mechanism, electronics">
         <!-- Stage 1: frame -->
@@ -952,7 +958,7 @@
       <figcaption>A simple build order: frame, then drivetrain, then the mechanism, then the electronics and wiring.</figcaption>
     </figure>
     <ol>
-      <li><strong>Frame first:</strong> square it up and check its fit against the CAD.</li>
+      <li><strong>Frame first:</strong> square it up and check its fit against the <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr>.</li>
       <li><strong>Drivetrain next:</strong> add the gearboxes, motors, and wheels.</li>
       <li><strong>Mechanisms:</strong> mount the arms, shooters, or climbers to the frame.</li>
       <li><strong>Electronics last:</strong> install the battery and controller, then route and label the wires.</li>
@@ -989,22 +995,22 @@
     </div>
     <p class="credit">A simplified model based on the layout of a real swerve robot shown in our photos and video. Sizes are approximate. Colors are for demo purposes only; actual colors are grey or black.</p>
 
-    <h3>Real robot CAD to explore</h3>
-    <p>Some teams publish their robot CAD so you can open the models and see how the parts fit. These pages link to public models:</p>
+    <h3>Real robot <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> to explore</h3>
+    <p>Some teams publish their robot <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> so you can open the models and see how the parts fit. These pages link to public models:</p>
     <ul>
       <li>Red Hawk Robotics (Team 2713), 2023 robot "Rainbow Dash": <a href="https://www.onshape.com/en/blog/red-hawk-robotics-world-championship">Onshape blog post</a></li>
       <li>Team SCREAM, robot AXL: <a href="https://www.onshape.com/en/blog/first-robotics-competition-team-scream">Onshape blog post</a></li>
-      <li>Spectre, 2025 FIRST World Championship robot: <a href="https://www.onshape.com/en/blog/spectre-2025-first-world-championship-robot-built-in-cloud-native-cad">Onshape blog post</a></li>
+      <li>Spectre, 2025 <abbr class="acro" tabindex="0" data-full="For Inspiration and Recognition of Science and Technology" data-desc="The nonprofit that runs FIRST Robotics Competition and other programs for students.">FIRST</abbr> World Championship robot: <a href="https://www.onshape.com/en/blog/spectre-2025-first-world-championship-robot-built-in-cloud-native-cad">Onshape blog post</a></li>
     </ul>
-    <p class="credit">Photos of these CAD models and built robots are not embedded yet. The source pages didn't expose image files I could verify from here.</p>
+    <p class="credit">Photos of these <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> models and built robots are not embedded yet. The source pages didn't expose image files I could verify from here.</p>
 
-    <div class="tip"><strong>Remember:</strong> CAD is a plan, not a guarantee. Teams check fit on the real parts, because a model and a built robot can differ.</div>
+    <div class="tip"><strong>Remember:</strong> <abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> is a plan, not a guarantee. Teams check fit on the real parts, because a model and a built robot can differ.</div>
 
     <div class="tip"><strong>In short:</strong> the frame is made of light aluminum, cut and bent by machines, and bolted into a stiff shape that fits inside the bumper zone.</div>
   </section>
 
   <footer>
-    Simplified for learning. For official rules, see the FIRST Robotics Competition Game Manual at firstinspires.org.
+    Simplified for learning. For official rules, see the <abbr class="acro" tabindex="0" data-full="For Inspiration and Recognition of Science and Technology" data-desc="The nonprofit that runs FIRST Robotics Competition and other programs for students.">FIRST</abbr> Robotics Competition Game Manual at firstinspires.org.
   </footer>
 </main>
 
@@ -1453,6 +1459,37 @@
   document.getElementById('btnReset').onclick = () => { hidden.clear(); render(); };
 
   render();
+})();
+</script>
+<script>
+(function () {
+  // Hover (or keyboard focus) on an acronym shows its full name and a short description
+  const tip = document.createElement('div');
+  tip.className = 'acro-tip';
+  tip.hidden = true;
+  document.body.appendChild(tip);
+
+  function show(el) {
+    tip.textContent = '';
+    const name = document.createElement('strong');
+    name.textContent = el.dataset.full;
+    const desc = document.createElement('span');
+    desc.textContent = el.dataset.desc;
+    tip.append(name, desc);
+    tip.hidden = false;
+    const r = el.getBoundingClientRect();
+    const left = Math.min(window.scrollX + r.left, window.scrollX + window.innerWidth - 320);
+    tip.style.left = Math.max(8, left) + 'px';
+    tip.style.top = (window.scrollY + r.bottom + 8) + 'px';
+  }
+  function hide() { tip.hidden = true; }
+
+  document.querySelectorAll('abbr.acro').forEach(el => {
+    el.addEventListener('mouseenter', () => show(el));
+    el.addEventListener('mouseleave', hide);
+    el.addEventListener('focus', () => show(el));
+    el.addEventListener('blur', hide);
+  });
 })();
 </script>
 </body>
