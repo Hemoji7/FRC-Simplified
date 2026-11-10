@@ -137,6 +137,7 @@
   <ul>
     <li><a href="#what-is-frc" class="active">What is FRC?</a></li>
     <li><a href="#what-is-the-game">What is the Game?</a></li>
+    <li><a href="#how-the-robot-changes">How the Robot Changes</a></li>
   </ul>
 </nav>
 
@@ -288,6 +289,110 @@
     </div>
 
     <div class="tip"><strong>Good to know:</strong> Each season the rules, timing, and scoring change. The official Game Manual is the final word. In 2027, the game is called BIOCORE and is revealed at kickoff on January 9, 2027.</div>
+  </section>
+
+  <!-- ============ TOPIC 3 ============ -->
+  <section id="how-the-robot-changes">
+    <h2>How the Robot Changes</h2>
+    <p class="lead">Every year teams build a new robot. Some parts stay the same, and the parts that do the game's work change.</p>
+
+    <h3>Same base, different tool</h3>
+    <p>Think of the robot as a base that drives around, plus a tool on top that does the game's job. The base stays similar from year to year. The tool changes with the game.</p>
+
+    <figure>
+      <svg viewBox="0 0 720 300" role="img" aria-label="Three robots share the same base and have different tools on top">
+        <!-- Panel backgrounds -->
+        <rect x="10" y="10" width="220" height="280" rx="14" fill="#f3f6f9"/>
+        <rect x="250" y="10" width="220" height="280" rx="14" fill="#f3f6f9"/>
+        <rect x="490" y="10" width="220" height="280" rx="14" fill="#f3f6f9"/>
+
+        <!-- Robot A: arm (x0=10) -->
+        <rect x="30" y="150" width="180" height="40" rx="6" fill="#9aa5b1"/>
+        <rect x="22" y="182" width="196" height="12" rx="4" fill="#2f6fd6"/>
+        <circle cx="55" cy="208" r="18" fill="#1f2933"/>
+        <circle cx="175" cy="208" r="18" fill="#1f2933"/>
+        <line x1="180" y1="150" x2="205" y2="70" stroke="#f2b233" stroke-width="10" stroke-linecap="round"/>
+        <path d="M195,60 l20,-2 l-6,16" fill="none" stroke="#c98a0b" stroke-width="5" stroke-linecap="round"/>
+
+        <!-- Robot B: shooter (x0=250) -->
+        <rect x="270" y="150" width="180" height="40" rx="6" fill="#9aa5b1"/>
+        <rect x="262" y="182" width="196" height="12" rx="4" fill="#d64545"/>
+        <circle cx="295" cy="208" r="18" fill="#1f2933"/>
+        <circle cx="415" cy="208" r="18" fill="#1f2933"/>
+        <rect x="300" y="90" width="110" height="60" rx="8" fill="#5b6770"/>
+        <rect x="350" y="106" width="50" height="28" rx="4" fill="#3b444c"/>
+        <circle cx="425" cy="104" r="10" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+
+        <!-- Robot C: climber (x0=490) -->
+        <rect x="510" y="150" width="180" height="40" rx="6" fill="#9aa5b1"/>
+        <rect x="502" y="182" width="196" height="12" rx="4" fill="#2f6fd6"/>
+        <circle cx="535" cy="208" r="18" fill="#1f2933"/>
+        <circle cx="655" cy="208" r="18" fill="#1f2933"/>
+        <rect x="540" y="60" width="12" height="90" fill="#5b6770"/>
+        <rect x="640" y="60" width="12" height="90" fill="#5b6770"/>
+        <rect x="540" y="56" width="112" height="12" rx="4" fill="#5b6770"/>
+        <path d="M596,68 v14 a8,8 0 0 1 -16,0" fill="none" stroke="#f2b233" stroke-width="5" stroke-linecap="round"/>
+
+        <!-- Labels -->
+        <text x="120" y="256" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2933">Arm</text>
+        <text x="120" y="276" text-anchor="middle" font-size="13" fill="#5b6770">picks up game pieces</text>
+        <text x="360" y="256" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2933">Shooter</text>
+        <text x="360" y="276" text-anchor="middle" font-size="13" fill="#5b6770">launches game pieces</text>
+        <text x="600" y="256" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2933">Climber</text>
+        <text x="600" y="276" text-anchor="middle" font-size="13" fill="#5b6770">lifts robot at the end</text>
+      </svg>
+      <figcaption>Three example robots with the same base (wheels, frame, bumpers) and a different tool for each game task.</figcaption>
+    </figure>
+
+    <h3>What stays the same</h3>
+    <p>The starting point and the rules rarely change. Each team uses the same kit, builds within the same time frame, and follows the same safety and inspection rules. Bumpers still show the alliance color.</p>
+
+    <h3>What changes</h3>
+    <p>The game decides the job. A new game means new game pieces, new field parts, and new point goals, so the robot needs a different tool. The season theme and the control system can change too.</p>
+
+    <h3>Same vs. different at a glance</h3>
+    <div class="terms">
+      <div class="term"><strong>Usually the same</strong><span>Same kit of parts to start with</span></div>
+      <div class="term"><strong>Usually the same</strong><span>Drive base: frame, wheels, motors</span></div>
+      <div class="term"><strong>Usually the same</strong><span>Three-robot alliances and bumper colors</span></div>
+      <div class="term"><strong>Usually the same</strong><span>Design, build, test, and repeat</span></div>
+      <div class="term"><strong>Changes every year</strong><span>The tool that scores or climbs</span></div>
+      <div class="term"><strong>Changes every year</strong><span>Game pieces and field elements</span></div>
+      <div class="term"><strong>Changes every year</strong><span>Scoring goals and strategy</span></div>
+      <div class="term"><strong>Changes sometimes</strong><span>The control system electronics</span></div>
+    </div>
+
+    <h3>The control system change</h3>
+    <p>The control system is the robot's brain and wiring. It was roboRIO-based through 2026. For 2027, every team must use the new SystemCore controller.</p>
+    <figure>
+      <svg viewBox="0 0 720 170" role="img" aria-label="Control system changes from roboRIO-based system to SystemCore in 2027">
+        <defs>
+          <marker id="arr2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#5b6770"/>
+          </marker>
+        </defs>
+        <!-- Before -->
+        <rect x="20" y="30" width="270" height="110" rx="14" fill="#eef1f4" stroke="#9aa5b1" stroke-width="3"/>
+        <text x="155" y="60" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Through 2026</text>
+        <rect x="45" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
+        <rect x="120" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
+        <rect x="195" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
+        <text x="75" y="103" text-anchor="middle" font-size="11" fill="#fff">roboRIO</text>
+        <text x="150" y="103" text-anchor="middle" font-size="11" fill="#fff">Power</text>
+        <text x="225" y="103" text-anchor="middle" font-size="11" fill="#fff">Pneumatics</text>
+        <!-- Arrow -->
+        <line x1="305" y1="85" x2="405" y2="85" stroke="#5b6770" stroke-width="4" marker-end="url(#arr2)"/>
+        <text x="355" y="75" text-anchor="middle" font-size="13" fill="#5b6770">2027</text>
+        <!-- After -->
+        <rect x="420" y="30" width="280" height="110" rx="14" fill="#e8f0fd" stroke="#2f6fd6" stroke-width="3"/>
+        <text x="560" y="60" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">2027 and on</text>
+        <rect x="475" y="75" width="170" height="45" rx="8" fill="#2f6fd6"/>
+        <text x="560" y="103" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">SystemCore</text>
+      </svg>
+      <figcaption>The control system is updated in 2027. The new controller is one unit.</figcaption>
+    </figure>
+
+    <div class="tip"><strong>In short:</strong> the base and the rules are the familiar part. The game decides the tool, and the robot is redesigned around it.</div>
   </section>
 
   <footer>
