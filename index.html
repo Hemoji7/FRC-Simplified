@@ -302,117 +302,156 @@
   <!-- ============ TOPIC 2 ============ -->
   <section id="getting-started">
     <h2>Getting Started: Team, Roles, and Mentors</h2>
-    <p>FRC is run by students, with adults who coach, screen, and support them. This section covers who is on a team, what each person does, when to start, and where to find the official details.</p>
+    <p class="lead">Students run the team. Adults coach, screen, and support.</p>
 
-    <h3>Who is on a team</h3>
-    <p>Anyone can join FRC, whatever their technical experience. A team has three kinds of people:</p>
+    <h3>Who does what</h3>
     <figure>
-      <svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Students do the work, lead coaches make team decisions, and mentors guide by example">
-        <rect x="20" y="30" width="210" height="150" rx="12" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
-        <rect x="255" y="30" width="210" height="150" rx="12" fill="#fff4e0" stroke="#e08e0b" stroke-width="3"/>
-        <rect x="490" y="30" width="210" height="150" rx="12" fill="#e8f7ee" stroke="#2e9b57" stroke-width="3"/>
-        <g font-size="14" fill="#1f2933" text-anchor="middle">
-          <text x="125" y="62" font-size="16" font-weight="700">Students</text>
-          <text x="125" y="90" font-size="13">Design, build, program</text>
-          <text x="125" y="110" font-size="13">and run the business side</text>
-          <text x="125" y="130" font-size="12" fill="#52606d">subteams: mechanical,</text>
-          <text x="125" y="146" font-size="12" fill="#52606d">electrical, programming,</text>
-          <text x="125" y="162" font-size="12" fill="#52606d">business and outreach</text>
-          <text x="360" y="62" font-size="16" font-weight="700">Lead Coaches</text>
-          <text x="360" y="90" font-size="13">Two adults who oversee</text>
-          <text x="360" y="110" font-size="13">day-to-day work and make</text>
-          <text x="360" y="130" font-size="13">the final team decisions</text>
-          <text x="595" y="62" font-size="16" font-weight="700">Mentors</text>
-          <text x="595" y="90" font-size="13">Adults who teach and guide</text>
-          <text x="595" y="110" font-size="13">by example, technical</text>
-          <text x="595" y="130" font-size="13">or not</text>
+      <svg viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Team hierarchy: lead coaches decide, student team leads run the work, and four subteams build. Mentors guide every subteam.">
+        <!-- Level 1: lead coaches and mentors -->
+        <rect x="250" y="16" width="220" height="64" rx="10" fill="#fff4e0" stroke="#e08e0b" stroke-width="3"/>
+        <text x="360" y="42" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Lead Coaches (2)</text>
+        <text x="360" y="62" text-anchor="middle" font-size="13" fill="#1f2933">final team decisions</text>
+        <rect x="500" y="16" width="200" height="64" rx="10" fill="#e8f7ee" stroke="#2e9b57" stroke-width="3"/>
+        <text x="600" y="42" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Mentors</text>
+        <text x="600" y="62" text-anchor="middle" font-size="13" fill="#1f2933">guide by example</text>
+        <line x1="472" y1="48" x2="498" y2="48" stroke="#2e9b57" stroke-width="2.5" stroke-dasharray="6 4"/>
+        <!-- Level 2: student team leads -->
+        <line x1="360" y1="80" x2="360" y2="118" stroke="#1f2933" stroke-width="2.5"/>
+        <rect x="250" y="118" width="220" height="52" rx="10" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <text x="360" y="141" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Student team leads</text>
+        <text x="360" y="160" text-anchor="middle" font-size="13" fill="#1f2933">run the day-to-day work</text>
+        <!-- Level 3: subteams -->
+        <line x1="360" y1="170" x2="360" y2="196" stroke="#1f2933" stroke-width="2.5"/>
+        <line x1="90" y1="196" x2="615" y2="196" stroke="#1f2933" stroke-width="2.5"/>
+        <g stroke="#1f2933" stroke-width="2.5">
+          <line x1="90" y1="196" x2="90" y2="214"/>
+          <line x1="265" y1="196" x2="265" y2="214"/>
+          <line x1="440" y1="196" x2="440" y2="214"/>
+          <line x1="615" y1="196" x2="615" y2="214"/>
         </g>
-        <text x="360" y="200" font-size="13" fill="#52606d" text-anchor="middle">Students lead the work. Adults coach, screen, and support.</text>
+        <g fill="#eef6ff" stroke="#2f6fd6" stroke-width="2.5">
+          <rect x="15" y="214" width="150" height="70" rx="10"/>
+          <rect x="190" y="214" width="150" height="70" rx="10"/>
+          <rect x="365" y="214" width="150" height="70" rx="10"/>
+          <rect x="540" y="214" width="150" height="70" rx="10"/>
+        </g>
+        <g fill="#1f2933" text-anchor="middle">
+          <text x="90" y="240" font-size="15" font-weight="700">Mechanical</text>
+          <text x="90" y="262" font-size="12">build the robot</text>
+          <text x="265" y="240" font-size="15" font-weight="700">Electrical</text>
+          <text x="265" y="262" font-size="12">wiring and power</text>
+          <text x="440" y="240" font-size="15" font-weight="700">Programming</text>
+          <text x="440" y="262" font-size="12">code and controls</text>
+          <text x="615" y="240" font-size="15" font-weight="700">Business</text>
+          <text x="615" y="262" font-size="12">sponsors and outreach</text>
+        </g>
+        <text x="360" y="318" text-anchor="middle" font-size="13" fill="#52606d">Mentors guide every subteam. Students make the work happen.</text>
       </svg>
-      <figcaption>The three groups on an FRC team. Students do the work; the adults guide it.</figcaption>
+      <figcaption>Who decides, who leads, and who builds.</figcaption>
     </figure>
+    <table class="tools-table">
+      <thead>
+        <tr><th>Role</th><th>Main job</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Lead Coaches</strong> (2 adults, required)</td><td>Final decisions, safety, and screening</td></tr>
+        <tr><td><strong>Mentors</strong> (any adults)</td><td>Teach and guide by example</td></tr>
+        <tr><td><strong>Student team leads</strong></td><td>Run the daily work and plan</td></tr>
+        <tr><td><strong>Students</strong> (anyone can join)</td><td>Design, build, program, and run the business side</td></tr>
+      </tbody>
+    </table>
+
+    <h3>What a team needs</h3>
     <ul>
-      <li><strong>Students:</strong> the center of every team. Many teams run like a small business, with engineering and business roles. On competition day, a drive team and a drive coach apply the strategy during each match, and an awards and publicity team tells the team's story.</li>
-      <li><strong>Lead Coaches:</strong> FIRST teams require two adult lead coaches. They can be parents, teachers, professional engineers, or retirees. They have the authority to make team leadership decisions.</li>
-      <li><strong>Mentors:</strong> every adult on a team is a mentor, because they lead through guidance and example. A technical background is helpful, but not necessary.</li>
+      <li>Two screened lead coaches</li>
+      <li>A team profile and season registration in the FIRST Dashboard</li>
+      <li>A place to meet and build</li>
     </ul>
 
-    <h3>What a team needs to compete</h3>
-    <ul>
-      <li><strong>Two adult lead coaches,</strong> both screened through FIRST's Youth Protection Screening. Check the Mentor Guide for the current screening rules for other adults.</li>
-      <li><strong>A team profile and season registration</strong> in the FIRST Dashboard.</li>
-      <li><strong>A roster</strong> of students and adults, submitted with the registration.</li>
-      <li><strong>A place to meet and build</strong>, and a budget for registration, parts, and travel.</li>
-    </ul>
-
-    <h3>How to get started</h3>
-    <ol>
-      <li><strong>Create a FIRST account</strong>, or log in if you already have one.</li>
-      <li><strong>Create a team profile</strong> from the "My Teams" tab, and choose FIRST Robotics Competition.</li>
-      <li><strong>Build your roster</strong> and complete screening for the lead coaches.</li>
-      <li><strong>Register for the season</strong> through the Dashboard's storefront. Have any sales tax exemption certificate ready.</li>
-      <li><strong>Choose your Kickoff and events</strong>, then begin meeting and planning the season.</li>
-    </ol>
-
-    <h3>Costs</h3>
-    <p>Season costs are covered in the Costs, Funding, and Travel section, which comes next. Registration is the largest single cost.</p>
+    <h3>How to start</h3>
+    <figure>
+      <svg viewBox="0 0 720 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five steps: create an account, make a team profile, build a roster, register for the season, and pick events">
+        <defs>
+          <marker id="startArrow" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#2f6fd6"/>
+          </marker>
+        </defs>
+        <g stroke="#2f6fd6" stroke-width="2.5" marker-end="url(#startArrow)">
+          <line x1="124" y1="50" x2="148" y2="50"/>
+          <line x1="264" y1="50" x2="288" y2="50"/>
+          <line x1="404" y1="50" x2="428" y2="50"/>
+          <line x1="544" y1="50" x2="568" y2="50"/>
+        </g>
+        <g fill="#eef6ff" stroke="#2f6fd6" stroke-width="2.5">
+          <rect x="10" y="18" width="114" height="64" rx="10"/>
+          <rect x="150" y="18" width="114" height="64" rx="10"/>
+          <rect x="290" y="18" width="114" height="64" rx="10"/>
+          <rect x="430" y="18" width="114" height="64" rx="10"/>
+          <rect x="570" y="18" width="140" height="64" rx="10"/>
+        </g>
+        <g fill="#1f2933" text-anchor="middle">
+          <text x="67" y="46" font-size="14" font-weight="700">1. Account</text>
+          <text x="67" y="66" font-size="12">FIRST login</text>
+          <text x="207" y="46" font-size="14" font-weight="700">2. Team</text>
+          <text x="207" y="66" font-size="12">profile</text>
+          <text x="347" y="46" font-size="14" font-weight="700">3. Roster</text>
+          <text x="347" y="66" font-size="12">students and adults</text>
+          <text x="487" y="46" font-size="14" font-weight="700">4. Register</text>
+          <text x="487" y="66" font-size="12">for the season</text>
+          <text x="640" y="46" font-size="14" font-weight="700">5. Events</text>
+          <text x="640" y="66" font-size="12">pick Kickoff and events</text>
+        </g>
+      </svg>
+    </figure>
 
     <h3>When to start</h3>
-    <p>The season follows a yearly cycle. Start in the fall so the team is ready when the new game is revealed.</p>
+    <p>Start in the fall, so the team is ready when the new game is revealed.</p>
     <table class="tools-table">
       <thead>
         <tr><th>When</th><th>What happens</th></tr>
       </thead>
       <tbody>
-        <tr><td>September and October</td><td>Teams that took a break start meeting again. Create or update the team profile, and begin event selection.</td></tr>
-        <tr><td>Before November 17 (noon Eastern)</td><td>Each team selects its Kickoff and Kit of Parts option for the next season, according to the FIRST calendar. Check the calendar for the current year, because this date changes each season.</td></tr>
-        <tr><td>December</td><td>Kickoff Kit shipments begin once the registration fee is paid. Some teams hold a mock Kickoff to prepare.</td></tr>
-        <tr><td>January</td><td>Kickoff. The new game is revealed and build season begins.</td></tr>
-        <tr><td>February to April</td><td>Regional and district competitions. Teams that advance go on to the championship.</td></tr>
-        <tr><td>April</td><td>FIRST Championship.</td></tr>
-        <tr><td>Summer and fall</td><td>Off-season events, fundraising, and preparation for next year.</td></tr>
+        <tr><td>Sept to Oct</td><td>Restart meetings and update the team profile</td></tr>
+        <tr><td>Before Nov 17 (noon ET)</td><td>Choose the Kickoff and Kit option. Check the calendar each year.</td></tr>
+        <tr><td>December</td><td>Kit shipments begin after the registration fee is paid</td></tr>
+        <tr><td>January</td><td>Kickoff: new game revealed, build season starts</td></tr>
+        <tr><td>Feb to April</td><td>Regional and district events, then championship in April</td></tr>
+        <tr><td>Summer and fall</td><td>Off-season events and fundraising</td></tr>
       </tbody>
     </table>
 
     <h3>Where to get information</h3>
     <ul>
-      <li><strong>The FIRST Dashboard:</strong> your team profile, registration, screening, and event and Kickoff choices.</li>
-      <li><strong>The FIRST Robotics Competition Mentor Guide:</strong> best practices for running a team. FIRST recommends it for all mentors, new and experienced.</li>
-      <li><strong>Mentor training:</strong> the Mentor Ready Training Path introduces mentors to the team, and Role of a Lead Coach covers the lead coach job.</li>
-      <li><strong>The FIRST Calendar:</strong> exact deadlines for each season.</li>
-      <li><strong>Rules and expectations:</strong> FIRST's event experience page is the authority on what is expected at events.</li>
-      <li><strong>Local leaders and nearby teams:</strong> people in your region can answer questions about events and local support.</li>
+      <li><strong>FIRST Dashboard:</strong> team profile, registration, and screening</li>
+      <li><strong>Mentor Guide:</strong> best practices for every mentor</li>
+      <li><strong>FIRST Calendar:</strong> exact deadlines each season</li>
+      <li><strong>Local leaders and nearby teams:</strong> answers about local events</li>
     </ul>
 
-    <div class="tip"><strong>In short:</strong> two lead coaches, a team profile in the Dashboard, a season registration, and a steady calendar are what it takes to start. Begin in the fall, before the January kickoff.</div>
-    <p class="credit">Dates and requirements come from FIRST's website and Mentor Guide. They change each season, so check the FIRST Calendar and the Dashboard for the current details.</p>
+    <div class="tip"><strong>In short:</strong> two lead coaches, a Dashboard profile, a season registration, and an early start.</div>
+    <p class="credit">Dates and requirements change each season. Check the FIRST Calendar and Dashboard. Costs are in the next section.</p>
   </section>
 
   <!-- ============ TOPIC 3 ============ -->
   <section id="costs-funding-travel">
     <h2>Costs, Funding, and Travel</h2>
-    <p>A season costs real money, and the money comes from several places. This section shows what a team pays for, who receives the money, where teams find funding, and what changes when the competition is in another city.</p>
+    <p class="lead">FIRST is paid for registration and events. The team pays for everything else.</p>
 
-    <h3>What the season costs</h3>
-    <p>The biggest single cost is the season registration, which is paid to FIRST. Everything else is paid by the team. The table lists the main items.</p>
+    <h3>What it costs</h3>
     <table class="tools-table">
       <thead>
-        <tr><th>Item</th><th>What it covers</th><th>Paid to</th></tr>
+        <tr><th>Item</th><th>Paid to</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>Season registration</strong></td><td>Team number, Kit of Parts, Kickoff Kit, Virtual Kit, FIRST Choice credits, and one regional or two district events. The 2025 to 2026 fee for U.S. and Canadian teams was $6,300.</td><td>FIRST</td></tr>
-        <tr><td><strong>Additional events</strong></td><td>Extra regional or district events beyond the registration. For the 2026 season, additional in-district or inter-district events cost $1,000 each.</td><td>FIRST</td></tr>
-        <tr><td><strong>Championship and other qualifying events</strong></td><td>Teams that qualify for championship-level events pay an additional fee.</td><td>FIRST</td></tr>
-        <tr><td><strong>Shipping, duties, and taxes</strong></td><td>The registration fee does not cover shipping of the Kit of Parts, duties, or taxes. Shipping of the Kickoff Kit to the team is also extra.</td><td>Carrier or customs</td></tr>
-        <tr><td><strong>Parts, stock, and tools</strong></td><td>Materials for robot parts, the tools used to build the robot, and spare parts.</td><td>Vendors</td></tr>
-        <tr><td><strong>Travel</strong></td><td>Transport of the robot and team, lodging, and meals for events held out of town.</td><td>Transport, hotels, and food providers</td></tr>
-        <tr><td><strong>Apparel and outreach</strong></td><td>Team shirts, a robot cart, presentation materials, and outreach events. Optional, but common.</td><td>Vendors</td></tr>
+        <tr><td>Season registration (about $6,300 for 2025 to 2026)</td><td>FIRST</td></tr>
+        <tr><td>Extra events (for example, $1,000 each in 2026)</td><td>FIRST</td></tr>
+        <tr><td>Parts, tools, and shipping</td><td>Team</td></tr>
+        <tr><td>Travel to events in other cities</td><td>Team</td></tr>
       </tbody>
     </table>
-    <p>In total, many teams spend between about $17,400 and $56,300 a season, depending on where they are located. A team that expects to qualify for district or championship events should budget for those fees too.</p>
+    <p>Many teams spend about $17,400 to $56,300 a season, depending on location.</p>
 
-    <h3>Who pays, and how the money flows</h3>
-    <p>Teams usually pay with more than one source. Money comes in from students, sponsors, grants, and fundraising, and goes out to FIRST, to parts and tools, and to travel.</p>
+    <h3>Who pays</h3>
     <figure>
       <svg viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Money comes into the team budget from team fees, sponsors, grants, and fundraisers, and goes out to FIRST fees, parts and tools, travel, and apparel">
         <defs>
@@ -463,39 +502,26 @@
         </g>
         <text x="360" y="222" font-size="13" fill="#52606d" text-anchor="middle">Sources on the left fill one budget, which pays for the uses on the right.</text>
       </svg>
-      <figcaption>How money moves through a team budget. The amounts vary a lot from team to team.</figcaption>
+      <figcaption>Several sources fill one team budget. The budget pays for the uses on the right.</figcaption>
     </figure>
-    <p>One team's example, from its own financial page, shows the mix. About two-thirds of its costs came from fees charged to each student, and the rest came from sponsors and fundraising. Its per-student fee was $250 a year, which covered the first competition and a team uniform.</p>
 
-    <h3>Where teams find funding</h3>
+    <h3>Where the money comes from</h3>
     <ul>
-      <li><strong>Team fees from students and families.</strong> Common, but it can be a barrier for some families. Many teams use fundraising to help students who cannot pay.</li>
-      <li><strong>Sponsors.</strong> Local businesses and organizations often support a team every year. One team reported that a local bank had paid its registration fee every year since the team started.</li>
-      <li><strong>Grants.</strong> FIRST and partner organizations offer team grants, and some grants pay for the first regional or district registration. Grants usually do not cover local events, travel, or team apparel. Check the team grants page for current programs and deadlines.</li>
-      <li><strong>Grant funds in the Storefront.</strong> Where a team has a grant, it can use the funds in the FIRST Storefront for registration and event fees.</li>
-      <li><strong>Fundraisers.</strong> Events, sales, and donation drives. Good fundraising also builds relationships that bring sponsors back.</li>
+      <li><strong>Students and families:</strong> team fees. Fundraising can cover students who cannot pay.</li>
+      <li><strong>Sponsors:</strong> local businesses, often yearly.</li>
+      <li><strong>Grants:</strong> usually cover the first registration, not travel.</li>
+      <li><strong>Fundraisers:</strong> events and sales.</li>
     </ul>
 
     <h3>Competing in another city</h3>
-    <p>Regional and district events have the same registration and event fees wherever they are. What changes is the travel. Going to a city far away adds transport, lodging, and food for the team, and the robot and spare parts must be moved too.</p>
     <ul>
-      <li><strong>Who pays:</strong> the team pays for travel. Grants usually do not cover it, so teams plan for it with fees, sponsors, and fundraising.</li>
-      <li><strong>How big the crew is:</strong> more people means more cost. One team reported its travel costs for 20 people, plus tools and spare parts, on top of registration.</li>
-      <li><strong>What to plan:</strong> transport for the robot and spares, lodging and meals for students and mentors, and any event fee changes.</li>
-      <li><strong>Early planning:</strong> booking transport and lodging early usually costs less, and it leaves more time to raise the money.</li>
+      <li>Registration and event fees stay the same.</li>
+      <li>Travel adds transport, lodging, and meals for the team and the robot.</li>
+      <li>Plan travel early, and fund it before the event.</li>
     </ul>
 
-    <h3>How to plan the budget</h3>
-    <ol>
-      <li><strong>Start with the official budget template.</strong> FIRST publishes a budget template and a page of median team budgets to compare against.</li>
-      <li><strong>List the fixed costs first.</strong> Registration, events, and shipping are known early.</li>
-      <li><strong>Add the variable costs.</strong> Parts, tools, and travel depend on the build and the event schedule.</li>
-      <li><strong>Plan the funding to match.</strong> Decide which sponsors, grants, fees, and fundraisers will cover each line.</li>
-      <li><strong>Keep a margin.</strong> Unexpected parts, repairs, and travel costs are common.</li>
-    </ol>
-
-    <div class="tip"><strong>In short:</strong> FIRST is paid for registration and events, and the team pays for everything else. Teams fund that from student fees, sponsors, grants, and fundraising, and travel to another city is one of the biggest costs to plan for.</div>
-    <p class="credit">Prices and grant programs change each season. The figures here are from FIRST's published information and team pages, and the 2025 to 2026 registration fee is shown as an example. Check the FIRST Cost and Registration page for the current season's prices.</p>
+    <div class="tip"><strong>In short:</strong> registration goes to FIRST, and sponsors, fees, grants, and fundraising cover the rest.</div>
+    <p class="credit">Prices change each season. Check the FIRST Cost and Registration page.</p>
   </section>
 
   <!-- ============ TOPIC 4 ============ -->
@@ -1546,11 +1572,9 @@
   <!-- ============ TOPIC 9 ============ -->
   <section id="media-and-marketing">
     <h2>Media and Marketing</h2>
-    <p>Media and marketing is how a team tells its story to the people who can help it: sponsors who pay for parts, judges who score its awards, families and schools who cheer it on, and students who might join next year. A great robot that nobody hears about gets less support. A team that shares its work clearly gets more.</p>
+    <p class="lead">Share your team's story. People support teams they can see.</p>
 
-    <h3>What it is</h3>
-    <p>It covers everything a team shares about itself: photos and video of the build, social media posts, a team website, sponsor thank-you posts, and the written record of the season. It also covers the team's story itself, which is the reason people care about the robot in the first place.</p>
-
+    <h3>How the story reaches people</h3>
     <figure>
       <svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A flow from team story to media to audience to support, with each step feeding the next">
         <rect x="20" y="50" width="140" height="90" rx="10" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
@@ -1576,52 +1600,48 @@
         </g>
         <text x="360" y="184" font-size="13" fill="#52606d" text-anchor="middle">Each step feeds the next: a clear story gets seen, and the attention brings support back to the team.</text>
       </svg>
-      <figcaption>How a team's story turns into support. Each step depends on the one before it.</figcaption>
+      <figcaption>Each step feeds the next.</figcaption>
     </figure>
 
     <h3>Why it matters</h3>
     <ul>
-      <li><strong>Funding:</strong> sponsors want to see what their money does. Clear photos, results, and thank-you posts show them.</li>
-      <li><strong>Judged awards:</strong> FIRST has awards based on team attributes, including recruiting students into engineering and STEM, fundraising, and community outreach. Judges talk with teams in the pit about their outreach efforts.</li>
-      <li><strong>Documentation:</strong> the Impact Award, FIRST's highest honor, values a team's record of its own experience. Keeping that record is part of the work, not an extra.</li>
-      <li><strong>Recruiting:</strong> a visible team draws the students and mentors who will run it next year.</li>
-      <li><strong>Gracious Professionalism:</strong> sharing your team's work openly and crediting others is part of the FIRST ethic, both on and off the field.</li>
+      <li><strong>Funding:</strong> sponsors want to see results.</li>
+      <li><strong>Judged awards:</strong> outreach, recruiting, and fundraising are judged.</li>
+      <li><strong>Recruiting:</strong> a visible team draws new students and mentors.</li>
     </ul>
 
-    <h3>A simple strategy</h3>
+    <h3>A simple plan</h3>
     <ol>
-      <li><strong>Pick the story.</strong> Choose one or two things worth telling, such as a problem the team solved, a new student who grew, or a community project.</li>
-      <li><strong>Capture as you go.</strong> Assign one student to photos and video from the first day of build. Collect moments, not just final shots.</li>
-      <li><strong>Plan a calendar.</strong> Match posts to the season: kickoff, build weeks, the first event, and the championship. Keep a steady rhythm rather than posting in bursts.</li>
-      <li><strong>Say thank you, and show results.</strong> Post about each sponsor and what their support made possible. Share event results and what the team learned.</li>
-      <li><strong>Keep a season record.</strong> Save photos, notes, and outreach numbers in one place. This makes awards submissions and next year's planning much easier.</li>
+      <li><strong>Pick one story</strong> worth telling.</li>
+      <li><strong>Capture photos and video</strong> all season.</li>
+      <li><strong>Post on a calendar</strong> that follows the season.</li>
+      <li><strong>Thank sponsors</strong> and share results.</li>
+      <li><strong>Keep a season record</strong> for awards.</li>
     </ol>
 
-    <h3>Approach by audience</h3>
-    <p>Each audience wants something different. Write for the one you are reaching.</p>
+    <h3>Who you are talking to</h3>
     <table class="tools-table">
       <thead>
-        <tr><th>Audience</th><th>What they want to know</th><th>Content that works</th></tr>
+        <tr><th>Audience</th><th>What to show</th></tr>
       </thead>
       <tbody>
-        <tr><td>Sponsors</td><td>What their support made possible, and whether it is well used</td><td>Build photos, results, a thank-you post with a short summary</td></tr>
-        <tr><td>Judges</td><td>What the team did, how it did it, and what it gained from it</td><td>A clear season record, outreach numbers, and a team who can talk about it</td></tr>
-        <tr><td>Families and school</td><td>What their student is learning and doing</td><td>Event photos, short updates, and a calendar of upcoming events</td></tr>
-        <tr><td>Future students</td><td>Whether they would fit in, and what they would do</td><td>Short videos of students at work, and clear "how to join" information</td></tr>
-        <tr><td>Community</td><td>What the team gives back</td><td>Outreach events, demonstrations, and local stories</td></tr>
+        <tr><td>Sponsors</td><td>What their support made possible</td></tr>
+        <tr><td>Judges</td><td>What the team did and learned</td></tr>
+        <tr><td>Families and school</td><td>Events and updates</td></tr>
+        <tr><td>Future students</td><td>Students at work and how to join</td></tr>
+        <tr><td>Community</td><td>What the team gives back</td></tr>
       </tbody>
     </table>
 
-    <h3>Rules and good habits</h3>
+    <h3>Good habits</h3>
     <ul>
-      <li><strong>Get permission</strong> before you post a person's photo or name, and take extra care with younger students.</li>
-      <li><strong>Credit others</strong> when you use their work, and check that sponsor logos are used the way the sponsor allows.</li>
-      <li><strong>Check the season rules</strong> for anything about team names, logos, or sharing, and ask a mentor when unsure.</li>
-      <li><strong>Keep the record accurate.</strong> Post numbers you can back up, such as outreach counts and results.</li>
+      <li>Get permission before posting a person's photo or name.</li>
+      <li>Credit others, and follow sponsor logo rules.</li>
+      <li>Post only numbers you can back up.</li>
     </ul>
 
-    <div class="tip"><strong>In short:</strong> decide who you are talking to, tell one clear story for them, and keep the record of the season. The robot earns the attention, and the story brings the support.</div>
-    <p class="credit">Award descriptions are from FIRST's awards pages. Check the current season's awards page for the latest wording before you write for it.</p>
+    <div class="tip"><strong>In short:</strong> know your audience, tell one clear story, and keep the record.</div>
+    <p class="credit">Award descriptions come from FIRST's awards pages. Check the current season's wording.</p>
   </section>
 
   <footer>
