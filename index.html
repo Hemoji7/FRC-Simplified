@@ -129,6 +129,13 @@
   .photos figcaption { font-size: 13px; margin-top: 6px; }
   .credit { color: var(--muted); font-size: 13px; margin-top: 16px; }
 
+  /* Frame type cards */
+  .frame-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+  .frame-card { border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: #fbfcfd; }
+  .frame-card svg { width: 100%; height: auto; display: block; }
+  .frame-card h4 { margin: 6px 0 4px; font-size: 16px; }
+  .frame-card p { margin: 0; font-size: 14px; color: var(--muted); }
+
   footer { margin-top: 36px; color: var(--muted); font-size: 14px; }
 
   /* Narrow screens: nav becomes a top bar */
@@ -165,6 +172,7 @@
     <li><a href="#what-is-the-game">What is the Game?</a></li>
     <li><a href="#how-the-robot-changes">How the Robot Changes</a></li>
     <li><a href="#robot-parts">Robot Parts</a></li>
+    <li><a href="#robot-frame">Robot Frame</a></li>
   </ul>
 </nav>
 
@@ -570,6 +578,146 @@
     <p class="credit">Part photos are from the WPILib documentation (docs.wpilib.org), which shows manufacturer product images. Check each image's license before reusing it outside this page.</p>
 
     <div class="tip"><strong>Remember:</strong> The parts are the same in most robots. How teams arrange them, and which mechanism they choose, is what makes each robot unique.</div>
+  </section>
+
+  <!-- ============ TOPIC 5 ============ -->
+  <section id="robot-frame">
+    <h2>Robot Frame</h2>
+    <p class="lead">The frame is the robot's skeleton. It holds every part, and it has to be light, stiff, and tough enough to survive a match.</p>
+
+    <h3>Is the frame the same every game?</h3>
+    <p>The base is mostly the same from year to year. Teams often reuse a drive base design or the kit drive base. The game changes the upper structure: where mechanisms mount, how tall the robot needs to be, and how the frame must stay inside the rules.</p>
+
+    <h3>Common frame types</h3>
+    <div class="frame-grid">
+      <div class="frame-card">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Box tube frame">
+          <rect x="40" y="30" width="140" height="90" rx="4" fill="none" stroke="#9aa5b1" stroke-width="16"/>
+          <rect x="40" y="70" width="140" height="10" fill="#9aa5b1"/>
+          <g fill="#fff"><circle cx="62" cy="75" r="3"/><circle cx="110" cy="75" r="3"/><circle cx="158" cy="75" r="3"/></g>
+        </svg>
+        <h4>Box tube frame</h4>
+        <p>Square aluminum tubes joined with brackets. Strong, simple, and the most common type.</p>
+      </div>
+      <div class="frame-card">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Bent sheet metal frame">
+          <path d="M30,40 H80 V110 H140 V40 H190" fill="none" stroke="#9aa5b1" stroke-width="14" stroke-linejoin="round"/>
+          <circle cx="55" cy="60" r="3" fill="#fff"/><circle cx="165" cy="60" r="3" fill="#fff"/>
+          <rect x="30" y="128" width="160" height="10" rx="2" fill="#c7d0d9"/>
+          <text x="110" y="148" text-anchor="middle" font-size="11" fill="#5b6770">cut flat, then bent</text>
+        </svg>
+        <h4>Bent sheet metal frame</h4>
+        <p>A flat sheet is cut, folded into channels, and riveted or bolted together. Light and quick to make.</p>
+      </div>
+      <div class="frame-card">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Aluminum extrusion frame with T-slots">
+          <rect x="20" y="60" width="180" height="36" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/>
+          <rect x="70" y="60" width="80" height="8" fill="#5b6770"/>
+          <rect x="70" y="88" width="80" height="8" fill="#5b6770"/>
+          <rect x="60" y="22" width="36" height="110" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/>
+          <rect x="83" y="22" width="8" height="110" fill="#5b6770"/>
+        </svg>
+        <h4>Extrusion frame</h4>
+        <p>Pre-made profiles with slots. Easy to adjust and rebuild, great for prototypes, but heavier for the same strength.</p>
+      </div>
+      <div class="frame-card">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Drive base with wheels outside the frame">
+          <rect x="50" y="48" width="120" height="18" rx="3" fill="#9aa5b1"/>
+          <rect x="50" y="84" width="120" height="18" rx="3" fill="#9aa5b1"/>
+          <circle cx="36" cy="78" r="24" fill="#1f2933"/>
+          <circle cx="184" cy="78" r="24" fill="#1f2933"/>
+          <circle cx="36" cy="78" r="7" fill="#c7d0d9"/>
+          <circle cx="184" cy="78" r="7" fill="#c7d0d9"/>
+        </svg>
+        <h4>Drive base (kit or custom)</h4>
+        <p>A chassis that holds the motors and wheels. Some designs keep wheels inside the frame; "West Coast" designs put them outside.</p>
+      </div>
+    </div>
+
+    <h3>What materials are used?</h3>
+    <div class="terms">
+      <div class="term"><strong>6061-T6 aluminum</strong><span>The most common choice. Strong, light, and easy to cut and machine. Used for tube, plate, and machined parts.</span></div>
+      <div class="term"><strong>Thin aluminum sheet (5052, 3003)</strong><span>Bends without cracking, so it is used for bent brackets and sheet parts.</span></div>
+      <div class="term"><strong>7075 aluminum</strong><span>Stronger than 6061 but harder to machine and bend. Used for high-load parts.</span></div>
+      <div class="term"><strong>Steel</strong><span>Stronger and heavier than aluminum. Used for shafts, gears, and high-load spots. It rusts.</span></div>
+      <div class="term"><strong>Polycarbonate (Lexan)</strong><span>Tough plastic for panels that stick out past the frame, since aluminum can bend there.</span></div>
+      <div class="term"><strong>Thickness rule of thumb</strong><span>Thin 1/16 in. tube is for non-structural parts. Outer drive tubes are usually 1/8 in. to handle collisions.</span></div>
+    </div>
+
+    <h3>How a frame is designed</h3>
+    <ol>
+      <li><strong>Set the goals:</strong> size, weight, and what the game needs the robot to reach.</li>
+      <li><strong>Draw it in CAD:</strong> sketch the flat outline first, then extrude it into 3D. Design one side of a symmetric drive base and mirror it.</li>
+      <li><strong>Check the rules:</strong> the frame must be fixed (no moving parts in the frame perimeter) and fit inside the bumper zone. Weight limits apply too. The 2026 limit was 115 lb, not counting bumpers and battery. Check the current manual.</li>
+      <li><strong>Plan clearance:</strong> on a flat floor, only the wheels should touch the carpet.</li>
+      <li><strong>Keep the weight low and centered:</strong> heavy parts like motors and batteries go low so the robot stays balanced.</li>
+      <li><strong>Make the drive base stiff:</strong> the drivetrain should flex the least of anything on the robot, so it holds its shape under impacts.</li>
+    </ol>
+
+    <h3>The frame and the bumper zone</h3>
+    <p>The frame sits inside the bumper zone. The bumpers cover the outside of that zone, so the frame is what the rules measure.</p>
+    <figure>
+      <svg viewBox="0 0 720 240" role="img" aria-label="Top view showing bumpers around the frame perimeter">
+        <rect x="150" y="20" width="420" height="200" rx="26" fill="#2f6fd6"/>
+        <rect x="186" y="56" width="348" height="128" rx="10" fill="#9aa5b1" stroke="#5b6770" stroke-width="3"/>
+        <rect x="240" y="88" width="90" height="64" rx="6" fill="#5b6770"/>
+        <rect x="350" y="88" width="90" height="64" rx="6" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+        <text x="360" y="234" text-anchor="middle" font-size="14" fill="#5b6770">Top view. Blue: bumpers. Grey: frame, which must stay inside the bumper zone.</text>
+      </svg>
+      <figcaption>The frame is the fixed structure. Bumpers wrap around it and show the alliance color.</figcaption>
+    </figure>
+
+    <h3>From raw stock to a usable part</h3>
+    <p>A frame part starts as plain material. Here is the path, step by step.</p>
+    <figure>
+      <svg viewBox="0 0 720 150" role="img" aria-label="Six steps from raw stock to inspected frame part">
+        <g stroke="#2f6fd6" stroke-width="3">
+          <line x1="100" y1="60" x2="140" y2="60"/>
+          <line x1="220" y1="60" x2="260" y2="60"/>
+          <line x1="340" y1="60" x2="380" y2="60"/>
+          <line x1="460" y1="60" x2="500" y2="60"/>
+          <line x1="580" y1="60" x2="620" y2="60"/>
+        </g>
+        <!-- 1 Raw stock -->
+        <circle cx="60" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(60,60)"><rect x="-20" y="-12" width="40" height="24" rx="3" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/></g>
+        <!-- 2 Cut -->
+        <circle cx="180" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(180,60)"><rect x="-20" y="-12" width="40" height="24" rx="3" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/><line x1="0" y1="-18" x2="0" y2="18" stroke="#d64545" stroke-width="3" stroke-dasharray="4 3"/></g>
+        <!-- 3 Bend -->
+        <circle cx="300" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(300,60)"><path d="M-18,-14 H0 V12 H18" fill="none" stroke="#5b6770" stroke-width="6" stroke-linejoin="round"/></g>
+        <!-- 4 Drill and mill -->
+        <circle cx="420" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(420,60)"><rect x="-20" y="-12" width="40" height="24" rx="3" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/><g fill="#fff"><circle cx="-10" cy="0" r="3.5"/><circle cx="0" cy="0" r="3.5"/><circle cx="10" cy="0" r="3.5"/></g></g>
+        <!-- 5 Assemble -->
+        <circle cx="540" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(540,60)"><rect x="-20" y="-14" width="22" height="28" rx="3" fill="#9aa5b1"/><rect x="0" y="-14" width="22" height="28" rx="3" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/><circle cx="0" cy="0" r="4" fill="#1f2933"/></g>
+        <!-- 6 Inspect -->
+        <circle cx="660" cy="60" r="38" fill="#eaf7ee" stroke="#2e9b57" stroke-width="3"/>
+        <g transform="translate(660,60)"><path d="M-14,0 L-4,10 L14,-10" fill="none" stroke="#2e9b57" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <!-- Labels -->
+        <g font-size="13" font-weight="700" fill="#1f2933" text-anchor="middle">
+          <text x="60" y="122">Raw stock</text>
+          <text x="180" y="122">Cut</text>
+          <text x="300" y="122">Bend</text>
+          <text x="420" y="122">Drill and mill</text>
+          <text x="540" y="122">Assemble</text>
+          <text x="660" y="122">Inspect</text>
+        </g>
+      </svg>
+      <figcaption>Six stages, from flat stock to a checked part on the robot.</figcaption>
+    </figure>
+    <ol>
+      <li><strong>Raw stock:</strong> Teams buy aluminum as sheets, plates, or tube. Tube often comes in 47-inch lengths.</li>
+      <li><strong>Cut:</strong> CNC routers, mills, waterjets, and laser cutters cut the shapes from CAD files. Hand saws work for rough cuts, but they are less accurate.</li>
+      <li><strong>Bend:</strong> A hand brake or CNC press brake folds sheet metal. Softer alloys like 3003 or 5052 bend better than 6061, which can crack.</li>
+      <li><strong>Drill and mill:</strong> Holes and pockets are added. Some tubing comes with bolt holes already punched.</li>
+      <li><strong>Assemble:</strong> Parts are bolted, riveted, or joined with brackets and gussets.</li>
+      <li><strong>Inspect:</strong> Measure the frame perimeter, weigh the robot, and check it against the inspection checklist before the event.</li>
+    </ol>
+
+    <div class="tip"><strong>In short:</strong> the frame is made of light aluminum, cut and bent by machines, and bolted into a stiff shape that fits inside the bumper zone.</div>
   </section>
 
   <footer>
