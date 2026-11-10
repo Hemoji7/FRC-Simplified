@@ -138,6 +138,7 @@
     <li><a href="#what-is-frc" class="active">What is FRC?</a></li>
     <li><a href="#what-is-the-game">What is the Game?</a></li>
     <li><a href="#how-the-robot-changes">How the Robot Changes</a></li>
+    <li><a href="#robot-parts">Robot Parts</a></li>
   </ul>
 </nav>
 
@@ -393,6 +394,146 @@
     </figure>
 
     <div class="tip"><strong>In short:</strong> the base and the rules are the familiar part. The game decides the tool, and the robot is redesigned around it.</div>
+  </section>
+
+  <!-- ============ TOPIC 4 ============ -->
+  <section id="robot-parts">
+    <h2>Robot Parts</h2>
+    <p class="lead">A robot is a team of parts working together. Here is a real robot, then a labeled drawing and a "break open" view showing what is inside.</p>
+
+    <h3>A real robot</h3>
+    <figure>
+      <img src="https://www.nasa.gov/wp-content/uploads/2023/03/653196main_ED12-0161-14-full_full.jpg"
+           alt="Student-built FIRST Robotics Competition robots demonstrate basketball-shooting skill"
+           style="width:100%; height:auto; border-radius:12px; display:block;">
+      <figcaption>Photo: NASA, 2012 FIRST Robotics Competition. Robots from three high school teams. Each team's robot is different.</figcaption>
+    </figure>
+
+    <h3>Labeled parts</h3>
+    <p>This drawing shows the common parts found on most FRC robots. Numbers match the list below it.</p>
+    <figure>
+      <svg viewBox="0 0 720 400" role="img" aria-label="Labeled FRC robot with numbered parts">
+        <!-- Ground -->
+        <line x1="40" y1="372" x2="680" y2="372" stroke="#c7d0d9" stroke-width="3"/>
+
+        <!-- Mechanism (arm) -->
+        <line x1="330" y1="168" x2="420" y2="70" stroke="#5b6770" stroke-width="12" stroke-linecap="round"/>
+        <path d="M408,58 l22,-4 l-8,20" fill="none" stroke="#c98a0b" stroke-width="5" stroke-linecap="round"/>
+
+        <!-- Camera -->
+        <rect x="296" y="142" width="34" height="18" rx="4" fill="#3b444c"/>
+        <circle cx="313" cy="151" r="5" fill="#9fb3c8"/>
+
+        <!-- Radio + antenna -->
+        <line x1="440" y1="160" x2="440" y2="120" stroke="#3b444c" stroke-width="3"/>
+        <rect x="428" y="160" width="26" height="20" rx="3" fill="#3b444c"/>
+
+        <!-- Electronics enclosure -->
+        <rect x="230" y="170" width="170" height="76" rx="8" fill="#5b6770"/>
+        <!-- Controller -->
+        <rect x="244" y="182" width="62" height="50" rx="5" fill="#2e9b57"/>
+        <circle cx="275" cy="200" r="5" fill="#eaf7ee"/>
+        <!-- Power distribution -->
+        <rect x="318" y="182" width="72" height="50" rx="5" fill="#3b444c"/>
+        <line x1="330" y1="196" x2="378" y2="196" stroke="#9fb3c8" stroke-width="3"/>
+        <line x1="330" y1="210" x2="378" y2="210" stroke="#9fb3c8" stroke-width="3"/>
+        <!-- Robot signal light -->
+        <circle cx="385" cy="158" r="7" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+
+        <!-- Frame / drive base -->
+        <rect x="170" y="250" width="360" height="50" rx="8" fill="#9aa5b1"/>
+        <!-- Battery -->
+        <rect x="262" y="258" width="96" height="34" rx="5" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+        <!-- Bumpers -->
+        <rect x="160" y="290" width="380" height="16" rx="6" fill="#2f6fd6"/>
+        <!-- Wheels -->
+        <circle cx="215" cy="322" r="26" fill="#1f2933"/>
+        <circle cx="215" cy="322" r="9" fill="#c7d0d9"/>
+        <circle cx="495" cy="322" r="26" fill="#1f2933"/>
+        <circle cx="495" cy="322" r="9" fill="#c7d0d9"/>
+
+        <!-- Numbered badges -->
+        <g font-size="14" font-weight="700" text-anchor="middle" fill="#fff">
+          <circle cx="560" cy="298" r="14" fill="#1f2933"/><text x="560" y="303">1</text>
+          <circle cx="305" cy="275" r="14" fill="#1f2933"/><text x="305" y="280">2</text>
+          <circle cx="210" cy="275" r="14" fill="#1f2933"/><text x="210" y="280">3</text>
+          <circle cx="148" cy="322" r="14" fill="#1f2933"/><text x="148" y="327">4</text>
+          <circle cx="262" cy="222" r="14" fill="#1f2933"/><text x="262" y="227">5</text>
+          <circle cx="354" cy="222" r="14" fill="#1f2933"/><text x="354" y="227">6</text>
+          <circle cx="470" cy="150" r="14" fill="#1f2933"/><text x="470" y="155">7</text>
+          <circle cx="400" cy="100" r="14" fill="#1f2933"/><text x="400" y="105">8</text>
+          <circle cx="282" cy="118" r="14" fill="#1f2933"/><text x="282" y="123">9</text>
+          <circle cx="385" cy="128" r="14" fill="#1f2933"/><text x="385" y="133">10</text>
+        </g>
+      </svg>
+    </figure>
+
+    <ol style="font-size:16px; padding-left:22px;">
+      <li><strong>Bumpers:</strong> Padded guards around the robot. They show the alliance color.</li>
+      <li><strong>Battery:</strong> The power source. It runs everything on the robot.</li>
+      <li><strong>Frame (drive base):</strong> The metal skeleton that holds the parts together.</li>
+      <li><strong>Wheels and motors:</strong> The motors turn the wheels to drive the robot.</li>
+      <li><strong>Controller:</strong> The robot's brain. It runs the team's code. roboRIO through 2026, SystemCore from 2027.</li>
+      <li><strong>Power distribution:</strong> Splits battery power safely to each motor and part.</li>
+      <li><strong>Radio:</strong> Connects the robot to the driver station, wirelessly.</li>
+      <li><strong>Mechanism:</strong> The tool that does the game task, such as an arm, shooter, or climber.</li>
+      <li><strong>Camera:</strong> Lets drivers and software see the field.</li>
+      <li><strong>Robot signal light:</strong> A required light that shows whether the robot is enabled.</li>
+    </ol>
+
+    <h3>Break it open</h3>
+    <p>Now imagine lifting the robot apart, layer by layer. Each layer has a job.</p>
+    <figure>
+      <svg viewBox="0 0 720 440" role="img" aria-label="Exploded view of an FRC robot showing layers from mechanism down to wheels">
+        <!-- Guide lines -->
+        <g stroke="#c7d0d9" stroke-width="2" stroke-dasharray="6 6">
+          <line x1="350" y1="92" x2="350" y2="120"/>
+          <line x1="350" y1="182" x2="350" y2="205"/>
+          <line x1="350" y1="247" x2="350" y2="275"/>
+        </g>
+
+        <!-- Layer 1: Mechanism -->
+        <rect x="240" y="30" width="220" height="62" rx="10" fill="#fff4dc" stroke="#f2b233" stroke-width="3"/>
+        <line x1="275" y1="78" x2="345" y2="50" stroke="#5b6770" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="345" cy="50" r="7" fill="#f2b233"/>
+        <text x="500" y="62" font-size="15" font-weight="700" fill="#1f2933">Mechanism</text>
+        <text x="500" y="80" font-size="13" fill="#5b6770">Does the game task</text>
+
+        <!-- Layer 2: Electronics -->
+        <rect x="200" y="120" width="300" height="62" rx="10" fill="#e8f0fd" stroke="#2f6fd6" stroke-width="3"/>
+        <rect x="216" y="132" width="60" height="38" rx="5" fill="#2e9b57"/>
+        <rect x="290" y="132" width="90" height="38" rx="5" fill="#3b444c"/>
+        <rect x="394" y="132" width="36" height="38" rx="5" fill="#5b6770"/>
+        <text x="550" y="150" font-size="15" font-weight="700" fill="#1f2933">Electronics</text>
+        <text x="550" y="168" font-size="13" fill="#5b6770">Controller, power, radio</text>
+
+        <!-- Layer 3: Battery -->
+        <rect x="280" y="205" width="140" height="42" rx="8" fill="#f2b233" stroke="#c98a0b" stroke-width="3"/>
+        <text x="550" y="222" font-size="15" font-weight="700" fill="#1f2933">Battery</text>
+        <text x="550" y="240" font-size="13" fill="#5b6770">Power for the whole robot</text>
+
+        <!-- Layer 4: Frame and drive base -->
+        <rect x="170" y="275" width="360" height="40" rx="8" fill="#9aa5b1" stroke="#5b6770" stroke-width="3"/>
+        <rect x="186" y="284" width="26" height="22" rx="3" fill="#3b444c"/>
+        <rect x="508" y="284" width="26" height="22" rx="3" fill="#3b444c"/>
+        <text x="550" y="296" font-size="15" font-weight="700" fill="#1f2933">Frame and motors</text>
+        <text x="550" y="312" font-size="13" fill="#5b6770">The base that drives</text>
+
+        <!-- Layer 5: Bumpers -->
+        <rect x="160" y="318" width="380" height="14" rx="6" fill="#2f6fd6"/>
+        <text x="550" y="333" font-size="15" font-weight="700" fill="#1f2933">Bumpers</text>
+
+        <!-- Wheels -->
+        <circle cx="215" cy="380" r="24" fill="#1f2933"/>
+        <circle cx="215" cy="380" r="8" fill="#c7d0d9"/>
+        <circle cx="495" cy="380" r="24" fill="#1f2933"/>
+        <circle cx="495" cy="380" r="8" fill="#c7d0d9"/>
+        <text x="550" y="386" font-size="15" font-weight="700" fill="#1f2933">Wheels</text>
+      </svg>
+      <figcaption>Layers from top to bottom: mechanism, electronics, battery, frame, bumpers, and wheels.</figcaption>
+    </figure>
+
+    <div class="tip"><strong>Remember:</strong> The parts are the same in most robots. How teams arrange them, and which mechanism they choose, is what makes each robot unique.</div>
   </section>
 
   <footer>
