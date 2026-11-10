@@ -129,6 +129,15 @@
   .photos figcaption { font-size: 13px; margin-top: 6px; }
   .credit { color: var(--muted); font-size: 13px; margin-top: 16px; }
 
+  /* Scenario picker */
+  .scene-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 10px 0; }
+  .scene-controls select { font: inherit; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .lang-toggle button { font: inherit; padding: 6px 14px; border: 0; background: #fff; cursor: pointer; }
+  .lang-toggle button.on { background: #2f6fd6; color: #fff; }
+  pre.code { background: #1f2933; color: #e6edf3; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 14px; line-height: 1.5; margin: 10px 0; }
+  pre.code code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; }
+
   /* Acronym tooltips */
   .acro { text-decoration: underline dotted #5b6770; text-underline-offset: 3px; cursor: help; }
   .acro-tip { position: absolute; z-index: 50; max-width: 300px; background: #1f2933; color: #fff; padding: 8px 11px; border-radius: 8px; font-size: 14px; line-height: 1.4; box-shadow: 0 6px 18px rgba(0,0,0,0.25); pointer-events: none; }
@@ -857,6 +866,44 @@
       <li>The code sends that speed to motor controller 5 over the <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> bus.</li>
       <li>The wheel turns. Its encoder reports how far it has turned, and the code checks that the speed matches the request.</li>
     </ol>
+
+    <h3>Tools for coding, debugging, and testing</h3>
+    <p>Teams use a few tools at each stage. Most are free.</p>
+    <div class="terms">
+      <div class="term"><strong>Coding: VS Code with the WPILib extension</strong><span>The editor where students write and build robot code for Java or Python.</span></div>
+      <div class="term"><strong>Coding: Gradle (Java)</strong><span>Builds the Java robot code and downloads the libraries it needs.</span></div>
+      <div class="term"><strong>Coding: RobotPy (Python)</strong><span>Lets Python code run on the controller.</span></div>
+      <div class="term"><strong>Coding: Git and GitHub</strong><span>Save every version of the code and share it with the team.</span></div>
+      <div class="term"><strong>Debugging: Driver Station console</strong><span>Shows messages and errors from the robot while it runs.</span></div>
+      <div class="term"><strong>Debugging: print statements</strong><span>Print a value to the console to see what the code is doing. Use print in Python or System.out.println in Java.</span></div>
+      <div class="term"><strong>Debugging: AdvantageScope</strong><span>Opens the robot's log files and graphs values over time, so you can see what happened in a match.</span></div>
+      <div class="term"><strong>Debugging: Shuffleboard</strong><span>A live dashboard that shows values from the robot as they change.</span></div>
+      <div class="term"><strong>Testing: WPILib simulator</strong><span>Runs the code on a laptop with virtual parts, so you can test before the robot is built.</span></div>
+      <div class="term"><strong>Testing: unit tests</strong><span>Small automatic checks for one piece of code. JUnit is used for Java, and pytest with pyfrc for Python.</span></div>
+      <div class="term"><strong>Testing: bench testing</strong><span>Test the real robot with the wheels off the floor, one motor at a time, starting at low speed.</span></div>
+    </div>
+
+    <h3>Try a scenario</h3>
+    <p>Pick a scenario and a language. Each comment explains one line of code. Scenarios 1 and 2 are simple. Scenarios 3 to 5 are complex.</p>
+    <div class="scene-controls">
+      <label>Scenario
+        <select id="sceneSelect">
+          <option value="0">Simple: drive with the stick</option>
+          <option value="1">Simple: a button runs the intake</option>
+          <option value="2">Complex: timed autonomous drive</option>
+          <option value="3">Complex: drive a set distance</option>
+          <option value="4">Complex: stop on high current</option>
+        </select>
+      </label>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-lang="java" class="on">Java</button>
+        <button type="button" data-lang="python">Python</button>
+      </div>
+    </div>
+    <p class="tag" id="sceneLevel"></p>
+    <p id="sceneWhat"></p>
+    <pre class="code"><code id="sceneCode"></code></pre>
+    <p id="sceneTeaches"></p>
 
     <h3>Testing without the robot</h3>
     <p>WPILib includes a simulator, so students can run robot code on a laptop, watch virtual parts move, and find bugs before the robot is built. Teams still test on the real robot, because a simulator can't copy every detail.</p>
@@ -1647,6 +1694,262 @@
     el.addEventListener('focus', () => show(el));
     el.addEventListener('blur', hide);
   });
+})();
+</script>
+<script>
+(function () {
+  const SCENES = [
+    {
+      level: 'Simple',
+      title: 'Drive with the stick',
+      what: 'The motor follows the driver\'s joystick. Push the stick forward, and the motor runs forward.',
+      teaches: 'Reading one joystick axis and sending that value to a motor. The loop runs in teleop, so the motor follows the stick the whole match.',
+      java: `import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+
+public class Robot extends TimedRobot {
+  // The driver's joystick, plugged into USB port 0 on the Driver Station laptop
+  private final Joystick driver = new Joystick(0);
+  // One motor controller, wired to port 0 on the controller
+  private final PWMSparkMax motor = new PWMSparkMax(0);
+
+  @Override
+  public void teleopPeriodic() {
+    // Read the stick. Axis 1 is forward and back. Its value runs from -1.0 to +1.0
+    // The minus sign flips it, so pushing the stick forward gives a positive speed
+    double speed = -driver.getRawAxis(1);
+
+    // Send that speed to the motor controller
+    motor.set(speed);
+  }
+}`,
+      python: `import wpilib
+
+class MyRobot(wpilib.TimedRobot):
+    def robotInit(self):
+        # Runs once when the robot turns on
+        self.driver = wpilib.Joystick(0)     # driver's joystick on USB port 0
+        self.motor = wpilib.PWMSparkMax(0)   # one motor controller on port 0
+
+    def teleopPeriodic(self):
+        # Runs about every 20 milliseconds during teleop
+        # Axis 1 is forward and back, from -1.0 to +1.0
+        # The minus sign flips it, so pushing forward gives a positive speed
+        speed = -self.driver.getRawAxis(1)
+
+        # Send that speed to the motor controller
+        self.motor.set(speed)`
+    },
+    {
+      level: 'Simple',
+      title: 'A button runs the intake',
+      what: 'While the driver holds button 1, the intake runs at 80 percent power. When the button is released, the intake stops.',
+      teaches: 'Using a button as a switch. A button is either pressed (true) or not (false), and the code turns that into a motor speed.',
+      java: `import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+
+public class Robot extends TimedRobot {
+  private final Joystick driver = new Joystick(0);       // driver's joystick on USB port 0
+  private final PWMSparkMax intake = new PWMSparkMax(1); // intake motor on port 1
+
+  @Override
+  public void teleopPeriodic() {
+    // Button 1 is the trigger on most sticks. It is true while it is held down
+    boolean pressed = driver.getRawButton(1);
+
+    // Run the intake at 80 percent power while the button is held, otherwise stop
+    intake.set(pressed ? 0.8 : 0.0);
+  }
+}`,
+      python: `import wpilib
+
+class MyRobot(wpilib.TimedRobot):
+    def robotInit(self):
+        self.driver = wpilib.Joystick(0)     # driver's joystick on USB port 0
+        self.intake = wpilib.PWMSparkMax(1)  # intake motor on port 1
+
+    def teleopPeriodic(self):
+        # Button 1 is the trigger on most sticks. It is True while held down
+        pressed = self.driver.getRawButton(1)
+
+        # Run the intake at 80 percent power while held, otherwise stop
+        self.intake.set(0.8 if pressed else 0.0)`
+    },
+    {
+      level: 'Complex',
+      title: 'Timed autonomous drive',
+      what: 'During the autonomous period, the robot drives forward at half power for 2 seconds, then stops. It runs without the driver.',
+      teaches: 'Autonomous mode, the built-in timer, and running code in a fixed order. The timer is reset when autonomous starts, so the 2 seconds always begin from zero.',
+      java: `import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+
+public class Robot extends TimedRobot {
+  private final PWMSparkMax motor = new PWMSparkMax(0); // drive motor on port 0
+  private final Timer timer = new Timer();              // a stopwatch
+
+  @Override
+  public void autonomousInit() {
+    // Runs once when autonomous starts. Reset the stopwatch to zero
+    timer.restart();
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    // Runs repeatedly during autonomous
+    if (timer.get() < 2.0) {
+      motor.set(0.5);   // under 2 seconds: drive forward at half power
+    } else {
+      motor.set(0.0);   // after 2 seconds: stop
+    }
+  }
+}`,
+      python: `import wpilib
+
+class MyRobot(wpilib.TimedRobot):
+    def robotInit(self):
+        self.motor = wpilib.PWMSparkMax(0)  # drive motor on port 0
+        self.timer = wpilib.Timer()         # a stopwatch
+
+    def autonomousInit(self):
+        # Runs once when autonomous starts. Reset the stopwatch to zero
+        self.timer.restart()
+
+    def autonomousPeriodic(self):
+        # Runs repeatedly during autonomous
+        if self.timer.get() < 2.0:
+            self.motor.set(0.5)   # under 2 seconds: drive forward at half power
+        else:
+            self.motor.set(0.0)   # after 2 seconds: stop`
+    },
+    {
+      level: 'Complex',
+      title: 'Drive a set distance',
+      what: 'The robot drives until its encoder shows it has moved 1000 counts. It slows down as it nears the goal, so it stops smoothly instead of overshooting.',
+      teaches: 'Feedback control. The code measures the error (how far is left to go) and sets the speed from it. This is proportional control: the bigger the error, the harder the push.',
+      java: `import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+
+public class Robot extends TimedRobot {
+  private static final double TARGET = 1000.0; // the goal, in encoder counts
+  private static final double KP = 0.0005;     // how hard to push per count of error
+
+  private final PWMSparkMax motor = new PWMSparkMax(0);
+  private final Encoder encoder = new Encoder(0, 1); // encoder wired to digital inputs 0 and 1
+
+  @Override
+  public void autonomousInit() {
+    encoder.reset(); // call the current position zero
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    double error = TARGET - encoder.get();    // how far we still have to go
+    double speed = KP * error;                // farther away means faster
+    speed = MathUtil.clamp(speed, -0.5, 0.5); // never more than half power
+    motor.set(speed);
+  }
+}`,
+      python: `import wpilib
+
+class MyRobot(wpilib.TimedRobot):
+    TARGET = 1000.0    # the goal, in encoder counts
+    KP = 0.0005        # how hard to push per count of error
+
+    def robotInit(self):
+        self.motor = wpilib.PWMSparkMax(0)
+        self.encoder = wpilib.Encoder(0, 1)   # encoder wired to digital inputs 0 and 1
+
+    def autonomousInit(self):
+        self.encoder.reset()                  # call the current position zero
+
+    def autonomousPeriodic(self):
+        error = self.TARGET - self.encoder.get()   # how far we still have to go
+        speed = self.KP * error                    # farther away means faster
+        speed = max(-0.5, min(0.5, speed))         # never more than half power
+        self.motor.set(speed)`
+    },
+    {
+      level: 'Complex',
+      title: 'Stop on high current',
+      what: 'The power hub reports how much current the motor draws. If it goes over 40 amps, the code stops the motor. Otherwise the motor follows the stick.',
+      teaches: 'Using a sensor to protect the robot. A stuck or overloaded motor draws a lot of current, so the code checks it every loop and stops the motor before something overheats or a breaker trips.',
+      java: `import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+
+public class Robot extends TimedRobot {
+  private static final int MOTOR_CHANNEL = 0;  // the hub breaker channel this motor is wired to
+  private static final double MAX_AMPS = 40.0; // stop if the motor pulls more than this
+
+  private final Joystick driver = new Joystick(0);
+  private final PWMSparkMax motor = new PWMSparkMax(0);
+  private final PowerDistribution hub = new PowerDistribution(0, ModuleType.kRev); // the power hub
+
+  @Override
+  public void teleopPeriodic() {
+    double amps = hub.getCurrent(MOTOR_CHANNEL); // how much current this motor is drawing
+
+    if (amps > MAX_AMPS) {
+      motor.set(0.0);                     // too much current: stop
+    } else {
+      motor.set(-driver.getRawAxis(1));   // safe: follow the stick
+    }
+  }
+}`,
+      python: `import wpilib
+
+class MyRobot(wpilib.TimedRobot):
+    MOTOR_CHANNEL = 0    # the hub breaker channel this motor is wired to
+    MAX_AMPS = 40.0      # stop if the motor pulls more than this
+
+    def robotInit(self):
+        self.driver = wpilib.Joystick(0)
+        self.motor = wpilib.PWMSparkMax(0)
+        # The power hub, using the REV module type
+        self.hub = wpilib.PowerDistribution(0, wpilib.PowerDistribution.ModuleType.kRev)
+
+    def teleopPeriodic(self):
+        amps = self.hub.getCurrent(self.MOTOR_CHANNEL)   # current this motor draws
+
+        if amps > self.MAX_AMPS:
+            self.motor.set(0.0)                          # too much current: stop
+        else:
+            self.motor.set(-self.driver.getRawAxis(1))   # safe: follow the stick`
+    }
+  ];
+
+  const select = document.getElementById('sceneSelect');
+  const codeEl = document.getElementById('sceneCode');
+  const levelEl = document.getElementById('sceneLevel');
+  const whatEl = document.getElementById('sceneWhat');
+  const teachEl = document.getElementById('sceneTeaches');
+  let lang = 'java';
+
+  function render() {
+    const s = SCENES[Number(select.value)];
+    levelEl.textContent = s.level + ': ' + s.title;
+    whatEl.textContent = s.what;
+    codeEl.textContent = s[lang];
+    teachEl.textContent = 'What this teaches: ' + s.teaches +
+      ' The PWM motor controller is used here to keep the example short. Motors on the CAN bus use their vendor\'s library instead.';
+  }
+
+  select.addEventListener('change', render);
+  document.querySelectorAll('[data-lang]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      lang = btn.dataset.lang;
+      document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b === btn));
+      render();
+    });
+  });
+  render();
 })();
 </script>
 </body>
