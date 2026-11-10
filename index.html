@@ -131,10 +131,8 @@
 
   /* Interactive robot simulation */
   .sim { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; margin-top: 12px; }
-  .sim-view svg { width: 100%; height: auto; display: block; background: #f3f6f9; border-radius: 12px; }
-  .sim-view g.part { cursor: pointer; }
-  .sim-view g.part:hover { opacity: 0.9; }
-  .sim-view g.part.sel * { stroke: #f2b233 !important; stroke-width: 5 !important; }
+  .sim-view canvas { width: 100%; height: auto; display: block; background: #f3f6f9; border-radius: 12px; cursor: grab; touch-action: none; }
+  .sim-view canvas:active { cursor: grabbing; }
   .sim-part {
     display: flex; align-items: center; gap: 10px;
     padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
@@ -859,40 +857,19 @@
       <li><strong>Electronics last:</strong> install the battery and controller, then route and label the wires.</li>
     </ol>
 
-    <h3>Interactive: take the robot apart</h3>
-    <p>Click a part in the drawing or in the list to select it. Remove it to see what is underneath, then add it back.</p>
+    <h3>Interactive: take the robot apart in 3D</h3>
+    <p>Drag the model to rotate it and see every side, or pick a preset view. Click a part to select it. Remove it to see what it was covering, then add it back.</p>
     <div class="sim">
       <div class="sim-view">
-        <svg id="simSvg" viewBox="0 0 720 400" role="img" aria-label="Side view of a robot with removable parts">
-          <line x1="40" y1="372" x2="680" y2="372" stroke="#c7d0d9" stroke-width="3"/>
-          <!-- Drawn bottom to top -->
-          <g class="part" data-id="drivetrain">
-            <rect x="165" y="296" width="60" height="34" rx="4" fill="#5b6770"/>
-            <rect x="495" y="296" width="60" height="34" rx="4" fill="#5b6770"/>
-            <rect x="200" y="326" width="320" height="8" fill="#3b444c"/>
-            <circle cx="200" cy="344" r="28" fill="#1f2933"/><circle cx="200" cy="344" r="9" fill="#c7d0d9"/>
-            <circle cx="520" cy="344" r="28" fill="#1f2933"/><circle cx="520" cy="344" r="9" fill="#c7d0d9"/>
-          </g>
-          <g class="part" data-id="frame">
-            <rect x="170" y="220" width="390" height="90" rx="8" fill="#9aa5b1" stroke="#5b6770" stroke-width="3"/>
-          </g>
-          <g class="part" data-id="bumpers">
-            <rect x="160" y="292" width="410" height="14" rx="6" fill="#2f6fd6"/>
-          </g>
-          <g class="part" data-id="battery">
-            <rect x="260" y="238" width="110" height="44" rx="5" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
-          </g>
-          <g class="part" data-id="electronics">
-            <rect x="390" y="178" width="140" height="42" rx="6" fill="#3b444c"/>
-            <rect x="400" y="186" width="52" height="26" rx="4" fill="#2e9b57"/>
-            <rect x="460" y="186" width="62" height="26" rx="4" fill="#5b6770"/>
-          </g>
-          <g class="part" data-id="mechanism">
-            <line x1="420" y1="178" x2="560" y2="70" stroke="#5b6770" stroke-width="12" stroke-linecap="round"/>
-            <path d="M548,58 l22,-4 l-8,20" fill="none" stroke="#c98a0b" stroke-width="5" stroke-linecap="round"/>
-            <circle cx="420" cy="178" r="9" fill="#f2b233"/>
-          </g>
-        </svg>
+        <canvas id="simCanvas" width="720" height="480" role="img" aria-label="3D model of a robot with removable parts"></canvas>
+        <div class="sim-actions">
+          <button type="button" data-view="iso">3/4 view</button>
+          <button type="button" data-view="top">Top</button>
+          <button type="button" data-view="front">Front</button>
+          <button type="button" data-view="side">Side</button>
+          <button type="button" data-view="bottom">Bottom</button>
+          <button type="button" id="btnSpin">Spin</button>
+        </div>
       </div>
       <div class="sim-panel">
         <div id="simList"></div>
@@ -904,7 +881,7 @@
         <div class="sim-info" id="simInfo"><p>Select a part to see what it does.</p></div>
       </div>
     </div>
-    <p class="credit">Parts are stacked from outside to inside: mechanism, electronics, battery, bumpers, frame, then drivetrain. "Directly underneath" shows the next part down.</p>
+    <p class="credit">This is a simplified model we drew to show a typical swerve-drive layout. It is not copied from any team's CAD or photo. Sizes are approximate.</p>
 
     <h3>Real robot CAD to explore</h3>
     <p>Some teams publish their robot CAD so you can open the models and see how the parts fit. These pages link to public models:</p>
@@ -940,31 +917,191 @@
 </script>
 <script>
 (function () {
-  // Stack order: top (outermost) to bottom (innermost)
+  // ---------- Parts (list order) ----------
   const PARTS = [
-    { id: 'mechanism', name: 'Mechanism', desc: 'The tool that does the game task, such as an arm, shooter, or climber. It changes every year.' },
-    { id: 'electronics', name: 'Electronics', desc: 'Controller, power distribution, and radio. Usually mounted on top of the frame.' },
+    { id: 'mechanism', name: 'Mechanism', desc: 'The tool that does the game task, such as an elevator, arm, intake, or shooter. It changes every year.' },
+    { id: 'electronics', name: 'Electronics', desc: 'Controller, power distribution, and radio. Mounted on the frame, away from the mechanism.' },
     { id: 'battery', name: 'Battery', desc: 'Powers the whole robot. Usually sits low and inside the frame.' },
     { id: 'bumpers', name: 'Bumpers', desc: 'Padded guards around the frame. They show the alliance color.' },
     { id: 'frame', name: 'Frame', desc: 'The skeleton. It holds the parts and sets the frame perimeter.' },
-    { id: 'drivetrain', name: 'Drivetrain', desc: 'Motors, gearboxes, and wheels that drive the robot.' }
+    { id: 'drivetrain', name: 'Drivetrain', desc: 'Four swerve modules. Each one has a steer motor, a wheel, and a mounting plate.' }
   ];
 
+  const COLORS = {
+    alu: '#c9d2dc', alu2: '#9aa5b1', alu3: '#7d8893', blue: '#2f6fd6', batt: '#e8ecf0',
+    black: '#2b333b', motor: '#1f2933', green: '#2e9b57', red: '#d7372f', tire: '#2a2f35',
+    hub: '#9aa5b1', panel: '#3b444c'
+  };
+
+  // ---------- Geometry (units are inches, x = left/right, y = front/back, z = up) ----------
+  const FACES = [];
+  const norm = v => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const LIGHT = norm([0.35, -0.55, 0.75]);
+
+  function addFace(part, color, pts, center) {
+    const cen = [0, 1, 2].map(k => pts.reduce((s, p) => s + p[k], 0) / pts.length);
+    let n = norm(cross(sub(pts[1], pts[0]), sub(pts[2], pts[0])));
+    if (dot(n, sub(cen, center)) < 0) n = n.map(v => -v); // make normal point outward
+    const shade = 0.55 + 0.45 * Math.max(0, dot(n, LIGHT));
+    FACES.push({ part, color, pts, n, shade });
+  }
+
+  function box(part, color, x0, x1, y0, y1, z0, z1) {
+    const c = [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2];
+    const v = [
+      [x0, y0, z0], [x1, y0, z0], [x1, y1, z0], [x0, y1, z0],
+      [x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]
+    ];
+    [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [2, 3, 7, 6], [1, 2, 6, 5], [0, 3, 7, 4]]
+      .forEach(q => addFace(part, color, q.map(i => v[i]), c));
+  }
+
+  function cyl(part, color, axis, c, r, len, N) {
+    N = N || 16;
+    const A = axis === 'x' ? [1, 0, 0] : [0, 0, 1];
+    const U = axis === 'x' ? [0, 1, 0] : [1, 0, 0];
+    const V = axis === 'x' ? [0, 0, 1] : [0, 1, 0];
+    const P = (t, s) => [0, 1, 2].map(k => c[k] + A[k] * s + (U[k] * Math.cos(t) + V[k] * Math.sin(t)) * r);
+    const h = len / 2;
+    for (let i = 0; i < N; i++) {
+      const t0 = 2 * Math.PI * i / N, t1 = 2 * Math.PI * (i + 1) / N;
+      addFace(part, color, [P(t0, -h), P(t1, -h), P(t1, h), P(t0, h)], c);
+    }
+    const ring = s => Array.from({ length: N }, (_, i) => P(2 * Math.PI * i / N, s));
+    addFace(part, color, ring(h), c);
+    addFace(part, color, ring(-h), c);
+  }
+
+  // Frame: aluminum rails and crossmembers, 28 x 28 inside the frame perimeter
+  box('frame', COLORS.alu, -14, 14, -14, -13, 2, 4);
+  box('frame', COLORS.alu, -14, 14, 13, 14, 2, 4);
+  box('frame', COLORS.alu, -14, -13, -14, 14, 2, 4);
+  box('frame', COLORS.alu, 13, 14, -14, 14, 2, 4);
+  [-8, 7].forEach(y => box('frame', COLORS.alu2, -13, 13, y, y + 1, 2.5, 3.5));
+  [-9, 8].forEach(x => box('frame', COLORS.alu2, x, x + 1, -13, 13, 2.5, 3.5));
+
+  // Bumpers: alliance-colored ring outside the frame
+  box('bumpers', COLORS.blue, -16, 16, -16, -14, 0.5, 2.5);
+  box('bumpers', COLORS.blue, -16, 16, 14, 16, 0.5, 2.5);
+  box('bumpers', COLORS.blue, -16, -14, -14, 14, 0.5, 2.5);
+  box('bumpers', COLORS.blue, 14, 16, -14, 14, 0.5, 2.5);
+
+  // Battery
+  box('battery', COLORS.batt, -7, 0, -2, 2.5, 4, 6.5);
+
+  // Electronics
+  box('electronics', COLORS.panel, 1, 6, -4, 1, 4, 5.2);          // power distribution hub
+  box('electronics', COLORS.green, -5, 4, 5.5, 10, 4, 4.4);       // controller board
+  box('electronics', COLORS.black, -3.5, 1, 6.5, 9, 4.4, 5.4);    // controller
+  box('electronics', COLORS.black, -12, -8, -8, -4.5, 4, 5.5);    // radio
+
+  // Mechanism: an elevator with a red roller
+  box('mechanism', COLORS.alu2, 8, 12, -2, 2, 4, 5.5);            // base
+  box('mechanism', COLORS.alu, 8.5, 9.5, -1.5, -0.5, 5.5, 18);    // left upright
+  box('mechanism', COLORS.alu, 10.5, 11.5, -1.5, -0.5, 5.5, 18);  // right upright
+  box('mechanism', COLORS.black, 8, 12, -2, 2, 14, 15.5);         // carriage
+  cyl('mechanism', COLORS.red, 'x', [10, 0, 11], 1.0, 4.0, 14);   // roller
+
+  // Drivetrain: four swerve modules at the corners
+  [[-11, -11], [11, -11], [-11, 11], [11, 11]].forEach(([mx, my]) => {
+    box('drivetrain', COLORS.alu3 || COLORS.alu2, mx - 2.3, mx + 2.3, my - 2.3, my + 2.3, 1.4, 2.0); // mounting plate
+    box('drivetrain', COLORS.black, mx - 1.7, mx + 1.7, my - 1.7, my + 1.7, 2.0, 4.6);              // module housing
+    cyl('drivetrain', COLORS.motor, 'z', [mx, my, 5.6], 1.0, 1.8);                                  // steer motor
+    cyl('drivetrain', COLORS.tire, 'x', [mx, my, 2.0], 2.0, 1.4, 20);                               // wheel
+    cyl('drivetrain', COLORS.hub, 'x', [mx, my, 2.0], 0.9, 1.6, 12);                                // wheel hub
+  });
+
+  // ---------- State ----------
   const hidden = new Set();
   let selected = null;
+  let yaw = -40 * Math.PI / 180;     // rotation around the vertical axis
+  let pitch = 30 * Math.PI / 180;    // tilt: 0 = side, 90 = top, -90 = bottom
+  let drawn = [];
+  let spinning = false;
+  let rafId = 0;
+
+  const VIEWS = { iso: [-40, 30], top: [0, 90], bottom: [0, -90], front: [0, 0], side: [90, 0] };
+
+  const canvas = document.getElementById('simCanvas');
+  const ctx = canvas.getContext('2d');
   const list = document.getElementById('simList');
   const info = document.getElementById('simInfo');
-  const groupEl = id => document.querySelector('#simSvg g.part[data-id="' + id + '"]');
+  const spinBtn = document.getElementById('btnSpin');
+  const W = canvas.width, H = canvas.height;
+  const SCALE = 7.5, OX = W / 2, OY = H / 2 + 60;
 
+  // Rotate a point (or direction) into view space: xv = screen right, dv = depth (smaller = nearer viewer), zv = screen up
+  function rot(p, a, b) {
+    const x1 = p[0] * Math.cos(a) - p[1] * Math.sin(a);
+    const y1 = p[0] * Math.sin(a) + p[1] * Math.cos(a);
+    const z1 = p[2];
+    return [x1, y1 * Math.cos(b) - z1 * Math.sin(b), y1 * Math.sin(b) + z1 * Math.cos(b)];
+  }
+
+  function shade(hex, k) {
+    const n = parseInt(hex.slice(1), 16);
+    const ch = s => Math.min(255, Math.round(((n >> s) & 255) * k));
+    return 'rgb(' + ch(16) + ',' + ch(8) + ',' + ch(0) + ')';
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const items = [];
+    for (const f of FACES) {
+      if (hidden.has(f.part)) continue;
+      if (rot(f.n, yaw, pitch)[1] >= 0) continue;          // facing away from the viewer
+      const pv = f.pts.map(p => rot(p, yaw, pitch));
+      const depth = pv.reduce((s, p) => s + p[1], 0) / pv.length;
+      items.push({ f, pv, depth });
+    }
+    items.sort((a, b) => b.depth - a.depth);                // draw far faces first
+    for (const it of items) {
+      ctx.beginPath();
+      it.pv.forEach((p, i) => {
+        const x = OX + p[0] * SCALE, y = OY - p[2] * SCALE;
+        if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+      });
+      ctx.closePath();
+      const isSel = it.f.part === selected;
+      ctx.fillStyle = shade(it.f.color, it.f.shade);
+      ctx.fill();
+      ctx.strokeStyle = isSel ? '#f2b233' : 'rgba(20,30,40,0.35)';
+      ctx.lineWidth = isSel ? 1.6 : 0.5;
+      ctx.stroke();
+    }
+    drawn = items;
+  }
+
+  function inside(poly, x, y) {
+    let c = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+      if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  }
+
+  // Returns the nearest visible part under a canvas point
+  function pick(x, y) {
+    for (let k = drawn.length - 1; k >= 0; k--) {
+      const poly = drawn[k].pv.map(p => [OX + p[0] * SCALE, OY - p[2] * SCALE]);
+      if (inside(poly, x, y)) return drawn[k].f.part;
+    }
+    return null;
+  }
+
+  function toCanvas(e) {
+    const r = canvas.getBoundingClientRect();
+    return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height];
+  }
+
+  // ---------- Parts list and info ----------
   function select(id) { selected = id; render(); }
 
   function render() {
-    PARTS.forEach(p => {
-      const g = groupEl(p.id);
-      g.style.display = hidden.has(p.id) ? 'none' : '';
-      g.classList.toggle('sel', selected === p.id);
-    });
-
     list.innerHTML = '';
     PARTS.forEach(p => {
       const row = document.createElement('div');
@@ -984,24 +1121,67 @@
       list.appendChild(row);
     });
 
-    if (!selected) {
-      info.innerHTML = '<p>Select a part to see what it does.</p>';
-      return;
-    }
-    const i = PARTS.findIndex(p => p.id === selected);
-    const p = PARTS[i];
-    const below = PARTS[i + 1];
-    const under = below
-      ? below.name + (hidden.has(below.id) ? ' (removed)' : '')
-      : 'nothing. This is the bottom layer.';
-    info.innerHTML =
-      '<h4>' + p.name + '</h4>' +
-      '<p>' + p.desc + '</p>' +
-      '<p><strong>Status:</strong> ' + (hidden.has(p.id) ? 'removed' : 'in place') + '.</p>' +
-      '<p><strong>Directly underneath:</strong> ' + under + '</p>';
+    const p = PARTS.find(x => x.id === selected);
+    info.innerHTML = p
+      ? '<h4>' + p.name + '</h4>' +
+        '<p>' + p.desc + '</p>' +
+        '<p><strong>Status:</strong> ' + (hidden.has(p.id) ? 'removed' : 'in place') + '.</p>' +
+        '<p>Remove it, then drag the model to see what it was covering.</p>'
+      : '<p>Select a part to see what it does. Drag the model to rotate it.</p>';
+    draw();
   }
 
-  PARTS.forEach(p => groupEl(p.id).addEventListener('click', e => { e.stopPropagation(); select(p.id); }));
+  // ---------- Mouse and touch ----------
+  let drag = null;
+  canvas.addEventListener('pointerdown', e => {
+    drag = { x: e.clientX, y: e.clientY, moved: false };
+    canvas.setPointerCapture(e.pointerId);
+    stopSpin();
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+    if (!drag.moved) return;
+    yaw += dx * 0.01;
+    pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch + dy * 0.01));
+    drag.x = e.clientX; drag.y = e.clientY;
+    draw();
+  });
+  canvas.addEventListener('pointerup', e => {
+    if (drag && !drag.moved) {
+      const [x, y] = toCanvas(e);
+      const id = pick(x, y);
+      if (id) select(id); else { selected = null; render(); }
+    }
+    drag = null;
+  });
+
+  // ---------- Preset views and spin ----------
+  document.querySelectorAll('[data-view]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const [a, b] = VIEWS[btn.dataset.view];
+      yaw = a * Math.PI / 180;
+      pitch = b * Math.PI / 180;
+      draw();
+    });
+  });
+
+  function spinStep() { yaw += 0.01; draw(); rafId = requestAnimationFrame(spinStep); }
+  function stopSpin() {
+    if (!spinning) return;
+    spinning = false;
+    cancelAnimationFrame(rafId);
+    spinBtn.textContent = 'Spin';
+  }
+  spinBtn.addEventListener('click', () => {
+    if (spinning) { stopSpin(); return; }
+    spinning = true;
+    spinBtn.textContent = 'Stop spin';
+    spinStep();
+  });
+
+  // ---------- Buttons ----------
   document.getElementById('btnRemove').onclick = () => { if (selected) { hidden.add(selected); render(); } };
   document.getElementById('btnAdd').onclick = () => { if (selected) { hidden.delete(selected); render(); } };
   document.getElementById('btnReset').onclick = () => { hidden.clear(); render(); };
