@@ -129,6 +129,11 @@
   .photos figcaption { font-size: 13px; margin-top: 6px; }
   .credit { color: var(--muted); font-size: 13px; margin-top: 16px; }
 
+  /* Tools table */
+  .tools-table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 10px 0 16px; }
+  .tools-table th, .tools-table td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  .tools-table thead th { background: #f3f6f9; font-weight: 700; }
+
   /* Scenario picker */
   .scene-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 10px 0; }
   .scene-controls select { font: inherit; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); }
@@ -848,7 +853,72 @@
       <div class="term"><strong>Device setup</strong><span>Each <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> device gets an ID and settings from the vendor's configuration tool. The code uses that ID to find the device.</span></div>
     </div>
 
+    <figure>
+      <svg viewBox="0 0 720 300" role="img" aria-label="Software layers from top to bottom: robot code, WPILib and vendor libraries, controller system, and hardware">
+        <rect x="30" y="20" width="430" height="56" rx="8" fill="#2f6fd6"/>
+        <text x="245" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">Robot code</text>
+        <text x="245" y="64" text-anchor="middle" font-size="12" fill="#ffffff">Java or Python, written by students</text>
+
+        <rect x="30" y="86" width="430" height="56" rx="8" fill="#2a9d8f"/>
+        <text x="245" y="112" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">WPILib and vendor libraries</text>
+        <text x="245" y="130" text-anchor="middle" font-size="12" fill="#ffffff">ready-made code for motors, sensors, and driving</text>
+
+        <rect x="30" y="152" width="430" height="56" rx="8" fill="#2a4d8a"/>
+        <text x="245" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">Controller system</text>
+        <text x="245" y="196" text-anchor="middle" font-size="12" fill="#ffffff">the operating system and firmware that run the code</text>
+
+        <rect x="30" y="218" width="430" height="56" rx="8" fill="#3b444c"/>
+        <text x="245" y="244" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">Hardware</text>
+        <text x="245" y="262" text-anchor="middle" font-size="12" fill="#ffffff">controller, power hub, motor controllers, motors, sensors</text>
+
+        <!-- Side notes -->
+        <g font-size="13" fill="#1f2933">
+          <text x="490" y="46">You write this</text>
+          <text x="490" y="112">Ready-made, from WPILib and vendors</text>
+          <text x="490" y="178">Runs the code</text>
+          <text x="490" y="244">The parts on the robot</text>
+        </g>
+      </svg>
+      <figcaption>The layers from top to bottom. Each layer depends on the one below it. The Driver Station laptop sits outside the robot and sends commands in over the radio.</figcaption>
+    </figure>
+
     <h3>How it works</h3>
+    <figure>
+      <svg viewBox="0 0 720 330" role="img" aria-label="A loop of five steps: input, read, decide, command, feedback. Feedback leads back to read, and the loop repeats about every 20 milliseconds">
+        <!-- Connecting lines between the steps -->
+        <g stroke="#c7d0d9" stroke-width="6" fill="none">
+          <line x1="360" y1="50" x2="469" y2="130"/>
+          <line x1="469" y1="130" x2="428" y2="258"/>
+          <line x1="428" y1="258" x2="292" y2="258"/>
+          <line x1="292" y1="258" x2="251" y2="130"/>
+          <line x1="251" y1="130" x2="360" y2="50"/>
+        </g>
+        <!-- Steps -->
+        <circle cx="360" cy="50" r="40" fill="#2f6fd6"/>
+        <text x="360" y="56" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">1. Input</text>
+        <circle cx="469" cy="130" r="40" fill="#2a9d8f"/>
+        <text x="469" y="136" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">2. Read</text>
+        <circle cx="428" cy="258" r="40" fill="#9b5de5"/>
+        <text x="428" y="264" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">3. Decide</text>
+        <circle cx="292" cy="258" r="40" fill="#f2b233"/>
+        <text x="292" y="264" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2933">4. Command</text>
+        <circle cx="251" cy="130" r="40" fill="#2e9b57"/>
+        <text x="251" y="136" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">5. Feedback</text>
+        <!-- Center note -->
+        <text x="360" y="160" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2933">The loop repeats</text>
+        <text x="360" y="180" text-anchor="middle" font-size="13" fill="#1f2933">about every 20 milliseconds</text>
+        <text x="360" y="200" text-anchor="middle" font-size="13" fill="#1f2933">Disabled: no motor commands</text>
+        <!-- Side labels -->
+        <g font-size="13" fill="#1f2933">
+          <text x="560" y="54">Driver moves a stick</text>
+          <text x="560" y="134">Sensors are read</text>
+          <text x="560" y="262">Each motor gets a speed</text>
+          <text x="20" y="262">Commands go out</text>
+          <text x="20" y="134">Sensor data comes back</text>
+        </g>
+      </svg>
+      <figcaption>The robot runs this loop over and over. Each pass reads the latest input and sensor values, makes a decision, and sends commands.</figcaption>
+    </figure>
     <ol>
       <li><strong>Input.</strong> The driver moves a joystick or presses a button. The Driver Station sends that input to the robot over the radio, many times a second.</li>
       <li><strong>Read.</strong> The robot code reads the input and the sensors. Encoders count wheel turns, and a gyro measures how the robot is turning.</li>
@@ -869,19 +939,24 @@
 
     <h3>Tools for coding, debugging, and testing</h3>
     <p>Teams use a few tools at each stage. Most are free.</p>
-    <div class="terms">
-      <div class="term"><strong>Coding: VS Code with the WPILib extension</strong><span>The editor where students write and build robot code for Java or Python.</span></div>
-      <div class="term"><strong>Coding: Gradle (Java)</strong><span>Builds the Java robot code and downloads the libraries it needs.</span></div>
-      <div class="term"><strong>Coding: RobotPy (Python)</strong><span>Lets Python code run on the controller.</span></div>
-      <div class="term"><strong>Coding: Git and GitHub</strong><span>Save every version of the code and share it with the team.</span></div>
-      <div class="term"><strong>Debugging: Driver Station console</strong><span>Shows messages and errors from the robot while it runs.</span></div>
-      <div class="term"><strong>Debugging: print statements</strong><span>Print a value to the console to see what the code is doing. Use print in Python or System.out.println in Java.</span></div>
-      <div class="term"><strong>Debugging: AdvantageScope</strong><span>Opens the robot's log files and graphs values over time, so you can see what happened in a match.</span></div>
-      <div class="term"><strong>Debugging: Shuffleboard</strong><span>A live dashboard that shows values from the robot as they change.</span></div>
-      <div class="term"><strong>Testing: WPILib simulator</strong><span>Runs the code on a laptop with virtual parts, so you can test before the robot is built.</span></div>
-      <div class="term"><strong>Testing: unit tests</strong><span>Small automatic checks for one piece of code. JUnit is used for Java, and pytest with pyfrc for Python.</span></div>
-      <div class="term"><strong>Testing: bench testing</strong><span>Test the real robot with the wheels off the floor, one motor at a time, starting at low speed.</span></div>
-    </div>
+    <table class="tools-table">
+      <thead>
+        <tr><th>Stage</th><th>Tool</th><th>What it does</th><th>Language</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Coding</td><td>VS Code with the WPILib extension</td><td>The editor for writing and building robot code.</td><td>Java, Python</td></tr>
+        <tr><td>Coding</td><td>Gradle</td><td>Builds the Java code and downloads the libraries it needs.</td><td>Java</td></tr>
+        <tr><td>Coding</td><td>RobotPy</td><td>Runs Python code on the controller.</td><td>Python</td></tr>
+        <tr><td>Coding</td><td>Git and GitHub</td><td>Saves every version of the code and shares it with the team.</td><td>Both</td></tr>
+        <tr><td>Debugging</td><td>Driver Station console</td><td>Shows messages and errors from the robot while it runs.</td><td>Both</td></tr>
+        <tr><td>Debugging</td><td>Print statements</td><td>Print a value to see what the code is doing.</td><td>Python: print. Java: System.out.println</td></tr>
+        <tr><td>Debugging</td><td>AdvantageScope</td><td>Opens the robot's log files and graphs values over time.</td><td>Both</td></tr>
+        <tr><td>Debugging</td><td>Shuffleboard</td><td>A live dashboard that shows robot values as they change.</td><td>Both</td></tr>
+        <tr><td>Testing</td><td>WPILib simulator</td><td>Runs the code on a laptop with virtual parts, before the robot is built.</td><td>Both</td></tr>
+        <tr><td>Testing</td><td>Unit tests</td><td>Automatic checks for one piece of code.</td><td>Java: JUnit. Python: pytest with pyfrc</td></tr>
+        <tr><td>Testing</td><td>Bench testing</td><td>Test the real robot with the wheels off the floor, one motor at a time, at low speed.</td><td>Hands-on</td></tr>
+      </tbody>
+    </table>
 
     <h3>Try a scenario</h3>
     <p>Pick a scenario and a language. Each comment explains one line of code. Scenarios 1 and 2 are simple. Scenarios 3 to 5 are complex.</p>
