@@ -130,7 +130,9 @@
   .credit { color: var(--muted); font-size: 13px; margin-top: 16px; }
 
   /* Interactive robot simulation */
-  .sim { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; margin-top: 12px; }
+  .sim { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 12px; }
+  .sim-toggles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+  .sim-toggles .sim-part { margin-bottom: 0; }
   .sim-view canvas { width: 100%; height: auto; display: block; background: #f3f6f9; border-radius: 12px; cursor: grab; touch-action: none; }
   .sim-view canvas:active { cursor: grabbing; }
   .sim-part {
@@ -150,7 +152,6 @@
   .sim-info { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: #fbfcfd; font-size: 15px; }
   .sim-info h4 { margin: 0 0 4px; font-size: 16px; }
   .sim-info p { margin: 4px 0; }
-  @media (max-width: 900px) { .sim { grid-template-columns: 1fr; } }
 
   /* Frame type cards */
   .frame-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
@@ -858,10 +859,10 @@
     </ol>
 
     <h3>Interactive: take the robot apart in 3D</h3>
-    <p>Drag the model to rotate it and see every side, or pick a preset view. Click a part to select it. Remove it to see what it was covering, then add it back.</p>
+    <p>Drag the model to rotate it and see every side, or pick a preset view. Click a part in the model or the list to select it. Remove it to see what it was covering, then add it back.</p>
     <div class="sim">
       <div class="sim-view">
-        <canvas id="simCanvas" width="720" height="480" role="img" aria-label="3D model of a robot with removable parts"></canvas>
+        <canvas id="simCanvas" width="960" height="600" role="img" aria-label="3D model of a robot with removable parts"></canvas>
         <div class="sim-actions">
           <button type="button" data-view="iso">3/4 view</button>
           <button type="button" data-view="top">Top</button>
@@ -872,7 +873,7 @@
         </div>
       </div>
       <div class="sim-panel">
-        <div id="simList"></div>
+        <div class="sim-toggles" id="simList"></div>
         <div class="sim-actions">
           <button id="btnRemove" type="button">Remove selected</button>
           <button id="btnAdd" type="button">Add back selected</button>
@@ -881,7 +882,7 @@
         <div class="sim-info" id="simInfo"><p>Select a part to see what it does.</p></div>
       </div>
     </div>
-    <p class="credit">This is a simplified model we drew to show a typical swerve-drive layout. It is not copied from any team's CAD or photo. Sizes are approximate.</p>
+    <p class="credit">A simplified model based on the layout of a real swerve robot shown in our photos and video. Sizes are approximate, and colors are close to the real parts.</p>
 
     <h3>Real robot CAD to explore</h3>
     <p>Some teams publish their robot CAD so you can open the models and see how the parts fit. These pages link to public models:</p>
@@ -920,20 +921,23 @@
   // ---------- Parts (list order) ----------
   const PARTS = [
     { id: 'mechanism', name: 'Mechanism', desc: 'The tool that does the game task, such as an elevator, arm, intake, or shooter. It changes every year.' },
-    { id: 'electronics', name: 'Electronics', desc: 'Controller, power distribution, and radio. Mounted on the frame, away from the mechanism.' },
-    { id: 'battery', name: 'Battery', desc: 'Powers the whole robot. Usually sits low and inside the frame.' },
+    { id: 'electronics', name: 'Electronics', desc: 'Power distribution hub, controller, radio, and camera. The wiring connects them all.' },
+    { id: 'battery', name: 'Battery', desc: 'A 12 V battery that powers the whole robot. It sits low, inside the frame, and is strapped down.' },
     { id: 'bumpers', name: 'Bumpers', desc: 'Padded guards around the frame. They show the alliance color.' },
-    { id: 'frame', name: 'Frame', desc: 'The skeleton. It holds the parts and sets the frame perimeter.' },
-    { id: 'drivetrain', name: 'Drivetrain', desc: 'Four swerve modules. Each one has a steer motor, a wheel, and a mounting plate.' }
+    { id: 'frame', name: 'Frame', desc: 'Black aluminum extrusion with a bolt-hole pattern, plus a metal base plate. It holds everything else.' },
+    { id: 'drivetrain', name: 'Drivetrain', desc: 'Four swerve modules. Each has a steer motor, a drive motor, a wheel, and a mounting plate.' }
   ];
 
-  const COLORS = {
-    alu: '#c9d2dc', alu2: '#9aa5b1', alu3: '#7d8893', blue: '#2f6fd6', batt: '#e8ecf0',
-    black: '#2b333b', motor: '#1f2933', green: '#2e9b57', red: '#d7372f', tire: '#2a2f35',
-    hub: '#9aa5b1', panel: '#3b444c'
+  const C = {
+    rail: '#262b31', rail2: '#2e343b', hole: '#0e1013', sheet: '#c4cad0',
+    blue: '#2f6fd6', batt: '#b5bcc3', battTop: '#5d656c', pink: '#e98fb0',
+    pdh: '#22272d', orange: '#e8833a', yellow: '#f2c230', board: '#2a4d8a', ctrl: '#1d2024',
+    white: '#e9edf1', lens: '#0c0e10', mech: '#3a4048', mechBase: '#2d3339', red: '#d7372f',
+    plate: '#aeb6bd', housing: '#1f2328', motor: '#15181c', tire: '#222529', hub: '#2f6fd6',
+    wRed: '#c62828', wBlack: '#111418', wGreen: '#2e9b57', wYellow: '#e6d43a', wWhite: '#f2f2f2'
   };
 
-  // ---------- Geometry (units are inches, x = left/right, y = front/back, z = up) ----------
+  // ---------- Geometry (inches: x = left/right, y = front/back, z = up) ----------
   const FACES = [];
   const norm = v => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
   const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
@@ -944,8 +948,8 @@
   function addFace(part, color, pts, center) {
     const cen = [0, 1, 2].map(k => pts.reduce((s, p) => s + p[k], 0) / pts.length);
     let n = norm(cross(sub(pts[1], pts[0]), sub(pts[2], pts[0])));
-    if (dot(n, sub(cen, center)) < 0) n = n.map(v => -v); // make normal point outward
-    const shade = 0.55 + 0.45 * Math.max(0, dot(n, LIGHT));
+    if (dot(n, sub(cen, center)) < 0) n = n.map(v => -v);
+    const shade = 0.5 + 0.5 * Math.max(0, dot(n, LIGHT));
     FACES.push({ part, color, pts, n, shade });
   }
 
@@ -975,44 +979,115 @@
     addFace(part, color, ring(-h), c);
   }
 
-  // Frame: aluminum rails and crossmembers, 28 x 28 inside the frame perimeter
-  box('frame', COLORS.alu, -14, 14, -14, -13, 2, 4);
-  box('frame', COLORS.alu, -14, 14, 13, 14, 2, 4);
-  box('frame', COLORS.alu, -14, -13, -14, 14, 2, 4);
-  box('frame', COLORS.alu, 13, 14, -14, 14, 2, 4);
-  [-8, 7].forEach(y => box('frame', COLORS.alu2, -13, 13, y, y + 1, 2.5, 3.5));
-  [-9, 8].forEach(x => box('frame', COLORS.alu2, x, x + 1, -13, 13, 2.5, 3.5));
+  // Small dark squares on a top surface, like the bolt holes in extrusion
+  function holesX(part, y, z, x0, x1) {
+    for (let t = x0 + 0.5; t <= x1 - 0.5; t += 1) {
+      const q = [[t - 0.22, y - 0.22, z + 0.02], [t + 0.22, y - 0.22, z + 0.02], [t + 0.22, y + 0.22, z + 0.02], [t - 0.22, y + 0.22, z + 0.02]];
+      addFace(part, C.hole, q, [t, y, z]);
+    }
+  }
+  function holesY(part, x, z, y0, y1) {
+    for (let t = y0 + 0.5; t <= y1 - 0.5; t += 1) {
+      const q = [[x - 0.22, t - 0.22, z + 0.02], [x + 0.22, t - 0.22, z + 0.02], [x + 0.22, t + 0.22, z + 0.02], [x - 0.22, t + 0.22, z + 0.02]];
+      addFace(part, C.hole, q, [x, t, z]);
+    }
+  }
 
-  // Bumpers: alliance-colored ring outside the frame
-  box('bumpers', COLORS.blue, -16, 16, -16, -14, 0.5, 2.5);
-  box('bumpers', COLORS.blue, -16, 16, 14, 16, 0.5, 2.5);
-  box('bumpers', COLORS.blue, -16, -14, -14, 14, 0.5, 2.5);
-  box('bumpers', COLORS.blue, 14, 16, -14, 14, 0.5, 2.5);
+  // A wire: a round tube along a polyline, with colors alternating along its length (twisted look)
+  function wire(part, pts, colors, r) {
+    const N = 6;
+    for (let s = 0; s < pts.length - 1; s++) {
+      const a = pts[s], b = pts[s + 1];
+      const d = norm(sub(b, a));
+      const ref = Math.abs(d[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0];
+      const u = norm(cross(d, ref)), v = cross(d, u);
+      const ring = p => Array.from({ length: N }, (_, k) => {
+        const t = 2 * Math.PI * k / N;
+        return [0, 1, 2].map(j => p[j] + r * (Math.cos(t) * u[j] + Math.sin(t) * v[j]));
+      });
+      const ra = ring(a), rb = ring(b);
+      const c = [0, 1, 2].map(j => (a[j] + b[j]) / 2);
+      const col = colors[s % colors.length];
+      for (let k = 0; k < N; k++) {
+        const k1 = (k + 1) % N;
+        addFace(part, col, [ra[k], ra[k1], rb[k1], rb[k]], c);
+      }
+    }
+  }
+  // A sagging cable path between two points
+  function cable(from, to, sag, n) {
+    const pts = [];
+    for (let i = 0; i <= n; i++) {
+      const t = i / n;
+      pts.push([0, 1, 2].map(j => from[j] + (to[j] - from[j]) * t + (j === 2 ? -sag * Math.sin(Math.PI * t) : 0)));
+    }
+    return pts;
+  }
 
-  // Battery
-  box('battery', COLORS.batt, -7, 0, -2, 2.5, 4, 6.5);
+  // ---------- Frame: black extrusion rails, bolt holes, galvanized base plate ----------
+  box('frame', C.sheet, -13, 13, -13, 13, 2.3, 2.5);                 // base plate
+  box('frame', C.rail, -14, 14, -14, -13, 2, 4);                      // front rail
+  box('frame', C.rail, -14, 14, 13, 14, 2, 4);                        // back rail
+  box('frame', C.rail, -14, -13, -14, 14, 2, 4);                      // left rail
+  box('frame', C.rail, 13, 14, -14, 14, 2, 4);                        // right rail
+  [-8, 7].forEach(y => box('frame', C.rail2, -13, 13, y, y + 1, 2.5, 3.5));
+  [-9, 8].forEach(x => box('frame', C.rail2, x, x + 1, -13, 13, 2.5, 3.5));
+  holesX('frame', -13.5, 4, -13, 13);
+  holesX('frame', 13.5, 4, -13, 13);
+  holesY('frame', -13.5, 4, -13, 13);
+  holesY('frame', 13.5, 4, -13, 13);
 
-  // Electronics
-  box('electronics', COLORS.panel, 1, 6, -4, 1, 4, 5.2);          // power distribution hub
-  box('electronics', COLORS.green, -5, 4, 5.5, 10, 4, 4.4);       // controller board
-  box('electronics', COLORS.black, -3.5, 1, 6.5, 9, 4.4, 5.4);    // controller
-  box('electronics', COLORS.black, -12, -8, -8, -4.5, 4, 5.5);    // radio
+  // ---------- Bumpers ----------
+  box('bumpers', C.blue, -16, 16, -16, -14, 0.5, 2.5);
+  box('bumpers', C.blue, -16, 16, 14, 16, 0.5, 2.5);
+  box('bumpers', C.blue, -16, -14, -14, 14, 0.5, 2.5);
+  box('bumpers', C.blue, 14, 16, -14, 14, 0.5, 2.5);
 
-  // Mechanism: an elevator with a red roller
-  box('mechanism', COLORS.alu2, 8, 12, -2, 2, 4, 5.5);            // base
-  box('mechanism', COLORS.alu, 8.5, 9.5, -1.5, -0.5, 5.5, 18);    // left upright
-  box('mechanism', COLORS.alu, 10.5, 11.5, -1.5, -0.5, 5.5, 18);  // right upright
-  box('mechanism', COLORS.black, 8, 12, -2, 2, 14, 15.5);         // carriage
-  cyl('mechanism', COLORS.red, 'x', [10, 0, 11], 1.0, 4.0, 14);   // roller
+  // ---------- Battery: gray 12 V battery with a pink connector and an orange strap ----------
+  box('battery', C.batt, -7, 0, -2, 2.5, 4, 6.5);
+  box('battery', C.battTop, -6.6, -0.4, -1.6, 2.1, 6.5, 6.7);
+  box('battery', C.orange, -7.2, 0.2, -2.1, -1.8, 6.7, 6.8);          // strap
+  box('battery', C.pink, 0, 1, -0.8, 0.8, 4.6, 5.6);                  // Anderson-style connector
 
-  // Drivetrain: four swerve modules at the corners
+  // ---------- Electronics ----------
+  box('electronics', C.pdh, 1, 6, -4, 1, 4, 5.2);                     // power distribution hub
+  box('electronics', C.orange, 1.1, 1.7, -3.8, 0.8, 5.2, 5.6);        // terminal blocks
+  box('electronics', C.orange, 5.3, 5.9, -3.8, 0.8, 5.2, 5.6);
+  [2.1, 3.1, 4.1].forEach(x => box('electronics', C.yellow, x, x + 0.6, -3.4, -2.6, 5.2, 5.5)); // breakers
+  box('electronics', C.board, -5, 4, 5.5, 10, 4, 4.3);                // controller board
+  box('electronics', C.ctrl, -3.5, 1, 6.5, 9, 4.3, 5.2);              // controller
+  box('electronics', C.white, -12, -8, -8, -4.5, 4, 5.5);             // radio
+  box('electronics', C.white, -12, -8, -4, -1, 4, 6);                 // camera
+  box('electronics', C.lens, -10.5, -9.5, -1, -0.9, 5.5, 5.8);        // camera lens
+
+  // ---------- Mechanism: elevator with a red roller ----------
+  box('mechanism', C.mechBase, 8, 12, -2, 2, 4, 5.5);
+  box('mechanism', C.ctrl, 8.5, 9.5, -1.5, -0.5, 5.5, 18);
+  box('mechanism', C.ctrl, 10.5, 11.5, -1.5, -0.5, 5.5, 18);
+  box('mechanism', C.mech, 8, 12, -2, 2, 14, 15.5);
+  cyl('mechanism', C.red, 'x', [10, 0, 11], 1.0, 4.0, 14);
+
+  // ---------- Drivetrain: four swerve modules ----------
   [[-11, -11], [11, -11], [-11, 11], [11, 11]].forEach(([mx, my]) => {
-    box('drivetrain', COLORS.alu3 || COLORS.alu2, mx - 2.3, mx + 2.3, my - 2.3, my + 2.3, 1.4, 2.0); // mounting plate
-    box('drivetrain', COLORS.black, mx - 1.7, mx + 1.7, my - 1.7, my + 1.7, 2.0, 4.6);              // module housing
-    cyl('drivetrain', COLORS.motor, 'z', [mx, my, 5.6], 1.0, 1.8);                                  // steer motor
-    cyl('drivetrain', COLORS.tire, 'x', [mx, my, 2.0], 2.0, 1.4, 20);                               // wheel
-    cyl('drivetrain', COLORS.hub, 'x', [mx, my, 2.0], 0.9, 1.6, 12);                                // wheel hub
+    box('drivetrain', C.plate, mx - 2.3, mx + 2.3, my - 2.3, my + 2.3, 1.4, 2.0);
+    box('drivetrain', C.housing, mx - 1.7, mx + 1.7, my - 1.7, my + 1.7, 2.0, 4.6);
+    cyl('drivetrain', C.motor, 'z', [mx, my, 5.6], 1.0, 1.8);           // steer motor
+    cyl('drivetrain', C.motor, 'x', [mx, my - 0.5, 3.4], 0.7, 1.8);     // drive motor
+    cyl('drivetrain', C.tire, 'x', [mx, my, 2.0], 2.0, 1.4, 20);        // wheel
+    cyl('drivetrain', C.hub, 'x', [mx, my, 2.0], 0.9, 1.6, 12);         // hub
   });
+
+  // ---------- Wiring (drawn last so it sits on top of the parts) ----------
+  wire('electronics', cable([-1.5, 0, 6.6], [2.5, -1, 5.6], 0.8, 14), [C.wRed, C.wBlack], 0.22); // battery to hub
+  wire('electronics', cable([2.5, -2, 5.3], [-10, -6, 5.6], 0.9, 18), [C.wRed, C.wBlack], 0.16);
+  wire('electronics', cable([-1, 8, 5.4], [-11, 11, 5.8], 0.6, 16), [C.wGreen, C.wYellow], 0.14);
+  wire('electronics', cable([-1, 8, 5.4], [11, 11, 5.8], 0.6, 20), [C.wGreen, C.wYellow], 0.14);
+  wire('electronics', cable([-1, 8, 5.4], [-11, -11, 5.8], 1.0, 22), [C.wGreen, C.wYellow], 0.14);
+  wire('electronics', cable([4, -1, 5.3], [11, -11, 5.8], 0.8, 20), [C.wRed, C.wBlack, C.wWhite], 0.16);
+  wire('electronics', cable([4, -1, 5.3], [11, 11, 5.8], 0.8, 20), [C.wRed, C.wBlack, C.wWhite], 0.16);
+  wire('electronics', cable([-3, 2, 5.4], [-11, 11, 5.8], 0.9, 20), [C.wWhite, C.wBlack], 0.13);
+  wire('electronics', cable([-10, -2, 5.6], [-3, 8, 5.2], 0.5, 14), [C.wWhite], 0.12);
+  wire('electronics', cable([6, 2, 5.4], [9, 6, 5.5], 0.3, 6), [C.wGreen, C.wYellow], 0.12);
 
   // ---------- State ----------
   const hidden = new Set();
@@ -1031,7 +1106,7 @@
   const info = document.getElementById('simInfo');
   const spinBtn = document.getElementById('btnSpin');
   const W = canvas.width, H = canvas.height;
-  const SCALE = 7.5, OX = W / 2, OY = H / 2 + 60;
+  const SCALE = 9.5, OX = W / 2, OY = H / 2 + 70;
 
   // Rotate a point (or direction) into view space: xv = screen right, dv = depth (smaller = nearer viewer), zv = screen up
   function rot(p, a, b) {
@@ -1047,8 +1122,19 @@
     return 'rgb(' + ch(16) + ',' + ch(8) + ',' + ch(0) + ')';
   }
 
+  function drawGround() {
+    const g = ctx.createRadialGradient(OX, OY + 6, 10, OX, OY + 6, 330);
+    g.addColorStop(0, 'rgba(40,50,60,0.22)');
+    g.addColorStop(1, 'rgba(40,50,60,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(OX, OY + 6, 330, 110, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   function draw() {
     ctx.clearRect(0, 0, W, H);
+    drawGround();
     const items = [];
     for (const f of FACES) {
       if (hidden.has(f.part)) continue;
@@ -1068,8 +1154,8 @@
       const isSel = it.f.part === selected;
       ctx.fillStyle = shade(it.f.color, it.f.shade);
       ctx.fill();
-      ctx.strokeStyle = isSel ? '#f2b233' : 'rgba(20,30,40,0.35)';
-      ctx.lineWidth = isSel ? 1.6 : 0.5;
+      ctx.strokeStyle = isSel ? '#f2b233' : 'rgba(10,14,18,0.45)';
+      ctx.lineWidth = isSel ? 1.8 : 0.4;
       ctx.stroke();
     }
     drawn = items;
@@ -1098,7 +1184,7 @@
     return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height];
   }
 
-  // ---------- Parts list and info ----------
+  // ---------- Parts list and info (below the model) ----------
   function select(id) { selected = id; render(); }
 
   function render() {
