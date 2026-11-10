@@ -37,6 +37,8 @@
     border-radius: 14px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     z-index: 10;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
   }
   nav.side h2 {
     margin: 0 0 10px;
@@ -57,6 +59,26 @@
   }
   nav.side a:hover { background: var(--bg); }
   nav.side a.active { background: var(--blue); color: #fff; }
+  nav.side a.in { font-weight: 700; }
+  nav.side .row { display: flex; align-items: center; gap: 4px; }
+  nav.side .row a { flex: 1; }
+  nav.side .toggle {
+    border: 0;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  nav.side .toggle:hover { background: var(--bg); }
+  nav.side ul ul {
+    margin: 2px 0 8px 12px;
+    padding-left: 6px;
+    border-left: 2px solid var(--line);
+  }
+  nav.side ul ul[hidden] { display: none; }
+  nav.side ul ul a { font-size: 14px; font-weight: 400; padding: 6px 10px; }
 
   main {
     margin-left: 270px;
@@ -200,8 +222,10 @@
       padding: 10px 14px;
       box-shadow: none;
     }
+    nav.side { max-height: none; overflow: visible; }
     nav.side h2 { display: none; }
-    nav.side ul { display: flex; gap: 8px; flex-wrap: wrap; }
+    nav.side > ul { display: flex; gap: 8px; flex-wrap: wrap; }
+    nav.side ul ul, nav.side .toggle { display: none; }
     nav.side li + li { margin-top: 0; }
     nav.side a { padding: 8px 12px; }
     main { margin-left: 0; padding: 24px 16px 60px; }
@@ -215,14 +239,8 @@
 
 <nav class="side" aria-label="Topics">
   <h2>Topics</h2>
-  <ul>
-    <li><a href="#what-is-frc" class="active">What is <abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr>?</a></li>
-    <li><a href="#what-is-the-game">What is the Game?</a></li>
-    <li><a href="#how-the-robot-changes">How the Robot Changes</a></li>
-    <li><a href="#robot-parts">Robot Parts</a></li>
-    <li><a href="#software-and-controls">Software and Controls</a></li>
-    <li><a href="#cad-and-mechanical"><abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> and Mechanical</a></li>
-  </ul>
+  <!-- Filled in by the navigation script at the end of the page, from the section and subsection headings. -->
+  <ul></ul>
 </nav>
 
 <main>
@@ -986,6 +1004,66 @@
     <h3>Keep the code under version control</h3>
     <p>Store the code and device settings in Git. That gives the team a record of what changed, when, and by whom. It's the same kind of record as the repository you're reading.</p>
 
+    <h3>Frameworks and repositories you can start from</h3>
+    <p>A framework is ready-made code that handles a hard job, such as driving a swerve base or logging a match, so the team can focus on its own game task. Most of these come with an example project or template. Start from that, change a few settings, and write new code only where the robot needs something different. Check each project's current release and license, and confirm the version matches your season's software with a mentor.</p>
+    <table class="tools-table">
+      <thead>
+        <tr><th>Framework</th><th>Language</th><th>What it does</th><th>Little customization needed</th><th>Where to look</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>YAGSL</strong> (Yet Another Swerve Library)</td>
+          <td>Java</td>
+          <td>Runs a swerve drive from a config file that describes each module.</td>
+          <td>Edit the JSON module settings for your robot, and start from the example project.</td>
+          <td><a href="https://github.com/BroncBotz3481/YAGSL">library</a>, <a href="https://docs.yagsl.com/">docs</a>, <a href="https://github.com/BroncBotz3481/YAGSL-Example">example project</a>, <a href="https://broncbotz3481.github.io/YAGSL-Example/">config generator</a></td>
+        </tr>
+        <tr>
+          <td><strong>PhotonVision</strong></td>
+          <td>Web interface; Java, C++, and Python libraries</td>
+          <td>Vision software for robot cameras, including AprilTag detection. It runs on a separate coprocessor, not the roboRIO.</td>
+          <td>Set up cameras and detection in its web interface before writing any code.</td>
+          <td><a href="https://github.com/PhotonVision/photonvision">repository</a>, <a href="https://docs.photonvision.org">docs</a></td>
+        </tr>
+        <tr>
+          <td><strong>AdvantageKit</strong></td>
+          <td>Java</td>
+          <td>Logging and replay framework from Team 6328. It records inputs and outputs so a match can be replayed later.</td>
+          <td>Moderate. Wrap each hardware device in an IO class, following the examples.</td>
+          <td><a href="https://github.com/Mechanical-Advantage/AdvantageKit">repository</a>, <a href="https://docs.advantagekit.org">docs</a></td>
+        </tr>
+        <tr>
+          <td><strong>AdvantageScope</strong></td>
+          <td>Desktop app (no code)</td>
+          <td>Opens robot log files and graphs the signals inside them. Used with AdvantageKit logs.</td>
+          <td>None. Open a log file and pick the signals to graph.</td>
+          <td><a href="https://github.com/Mechanical-Advantage/AdvantageScope">repository</a></td>
+        </tr>
+        <tr>
+          <td><strong>PathPlanner</strong></td>
+          <td>Java (paths drawn in a desktop app)</td>
+          <td>Draws autonomous paths on a field picture and follows them with the robot's drive code.</td>
+          <td>Low. Draw paths in the app, then add the library and call the path from the code.</td>
+          <td><a href="https://github.com/mjansen4857/pathplanner">repository</a>, <a href="https://pathplanner.dev">docs</a></td>
+        </tr>
+        <tr>
+          <td><strong>RobotPy</strong> and <strong>pyfrc</strong></td>
+          <td>Python</td>
+          <td>Lets teams write robot code in Python. pyfrc adds a simulator for testing on a laptop.</td>
+          <td>Low. Start from the template project, then edit the robot class.</td>
+          <td><a href="https://github.com/robotpy">RobotPy</a>, <a href="https://robotpy.readthedocs.io">docs</a>, <a href="https://github.com/robotpy/pyfrc">pyfrc repository</a></td>
+        </tr>
+        <tr>
+          <td><strong>WPILib</strong></td>
+          <td>Java, C++, Python</td>
+          <td>The official robot framework and toolchain. Its examples appear in the New Project wizard in VS Code.</td>
+          <td>Low. Pick the example closest to your robot and build from it.</td>
+          <td><a href="https://github.com/wpilibsuite/allwpilib">repository</a>, <a href="https://docs.wpilib.org">docs</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="credit">Each link was found through a web search, and the pages themselves were not opened and read in full. Visit the project before you rely on it.</p>
+
     <div class="tip"><strong>In short:</strong> the laptop sends what the driver wants, the controller decides what to do, the motor controllers deliver the power, and the sensors report back so the next decision is better.</div>
   </section>
 
@@ -1294,17 +1372,80 @@
 </main>
 
 <script>
-  // Highlight the nav item for the section currently in view.
-  const links = document.querySelectorAll('nav.side a');
-  const sections = [...links].map(a => document.querySelector(a.getAttribute('href')));
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
-      }
+(function () {
+  // Build the side navigation from the page: one link per section (h2), with collapsible
+  // links to its subsections (h3). Runs before the acronym tooltips are attached, so nav acronyms get tooltips too.
+  const nav = document.querySelector('nav.side');
+  const list = nav.querySelector('ul');
+  const used = new Set();
+  const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const linkFor = el => { const a = document.createElement('a'); a.href = '#' + el.id; a.innerHTML = el.innerHTML; return a; };
+  const targets = [];
+
+  document.querySelectorAll('main section[id]').forEach(sec => {
+    used.add(sec.id);
+    const h2 = sec.querySelector('h2');
+    if (!h2) return;
+    h2.id = sec.id + '-title';
+    const li = document.createElement('li');
+    const row = document.createElement('div');
+    row.className = 'row';
+    const a = linkFor(h2);
+    a.dataset.section = sec.id;
+    row.append(a);
+    targets.push(h2);
+
+    const subs = [...sec.querySelectorAll('h3')];
+    if (subs.length) {
+      const ul = document.createElement('ul');
+      ul.id = sec.id + '-topics';
+      subs.forEach(h3 => {
+        const base = slug(h3.textContent) || 'topic';
+        let id = base, n = 2;
+        while (used.has(id)) id = base + '-' + n++;
+        used.add(id);
+        h3.id = id;
+        const sub = document.createElement('li');
+        sub.append(linkFor(h3));
+        ul.append(sub);
+        targets.push(h3);
+      });
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'toggle';
+      btn.textContent = '▾';
+      btn.setAttribute('aria-expanded', 'true');
+      btn.setAttribute('aria-controls', ul.id);
+      btn.setAttribute('aria-label', 'Show or hide the topics under ' + h2.textContent.trim());
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') !== 'true';
+        btn.setAttribute('aria-expanded', String(open));
+        btn.textContent = open ? '▾' : '▸';
+        ul.hidden = !open;
+      });
+      row.append(btn);
+      li.append(row, ul);
+    } else {
+      li.append(row);
+    }
+    list.append(li);
+  });
+
+  // Highlight the nav link for the heading currently in view; the parent section gets a lighter mark.
+  const links = [...nav.querySelectorAll('a')];
+  function setActive(el) {
+    const sec = el.closest('section');
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + el.id);
+      a.classList.toggle('in', !!sec && a.dataset.section === sec.id);
     });
+  }
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target); });
   }, { rootMargin: '-40% 0px -55% 0px' });
-  sections.forEach(s => s && observer.observe(s));
+  targets.forEach(t => observer.observe(t));
+  if (targets.length) setActive(targets[0]);
+})();
 </script>
 <script>
 (function () {
