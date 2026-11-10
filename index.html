@@ -129,6 +129,31 @@
   .photos figcaption { font-size: 13px; margin-top: 6px; }
   .credit { color: var(--muted); font-size: 13px; margin-top: 16px; }
 
+  /* Interactive robot simulation */
+  .sim { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; margin-top: 12px; }
+  .sim-view svg { width: 100%; height: auto; display: block; background: #f3f6f9; border-radius: 12px; }
+  .sim-view g.part { cursor: pointer; }
+  .sim-view g.part:hover { opacity: 0.9; }
+  .sim-view g.part.sel * { stroke: #f2b233 !important; stroke-width: 5 !important; }
+  .sim-part {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
+    margin-bottom: 6px; cursor: pointer; background: #fff;
+  }
+  .sim-part.sel { border-color: var(--blue); box-shadow: 0 0 0 2px #cfe0fb; }
+  .sim-part.gone span { text-decoration: line-through; color: var(--muted); }
+  .sim-part input { margin: 0; }
+  .sim-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .sim-actions button {
+    padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; cursor: pointer; font: inherit; font-size: 14px;
+  }
+  .sim-actions button:hover { border-color: var(--blue); }
+  .sim-info { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: #fbfcfd; font-size: 15px; }
+  .sim-info h4 { margin: 0 0 4px; font-size: 16px; }
+  .sim-info p { margin: 4px 0; }
+  @media (max-width: 900px) { .sim { grid-template-columns: 1fr; } }
+
   /* Frame type cards */
   .frame-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
   .frame-card { border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: #fbfcfd; }
@@ -834,6 +859,53 @@
       <li><strong>Electronics last:</strong> install the battery and controller, then route and label the wires.</li>
     </ol>
 
+    <h3>Interactive: take the robot apart</h3>
+    <p>Click a part in the drawing or in the list to select it. Remove it to see what is underneath, then add it back.</p>
+    <div class="sim">
+      <div class="sim-view">
+        <svg id="simSvg" viewBox="0 0 720 400" role="img" aria-label="Side view of a robot with removable parts">
+          <line x1="40" y1="372" x2="680" y2="372" stroke="#c7d0d9" stroke-width="3"/>
+          <!-- Drawn bottom to top -->
+          <g class="part" data-id="drivetrain">
+            <rect x="165" y="296" width="60" height="34" rx="4" fill="#5b6770"/>
+            <rect x="495" y="296" width="60" height="34" rx="4" fill="#5b6770"/>
+            <rect x="200" y="326" width="320" height="8" fill="#3b444c"/>
+            <circle cx="200" cy="344" r="28" fill="#1f2933"/><circle cx="200" cy="344" r="9" fill="#c7d0d9"/>
+            <circle cx="520" cy="344" r="28" fill="#1f2933"/><circle cx="520" cy="344" r="9" fill="#c7d0d9"/>
+          </g>
+          <g class="part" data-id="frame">
+            <rect x="170" y="220" width="390" height="90" rx="8" fill="#9aa5b1" stroke="#5b6770" stroke-width="3"/>
+          </g>
+          <g class="part" data-id="bumpers">
+            <rect x="160" y="292" width="410" height="14" rx="6" fill="#2f6fd6"/>
+          </g>
+          <g class="part" data-id="battery">
+            <rect x="260" y="238" width="110" height="44" rx="5" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+          </g>
+          <g class="part" data-id="electronics">
+            <rect x="390" y="178" width="140" height="42" rx="6" fill="#3b444c"/>
+            <rect x="400" y="186" width="52" height="26" rx="4" fill="#2e9b57"/>
+            <rect x="460" y="186" width="62" height="26" rx="4" fill="#5b6770"/>
+          </g>
+          <g class="part" data-id="mechanism">
+            <line x1="420" y1="178" x2="560" y2="70" stroke="#5b6770" stroke-width="12" stroke-linecap="round"/>
+            <path d="M548,58 l22,-4 l-8,20" fill="none" stroke="#c98a0b" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="420" cy="178" r="9" fill="#f2b233"/>
+          </g>
+        </svg>
+      </div>
+      <div class="sim-panel">
+        <div id="simList"></div>
+        <div class="sim-actions">
+          <button id="btnRemove" type="button">Remove selected</button>
+          <button id="btnAdd" type="button">Add back selected</button>
+          <button id="btnReset" type="button">Reset</button>
+        </div>
+        <div class="sim-info" id="simInfo"><p>Select a part to see what it does.</p></div>
+      </div>
+    </div>
+    <p class="credit">Parts are stacked from outside to inside: mechanism, electronics, battery, bumpers, frame, then drivetrain. "Directly underneath" shows the next part down.</p>
+
     <h3>Real robot CAD to explore</h3>
     <p>Some teams publish their robot CAD so you can open the models and see how the parts fit. These pages link to public models:</p>
     <ul>
@@ -865,6 +937,77 @@
     });
   }, { rootMargin: '-40% 0px -55% 0px' });
   sections.forEach(s => s && observer.observe(s));
+</script>
+<script>
+(function () {
+  // Stack order: top (outermost) to bottom (innermost)
+  const PARTS = [
+    { id: 'mechanism', name: 'Mechanism', desc: 'The tool that does the game task, such as an arm, shooter, or climber. It changes every year.' },
+    { id: 'electronics', name: 'Electronics', desc: 'Controller, power distribution, and radio. Usually mounted on top of the frame.' },
+    { id: 'battery', name: 'Battery', desc: 'Powers the whole robot. Usually sits low and inside the frame.' },
+    { id: 'bumpers', name: 'Bumpers', desc: 'Padded guards around the frame. They show the alliance color.' },
+    { id: 'frame', name: 'Frame', desc: 'The skeleton. It holds the parts and sets the frame perimeter.' },
+    { id: 'drivetrain', name: 'Drivetrain', desc: 'Motors, gearboxes, and wheels that drive the robot.' }
+  ];
+
+  const hidden = new Set();
+  let selected = null;
+  const list = document.getElementById('simList');
+  const info = document.getElementById('simInfo');
+  const groupEl = id => document.querySelector('#simSvg g.part[data-id="' + id + '"]');
+
+  function select(id) { selected = id; render(); }
+
+  function render() {
+    PARTS.forEach(p => {
+      const g = groupEl(p.id);
+      g.style.display = hidden.has(p.id) ? 'none' : '';
+      g.classList.toggle('sel', selected === p.id);
+    });
+
+    list.innerHTML = '';
+    PARTS.forEach(p => {
+      const row = document.createElement('div');
+      row.className = 'sim-part' + (selected === p.id ? ' sel' : '') + (hidden.has(p.id) ? ' gone' : '');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !hidden.has(p.id);
+      cb.setAttribute('aria-label', 'Show ' + p.name);
+      cb.addEventListener('change', () => {
+        if (cb.checked) hidden.delete(p.id); else hidden.add(p.id);
+        select(p.id);
+      });
+      const label = document.createElement('span');
+      label.textContent = p.name + (hidden.has(p.id) ? ' (removed)' : '');
+      row.append(cb, label);
+      row.addEventListener('click', e => { if (e.target !== cb) select(p.id); });
+      list.appendChild(row);
+    });
+
+    if (!selected) {
+      info.innerHTML = '<p>Select a part to see what it does.</p>';
+      return;
+    }
+    const i = PARTS.findIndex(p => p.id === selected);
+    const p = PARTS[i];
+    const below = PARTS[i + 1];
+    const under = below
+      ? below.name + (hidden.has(below.id) ? ' (removed)' : '')
+      : 'nothing. This is the bottom layer.';
+    info.innerHTML =
+      '<h4>' + p.name + '</h4>' +
+      '<p>' + p.desc + '</p>' +
+      '<p><strong>Status:</strong> ' + (hidden.has(p.id) ? 'removed' : 'in place') + '.</p>' +
+      '<p><strong>Directly underneath:</strong> ' + under + '</p>';
+  }
+
+  PARTS.forEach(p => groupEl(p.id).addEventListener('click', e => { e.stopPropagation(); select(p.id); }));
+  document.getElementById('btnRemove').onclick = () => { if (selected) { hidden.add(selected); render(); } };
+  document.getElementById('btnAdd').onclick = () => { if (selected) { hidden.delete(selected); render(); } };
+  document.getElementById('btnReset').onclick = () => { hidden.clear(); render(); };
+
+  render();
+})();
 </script>
 </body>
 </html>
