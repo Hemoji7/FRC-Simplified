@@ -1373,14 +1373,19 @@
 
 <script>
 (function () {
-  // Build the side navigation from the page: one link per section (h2), with collapsible
-  // links to its subsections (h3). Runs before the acronym tooltips are attached, so nav acronyms get tooltips too.
+  // Build the side navigation from the page: one link per section (h2), with a collapsible
+  // list of links to its subsections (h3). Built before the acronym tooltips are attached,
+  // so acronyms in the navigation get tooltips too.
   const nav = document.querySelector('nav.side');
   const list = nav.querySelector('ul');
   const used = new Set();
   const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const linkFor = el => { const a = document.createElement('a'); a.href = '#' + el.id; a.innerHTML = el.innerHTML; return a; };
-  const targets = [];
+  const targets = [];          // every h2 and h3, in page order
+  const navLinks = new Map();  // heading id -> its nav link
+  const groups = new Map();    // section id -> { ul, btn } for sections that have subsections
+  let openSec = null;          // section whose subsections are currently shown
+  let activeSec = null;        // section last opened by scrolling or clicking
 
   document.querySelectorAll('main section[id]').forEach(sec => {
     used.add(sec.id);
@@ -1391,8 +1396,8 @@
     const row = document.createElement('div');
     row.className = 'row';
     const a = linkFor(h2);
-    a.dataset.section = sec.id;
     row.append(a);
+    navLinks.set(h2.id, a);
     targets.push(h2);
 
     const subs = [...sec.querySelectorAll('h3')];
@@ -1406,45 +1411,91 @@
         used.add(id);
         h3.id = id;
         const sub = document.createElement('li');
-        sub.append(linkFor(h3));
+        const subLink = linkFor(h3);
+        sub.append(subLink);
         ul.append(sub);
+        navLinks.set(h3.id, subLink);
         targets.push(h3);
       });
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'toggle';
-      btn.textContent = '▾';
-      btn.setAttribute('aria-expanded', 'true');
       btn.setAttribute('aria-controls', ul.id);
       btn.setAttribute('aria-label', 'Show or hide the topics under ' + h2.textContent.trim());
       btn.addEventListener('click', () => {
-        const open = btn.getAttribute('aria-expanded') !== 'true';
-        btn.setAttribute('aria-expanded', String(open));
-        btn.textContent = open ? '▾' : '▸';
-        ul.hidden = !open;
+        if (openSec === sec.id) { setOpen(sec.id, false); openSec = null; }
+        else showSection(sec.id);
       });
       row.append(btn);
       li.append(row, ul);
+      groups.set(sec.id, { ul, btn });
     } else {
       li.append(row);
     }
     list.append(li);
   });
 
-  // Highlight the nav link for the heading currently in view; the parent section gets a lighter mark.
-  const links = [...nav.querySelectorAll('a')];
-  function setActive(el) {
-    const sec = el.closest('section');
-    links.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + el.id);
-      a.classList.toggle('in', !!sec && a.dataset.section === sec.id);
+  function setOpen(secId, open) {
+    const g = groups.get(secId);
+    if (!g) return;
+    g.ul.hidden = !open;
+    g.btn.setAttribute('aria-expanded', String(open));
+    g.btn.textContent = open ? '▾' : '▸';
+  }
+
+  // Expand one section and collapse whichever was open before.
+  function showSection(secId) {
+    if (openSec && openSec !== secId) setOpen(openSec, false);
+    openSec = secId;
+    setOpen(secId, true);
+  }
+
+  // Mark the nav link for a heading, and a bold mark on its parent section's link.
+  function highlight(el) {
+    const parentH2 = el.closest('section').querySelector('h2');
+    navLinks.forEach((a, id) => {
+      a.classList.toggle('active', id === el.id);
+      a.classList.toggle('in', id === parentH2.id && id !== el.id);
     });
   }
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target); });
-  }, { rootMargin: '-40% 0px -55% 0px' });
-  targets.forEach(t => observer.observe(t));
-  if (targets.length) setActive(targets[0]);
+
+  // The last heading that has scrolled above a line 30% down the window is the current one.
+  function currentHeading() {
+    const line = window.innerHeight * 0.3;
+    let found = targets[0];
+    for (const t of targets) {
+      if (t.getBoundingClientRect().top <= line) found = t; else break;
+    }
+    return found;
+  }
+
+  function onScroll() {
+    const el = currentHeading();
+    highlight(el);
+    const secId = el.closest('section').id;
+    if (secId !== activeSec) { activeSec = secId; showSection(secId); }
+  }
+
+  // Clicking a nav link selects it right away and expands its section, so the nav matches the page.
+  navLinks.forEach((a, id) => {
+    a.addEventListener('click', () => {
+      const el = document.getElementById(id);
+      highlight(el);
+      activeSec = el.closest('section').id;
+      showSection(activeSec);
+    });
+  });
+
+  // On load, every subsection list is collapsed. Scrolling opens the section in view.
+  groups.forEach((g, id) => setOpen(id, false));
+  highlight(currentHeading());
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { onScroll(); ticking = false; });
+  }, { passive: true });
 })();
 </script>
 <script>
