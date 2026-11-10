@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRC Simplified</title>
+<style>
+  :root {
+    --red: #d64545;
+    --blue: #2f6fd6;
+    --gold: #f2b233;
+    --ink: #1f2933;
+    --muted: #5b6770;
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --line: #e2e6ea;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* Floating left navigator */
+  nav.side {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    width: 220px;
+    padding: 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    z-index: 10;
+  }
+  nav.side h2 {
+    margin: 0 0 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  nav.side ul { list-style: none; margin: 0; padding: 0; }
+  nav.side li + li { margin-top: 6px; }
+  nav.side a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  nav.side a:hover { background: var(--bg); }
+  nav.side a.active { background: var(--blue); color: #fff; }
+
+  main {
+    margin-left: 270px;
+    max-width: 760px;
+    padding: 40px 32px 80px;
+  }
+  header.hero {
+    padding: 32px 0 8px;
+  }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 40px;
+    line-height: 1.15;
+  }
+  header.hero p { margin: 0; color: var(--muted); font-size: 18px; }
+
+  section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 28px;
+    scroll-margin-top: 24px;
+  }
+  section h2 { margin: 0 0 6px; font-size: 28px; }
+  section .lead { color: var(--muted); margin: 0 0 18px; font-size: 17px; }
+  section h3 { margin: 26px 0 8px; font-size: 19px; }
+  section p, section li { font-size: 16px; }
+  figure { margin: 20px 0; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; text-align: center; }
+
+  .tip {
+    background: #fff8e6;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 18px 0;
+  }
+  .terms { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .term {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .term strong { display: block; margin-bottom: 2px; }
+  .term span { color: var(--muted); font-size: 15px; }
+
+  /* Break-open layers */
+  .layer {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 14px 0;
+    background: #fbfcfd;
+  }
+  .layer h4 { margin: 0 0 2px; font-size: 17px; }
+  .layer .tag { color: var(--muted); font-size: 14px; margin: 0 0 10px; }
+  .photos { display: flex; flex-wrap: wrap; gap: 14px; }
+  .photos figure { margin: 0; width: 200px; text-align: center; }
+  .photos img {
+    width: 200px;
+    height: 150px;
+    object-fit: contain;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    display: block;
+  }
+  .photos figcaption { font-size: 13px; margin-top: 6px; }
+  .credit { color: var(--muted); font-size: 13px; margin-top: 16px; }
+
+  /* Interactive robot simulation */
+  .sim { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; margin-top: 12px; }
+  .sim-view svg { width: 100%; height: auto; display: block; background: #f3f6f9; border-radius: 12px; }
+  .sim-view g.part { cursor: pointer; }
+  .sim-view g.part:hover { opacity: 0.9; }
+  .sim-view g.part.sel * { stroke: #f2b233 !important; stroke-width: 5 !important; }
+  .sim-part {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
+    margin-bottom: 6px; cursor: pointer; background: #fff;
+  }
+  .sim-part.sel { border-color: var(--blue); box-shadow: 0 0 0 2px #cfe0fb; }
+  .sim-part.gone span { text-decoration: line-through; color: var(--muted); }
+  .sim-part input { margin: 0; }
+  .sim-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .sim-actions button {
+    padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; cursor: pointer; font: inherit; font-size: 14px;
+  }
+  .sim-actions button:hover { border-color: var(--blue); }
+  .sim-info { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: #fbfcfd; font-size: 15px; }
+  .sim-info h4 { margin: 0 0 4px; font-size: 16px; }
+  .sim-info p { margin: 4px 0; }
+  @media (max-width: 900px) { .sim { grid-template-columns: 1fr; } }
+
+  /* Frame type cards */
+  .frame-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+  .frame-card { border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: #fbfcfd; }
+  .frame-card svg { width: 100%; height: auto; display: block; }
+  .frame-card h4 { margin: 6px 0 4px; font-size: 16px; }
+  .frame-card p { margin: 0; font-size: 14px; color: var(--muted); }
+
+  footer { margin-top: 36px; color: var(--muted); font-size: 14px; }
+
+  /* Narrow screens: nav becomes a top bar */
+  @media (max-width: 900px) {
+    nav.side {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: auto;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      padding: 10px 14px;
+      box-shadow: none;
+    }
+    nav.side h2 { display: none; }
+    nav.side ul { display: flex; gap: 8px; flex-wrap: wrap; }
+    nav.side li + li { margin-top: 0; }
+    nav.side a { padding: 8px 12px; }
+    main { margin-left: 0; padding: 24px 16px 60px; }
+    .terms { grid-template-columns: 1fr; }
+    .photos figure { width: 150px; }
+    .photos img { width: 150px; height: 115px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="side" aria-label="Topics">
+  <h2>Topics</h2>
+  <ul>
+    <li><a href="#what-is-frc" class="active">What is FRC?</a></li>
+    <li><a href="#what-is-the-game">What is the Game?</a></li>
+    <li><a href="#how-the-robot-changes">How the Robot Changes</a></li>
+    <li><a href="#robot-parts">Robot Parts</a></li>
+    <li><a href="#cad-and-mechanical">CAD and Mechanical</a></li>
+  </ul>
+</nav>
+
+<main>
+  <header class="hero">
+    <h1>FRC, Simplified</h1>
+    <p>A plain-language guide to the FIRST Robotics Competition.</p>
+  </header>
+
+  <!-- ============ TOPIC 1 ============ -->
+  <section id="what-is-frc">
+    <h2>What is FRC?</h2>
+    <p class="lead">The FIRST Robotics Competition (FRC) is a high school robot sport. Teams of students design, build, and program big robots, then compete with them.</p>
+
+    <h3>The short version</h3>
+    <p>Every January, FRC releases a new game. Every team gets the same starter kit of parts. Teams have about six weeks to design and build a robot that can play that game, then they compete at events around the world.</p>
+
+    <h3>Who takes part?</h3>
+    <p>FRC is for students in grades 9 to 12, usually ages 14 to 18. Each team has students who do most of the work, plus adult mentors who guide them. Mentors teach, but students make the decisions.</p>
+
+    <h3>The life of a season</h3>
+    <figure>
+      <svg viewBox="0 0 720 200" role="img" aria-label="Season cycle: Kickoff, Build, Compete, Championship">
+        <defs>
+          <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#5b6770"/>
+          </marker>
+        </defs>
+        <circle cx="90" cy="95" r="58" fill="#e8f0fd" stroke="#2f6fd6" stroke-width="3"/>
+        <text x="90" y="92" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Kickoff</text>
+        <text x="90" y="112" text-anchor="middle" font-size="13" fill="#5b6770">January</text>
+        <circle cx="260" cy="95" r="58" fill="#fff4dc" stroke="#f2b233" stroke-width="3"/>
+        <text x="260" y="92" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Build</text>
+        <text x="260" y="112" text-anchor="middle" font-size="13" fill="#5b6770">~6 weeks</text>
+        <circle cx="430" cy="95" r="58" fill="#fde8e8" stroke="#d64545" stroke-width="3"/>
+        <text x="430" y="92" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Compete</text>
+        <text x="430" y="112" text-anchor="middle" font-size="13" fill="#5b6770">Events</text>
+        <circle cx="600" cy="95" r="58" fill="#eaf7ee" stroke="#2e9b57" stroke-width="3"/>
+        <text x="600" y="92" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Champs</text>
+        <text x="600" y="112" text-anchor="middle" font-size="13" fill="#5b6770">Finals</text>
+        <line x1="150" y1="95" x2="194" y2="95" stroke="#5b6770" stroke-width="3" marker-end="url(#arr)"/>
+        <line x1="320" y1="95" x2="364" y2="95" stroke="#5b6770" stroke-width="3" marker-end="url(#arr)"/>
+        <line x1="490" y1="95" x2="534" y2="95" stroke="#5b6770" stroke-width="3" marker-end="url(#arr)"/>
+      </svg>
+      <figcaption>A season runs from kickoff to the championship event.</figcaption>
+    </figure>
+
+    <h3>What is the Kit of Parts?</h3>
+    <p>At kickoff, every team receives the same box of parts: motors, wheels, electronics, and building materials. Everyone starts from the same place, so the winning robot comes from smart design and good teamwork, not from having the biggest budget.</p>
+
+    <h3>Core values</h3>
+    <div class="terms">
+      <div class="term"><strong>Gracious Professionalism</strong><span>Do great work and treat others with respect, even your opponents.</span></div>
+      <div class="term"><strong>Coopertition</strong><span>Compete hard, but help each other, because you need your rivals to succeed too.</span></div>
+    </div>
+
+    <div class="tip"><strong>Remember:</strong> FRC is less about the robot and more about learning engineering, teamwork, and problem solving.</div>
+  </section>
+
+  <!-- ============ TOPIC 2 ============ -->
+  <section id="what-is-the-game">
+    <h2>What is the Game?</h2>
+    <p class="lead">Each year's "game" is the challenge the robots must solve. It is a sports-style contest with a new theme every season.</p>
+
+    <h3>The basic idea</h3>
+    <p>Two <strong>alliances</strong> compete in each match. Each alliance has three robots, so six robots are on the field at once. The alliance with more points wins.</p>
+
+    <h3>Example: the 2026 game, REBUILT</h3>
+    <p>In 2026, alliances scored <em>fuel</em> (yellow balls) into their <em>hub</em>, crossed obstacles, and climbed a <em>tower</em> at the end of the match.</p>
+
+    <figure>
+      <svg viewBox="0 0 720 360" role="img" aria-label="Top-down simplified field with two alliances, hubs and a tower">
+        <rect x="20" y="20" width="680" height="320" rx="14" fill="#eef6ff" stroke="#9fb3c8" stroke-width="3"/>
+        <line x1="360" y1="20" x2="360" y2="340" stroke="#9fb3c8" stroke-width="3" stroke-dasharray="10 8"/>
+        <circle cx="150" cy="180" r="60" fill="#fde8e8" stroke="#d64545" stroke-width="4"/>
+        <text x="150" y="186" text-anchor="middle" font-size="16" font-weight="700" fill="#d64545">RED HUB</text>
+        <rect x="40" y="60" width="50" height="90" rx="6" fill="#d64545" opacity="0.85"/>
+        <text x="65" y="108" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">TOWER</text>
+        <circle cx="570" cy="180" r="60" fill="#e4edfc" stroke="#2f6fd6" stroke-width="4"/>
+        <text x="570" y="186" text-anchor="middle" font-size="16" font-weight="700" fill="#2f6fd6">BLUE HUB</text>
+        <rect x="630" y="210" width="50" height="90" rx="6" fill="#2f6fd6" opacity="0.85"/>
+        <text x="655" y="258" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">TOWER</text>
+        <g fill="#f2b233" stroke="#c98a0b" stroke-width="2">
+          <circle cx="230" cy="130" r="9"/>
+          <circle cx="250" cy="160" r="9"/>
+          <circle cx="240" cy="200" r="9"/>
+          <circle cx="490" cy="130" r="9"/>
+          <circle cx="470" cy="160" r="9"/>
+          <circle cx="480" cy="210" r="9"/>
+        </g>
+        <g>
+          <rect x="300" y="110" width="44" height="34" rx="6" fill="#d64545"/>
+          <rect x="300" y="200" width="44" height="34" rx="6" fill="#d64545"/>
+          <rect x="390" y="150" width="44" height="34" rx="6" fill="#2f6fd6"/>
+          <rect x="390" y="240" width="44" height="34" rx="6" fill="#2f6fd6"/>
+        </g>
+        <text x="20" y="352" font-size="13" fill="#5b6770">Simplified sketch, not to scale. Robots shown as squares.</text>
+      </svg>
+      <figcaption>Each alliance tries to score fuel in its own hub and climb its tower.</figcaption>
+    </figure>
+
+    <h3>How a match flows</h3>
+    <p>A match has three parts. Think of it like a sports game with a quick warm-up.</p>
+    <figure>
+      <svg viewBox="0 0 720 150" role="img" aria-label="Match timeline: Autonomous, Driver control, Endgame">
+        <rect x="30" y="50" width="660" height="40" rx="8" fill="#eef1f4"/>
+        <rect x="30" y="50" width="88" height="40" rx="8" fill="#f2b233"/>
+        <text x="74" y="75" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2933">Auto</text>
+        <rect x="118" y="50" width="484" height="40" fill="#2f6fd6"/>
+        <text x="360" y="75" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Driver control</text>
+        <rect x="602" y="50" width="88" height="40" rx="8" fill="#d64545"/>
+        <text x="646" y="75" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Endgame</text>
+        <text x="30" y="118" font-size="13" fill="#5b6770">Start</text>
+        <text x="690" y="118" text-anchor="end" font-size="13" fill="#5b6770">End</text>
+        <text x="360" y="32" text-anchor="middle" font-size="14" fill="#1f2933">Match timeline (2026, rounded)</text>
+      </svg>
+      <figcaption>The robots run on their own first, then drivers take over, then a final Endgame push.</figcaption>
+    </figure>
+    <ul>
+      <li><strong>Autonomous:</strong> The first 20 seconds. Robots run pre-programmed code. No one is driving.</li>
+      <li><strong>Driver control:</strong> The main part of the match. Drivers and human players control the robots.</li>
+      <li><strong>Endgame:</strong> The last 30 seconds. Robots try for final bonus points, like climbing.</li>
+    </ul>
+
+    <h3>How points work</h3>
+    <p>Teams earn points by completing tasks in the game, such as scoring game pieces or climbing. Some tasks are worth more points during autonomous. Teams also earn <strong>ranking points</strong> for winning matches and for meeting bonus goals. Ranking points decide who advances in qualification events.</p>
+
+    <h3>Key words</h3>
+    <div class="terms">
+      <div class="term"><strong>Alliance</strong><span>Three robots working together in one match.</span></div>
+      <div class="term"><strong>Game piece</strong><span>The objects robots pick up and score that season.</span></div>
+      <div class="term"><strong>Driver station</strong><span>Where drivers and coaches control the robot.</span></div>
+      <div class="term"><strong>Ranking points</strong><span>Extra points that help teams advance.</span></div>
+    </div>
+
+    <div class="tip"><strong>Good to know:</strong> Each season the rules, timing, and scoring change. The official Game Manual is the final word. In 2027, the game is called BIOCORE and is revealed at kickoff on January 9, 2027.</div>
+  </section>
+
+  <!-- ============ TOPIC 3 ============ -->
+  <section id="how-the-robot-changes">
+    <h2>How the Robot Changes</h2>
+    <p class="lead">Every year teams build a new robot. Some parts stay the same, and the parts that do the game's work change.</p>
+
+    <h3>Same base, different tool</h3>
+    <p>Think of the robot as a base that drives around, plus a tool on top that does the game's job. The base stays similar from year to year. The tool changes with the game.</p>
+
+    <figure>
+      <svg viewBox="0 0 720 300" role="img" aria-label="Three robots share the same base and have different tools on top">
+        <rect x="10" y="10" width="220" height="280" rx="14" fill="#f3f6f9"/>
+        <rect x="250" y="10" width="220" height="280" rx="14" fill="#f3f6f9"/>
+        <rect x="490" y="10" width="220" height="280" rx="14" fill="#f3f6f9"/>
+
+        <rect x="30" y="150" width="180" height="40" rx="6" fill="#9aa5b1"/>
+        <rect x="22" y="182" width="196" height="12" rx="4" fill="#2f6fd6"/>
+        <circle cx="55" cy="208" r="18" fill="#1f2933"/>
+        <circle cx="175" cy="208" r="18" fill="#1f2933"/>
+        <line x1="180" y1="150" x2="205" y2="70" stroke="#f2b233" stroke-width="10" stroke-linecap="round"/>
+        <path d="M195,60 l20,-2 l-6,16" fill="none" stroke="#c98a0b" stroke-width="5" stroke-linecap="round"/>
+
+        <rect x="270" y="150" width="180" height="40" rx="6" fill="#9aa5b1"/>
+        <rect x="262" y="182" width="196" height="12" rx="4" fill="#d64545"/>
+        <circle cx="295" cy="208" r="18" fill="#1f2933"/>
+        <circle cx="415" cy="208" r="18" fill="#1f2933"/>
+        <rect x="300" y="90" width="110" height="60" rx="8" fill="#5b6770"/>
+        <rect x="350" y="106" width="50" height="28" rx="4" fill="#3b444c"/>
+        <circle cx="425" cy="104" r="10" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+
+        <rect x="510" y="150" width="180" height="40" rx="6" fill="#9aa5b1"/>
+        <rect x="502" y="182" width="196" height="12" rx="4" fill="#2f6fd6"/>
+        <circle cx="535" cy="208" r="18" fill="#1f2933"/>
+        <circle cx="655" cy="208" r="18" fill="#1f2933"/>
+        <rect x="540" y="60" width="12" height="90" fill="#5b6770"/>
+        <rect x="640" y="60" width="12" height="90" fill="#5b6770"/>
+        <rect x="540" y="56" width="112" height="12" rx="4" fill="#5b6770"/>
+        <path d="M596,68 v14 a8,8 0 0 1 -16,0" fill="none" stroke="#f2b233" stroke-width="5" stroke-linecap="round"/>
+
+        <text x="120" y="256" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2933">Arm</text>
+        <text x="120" y="276" text-anchor="middle" font-size="13" fill="#5b6770">picks up game pieces</text>
+        <text x="360" y="256" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2933">Shooter</text>
+        <text x="360" y="276" text-anchor="middle" font-size="13" fill="#5b6770">launches game pieces</text>
+        <text x="600" y="256" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2933">Climber</text>
+        <text x="600" y="276" text-anchor="middle" font-size="13" fill="#5b6770">lifts robot at the end</text>
+      </svg>
+      <figcaption>Three example robots with the same base (wheels, frame, bumpers) and a different tool for each game task.</figcaption>
+    </figure>
+
+    <h3>What stays the same</h3>
+    <p>The starting point and the rules rarely change. Each team uses the same kit, builds within the same time frame, and follows the same safety and inspection rules. Bumpers still show the alliance color.</p>
+
+    <h3>What changes</h3>
+    <p>The game decides the job. A new game means new game pieces, new field parts, and new point goals, so the robot needs a different tool. The season theme and the control system can change too.</p>
+
+    <h3>Same vs. different at a glance</h3>
+    <div class="terms">
+      <div class="term"><strong>Usually the same</strong><span>Same kit of parts to start with</span></div>
+      <div class="term"><strong>Usually the same</strong><span>Drive base: frame, wheels, motors</span></div>
+      <div class="term"><strong>Usually the same</strong><span>Three-robot alliances and bumper colors</span></div>
+      <div class="term"><strong>Usually the same</strong><span>Design, build, test, and repeat</span></div>
+      <div class="term"><strong>Changes every year</strong><span>The tool that scores or climbs</span></div>
+      <div class="term"><strong>Changes every year</strong><span>Game pieces and field elements</span></div>
+      <div class="term"><strong>Changes every year</strong><span>Scoring goals and strategy</span></div>
+      <div class="term"><strong>Changes sometimes</strong><span>The control system electronics</span></div>
+    </div>
+
+    <h3>The control system change</h3>
+    <p>The control system is the robot's brain and wiring. It was roboRIO-based through 2026. For 2027, every team must use the new SystemCore controller.</p>
+    <figure>
+      <svg viewBox="0 0 720 170" role="img" aria-label="Control system changes from roboRIO-based system to SystemCore in 2027">
+        <defs>
+          <marker id="arr2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#5b6770"/>
+          </marker>
+        </defs>
+        <rect x="20" y="30" width="270" height="110" rx="14" fill="#eef1f4" stroke="#9aa5b1" stroke-width="3"/>
+        <text x="155" y="60" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">Through 2026</text>
+        <rect x="45" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
+        <rect x="120" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
+        <rect x="195" y="75" width="60" height="45" rx="6" fill="#5b6770"/>
+        <text x="75" y="103" text-anchor="middle" font-size="11" fill="#fff">roboRIO</text>
+        <text x="150" y="103" text-anchor="middle" font-size="11" fill="#fff">Power</text>
+        <text x="225" y="103" text-anchor="middle" font-size="11" fill="#fff">Pneumatics</text>
+        <line x1="305" y1="85" x2="405" y2="85" stroke="#5b6770" stroke-width="4" marker-end="url(#arr2)"/>
+        <text x="355" y="75" text-anchor="middle" font-size="13" fill="#5b6770">2027</text>
+        <rect x="420" y="30" width="280" height="110" rx="14" fill="#e8f0fd" stroke="#2f6fd6" stroke-width="3"/>
+        <text x="560" y="60" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2933">2027 and on</text>
+        <rect x="475" y="75" width="170" height="45" rx="8" fill="#2f6fd6"/>
+        <text x="560" y="103" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">SystemCore</text>
+      </svg>
+      <figcaption>The control system is updated in 2027. The new controller is one unit.</figcaption>
+    </figure>
+
+    <div class="tip"><strong>In short:</strong> the base and the rules are the familiar part. The game decides the tool, and the robot is redesigned around it.</div>
+  </section>
+
+  <!-- ============ TOPIC 4 ============ -->
+  <section id="robot-parts">
+    <h2>Robot Parts</h2>
+    <p class="lead">A robot is a team of parts working together. Here is a real robot, then the electronics labeled, and finally a layer-by-layer look at real parts.</p>
+
+    <h3>A real robot</h3>
+    <figure>
+      <img src="https://www.nasa.gov/wp-content/uploads/2023/03/653196main_ED12-0161-14-full_full.jpg"
+           alt="Student-built FIRST Robotics Competition robots demonstrate basketball-shooting skill"
+           style="width:100%; height:auto; border-radius:12px; display:block;">
+      <figcaption>Photo: NASA, 2012 FIRST Robotics Competition. Robots from three high school teams. Each team's robot is different.</figcaption>
+    </figure>
+
+    <h3>The robot and its electronics, labeled</h3>
+    <p>This drawing leaves out the mechanism, since that changes every year. It shows the parts that most robots share.</p>
+    <figure>
+      <svg viewBox="0 0 720 420" role="img" aria-label="Labeled FRC robot base and electronics, mechanism removed">
+        <!-- Ground -->
+        <line x1="40" y1="372" x2="680" y2="372" stroke="#c7d0d9" stroke-width="3"/>
+
+        <!-- Leader lines (drawn first so parts sit on top) -->
+        <g stroke="#1f2933" stroke-width="1.5" fill="none">
+          <line x1="165" y1="104" x2="296" y2="146"/>
+          <line x1="165" y1="168" x2="244" y2="200"/>
+          <line x1="165" y1="262" x2="200" y2="284"/>
+          <line x1="165" y1="350" x2="193" y2="346"/>
+          <line x1="575" y1="126" x2="452" y2="164"/>
+          <line x1="575" y1="150" x2="392" y2="158"/>
+          <line x1="575" y1="212" x2="390" y2="208"/>
+          <line x1="575" y1="276" x2="358" y2="276"/>
+          <line x1="575" y1="302" x2="540" y2="298"/>
+        </g>
+
+        <!-- Radio antenna + radio -->
+        <line x1="440" y1="160" x2="440" y2="120" stroke="#3b444c" stroke-width="3"/>
+        <rect x="428" y="160" width="26" height="20" rx="3" fill="#3b444c"/>
+
+        <!-- Camera -->
+        <rect x="296" y="142" width="34" height="18" rx="4" fill="#3b444c"/>
+        <circle cx="313" cy="151" r="5" fill="#9fb3c8"/>
+
+        <!-- Electronics enclosure -->
+        <rect x="230" y="170" width="170" height="76" rx="8" fill="#5b6770"/>
+        <rect x="244" y="182" width="62" height="50" rx="5" fill="#2e9b57"/>
+        <circle cx="275" cy="200" r="5" fill="#eaf7ee"/>
+        <rect x="318" y="182" width="72" height="50" rx="5" fill="#3b444c"/>
+        <line x1="330" y1="196" x2="378" y2="196" stroke="#9fb3c8" stroke-width="3"/>
+        <line x1="330" y1="210" x2="378" y2="210" stroke="#9fb3c8" stroke-width="3"/>
+
+        <!-- Robot signal light -->
+        <circle cx="385" cy="158" r="7" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+
+        <!-- Frame -->
+        <rect x="170" y="250" width="360" height="50" rx="8" fill="#9aa5b1"/>
+        <!-- Battery -->
+        <rect x="262" y="258" width="96" height="34" rx="5" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+        <!-- Bumpers -->
+        <rect x="160" y="290" width="380" height="16" rx="6" fill="#2f6fd6"/>
+        <!-- Wheels -->
+        <circle cx="215" cy="322" r="26" fill="#1f2933"/>
+        <circle cx="215" cy="322" r="9" fill="#c7d0d9"/>
+        <circle cx="495" cy="322" r="26" fill="#1f2933"/>
+        <circle cx="495" cy="322" r="9" fill="#c7d0d9"/>
+
+        <!-- Left labels -->
+        <g font-size="15" font-weight="700" fill="#1f2933">
+          <text x="30" y="100">Camera</text>
+          <text x="30" y="164">Controller</text>
+          <text x="30" y="258">Frame</text>
+          <text x="30" y="354">Wheels</text>
+        </g>
+        <!-- Right labels -->
+        <g font-size="15" font-weight="700" fill="#1f2933">
+          <text x="580" y="122">Radio</text>
+          <text x="580" y="146">Signal light</text>
+          <text x="580" y="218">Power hub</text>
+          <text x="580" y="282">Battery</text>
+          <text x="580" y="306">Bumpers</text>
+        </g>
+      </svg>
+      <figcaption>Common parts found on most FRC robots. The mechanism is left out because it changes with each game.</figcaption>
+    </figure>
+
+    <h3>What each part does</h3>
+    <div class="terms">
+      <div class="term"><strong>Controller</strong><span>Runs the team's code. roboRIO through 2026, SystemCore from 2027.</span></div>
+      <div class="term"><strong>Power distribution</strong><span>Splits battery power safely to every motor and part.</span></div>
+      <div class="term"><strong>Battery</strong><span>The power source for the whole robot.</span></div>
+      <div class="term"><strong>Radio</strong><span>Connects the robot to the driver station, wirelessly.</span></div>
+      <div class="term"><strong>Signal light</strong><span>A required light that shows whether the robot is enabled.</span></div>
+      <div class="term"><strong>Camera</strong><span>Lets drivers and software see the field.</span></div>
+    </div>
+
+    <h3>Break it open</h3>
+    <p>Lift the robot apart, layer by layer. Each layer has a job, and the photos show what the real parts look like.</p>
+
+    <div class="layer">
+      <h4>1. Mechanism</h4>
+      <p class="tag">Changes every year. Arm, shooter, or climber.</p>
+      <p style="margin:0; font-size:15px;">This is the part that does the game task. Because it changes with each game, there is no single photo. Look at the example robots in "How the Robot Changes."</p>
+    </div>
+
+    <div class="layer">
+      <h4>2. Electronics</h4>
+      <p class="tag">The brain, the power splitter, and the links to the outside world.</p>
+      <div class="photos">
+        <figure>
+          <img src="https://docs.wpilib.org/en/stable/_images/roborio.png" alt="NI roboRIO robot controller">
+          <figcaption>Controller: roboRIO (through 2026)</figcaption>
+        </figure>
+        <figure>
+          <img src="https://docs.wpilib.org/en/stable/_images/power-distribution-hub.png" alt="REV Power Distribution Hub">
+          <figcaption>Power distribution hub</figcaption>
+        </figure>
+        <figure>
+          <img src="https://docs.wpilib.org/en/stable/_images/radio.png" alt="VH-109 wireless radio">
+          <figcaption>Radio (VH-109)</figcaption>
+        </figure>
+        <figure>
+          <img src="https://docs.wpilib.org/en/stable/_images/rsl-allenbradley.jpg" alt="Orange robot signal light">
+          <figcaption>Robot signal light</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="layer">
+      <h4>3. Battery</h4>
+      <p class="tag">Powers everything on the robot.</p>
+      <div class="photos">
+        <figure>
+          <img src="https://docs.wpilib.org/en/stable/_images/robot-battery.png" alt="FRC robot battery">
+          <figcaption>Robot battery</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="layer">
+      <h4>4. Motor controllers and motors</h4>
+      <p class="tag">They take power from the hub and turn it into motion.</p>
+      <div class="photos">
+        <figure>
+          <img src="https://docs.wpilib.org/en/stable/_images/spark-max-motor-controller.png" alt="SPARK MAX motor controller">
+          <figcaption>Motor controller: SPARK MAX</figcaption>
+        </figure>
+        <figure>
+          <img src="https://docs.wpilib.org/en/stable/_images/venom.jpg" alt="Venom motor with integrated controller">
+          <figcaption>Motor with controller: Venom</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="layer">
+      <h4>5. Pneumatics (optional)</h4>
+      <p class="tag">Air-powered parts, used by some robots.</p>
+      <div class="photos">
+        <figure>
+          <img src="https://docs.wpilib.org/en/stable/_images/pneumatic-hub.png" alt="REV pneumatic hub">
+          <figcaption>Pneumatic hub</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="layer">
+      <h4>6. Frame, bumpers, and wheels</h4>
+      <p class="tag">The body that holds everything together and drives.</p>
+      <p style="margin:0; font-size:15px;">The frame is the metal skeleton. Bumpers are padded guards that show the alliance color. Wheels and drive motors move the robot. Teams build these from the kit and their own parts, so see the labeled drawing above for how they fit together.</p>
+    </div>
+
+    <p class="credit">Part photos are from the WPILib documentation (docs.wpilib.org), which shows manufacturer product images. Check each image's license before reusing it outside this page.</p>
+
+    <div class="tip"><strong>Remember:</strong> The parts are the same in most robots. How teams arrange them, and which mechanism they choose, is what makes each robot unique.</div>
+  </section>
+
+  <!-- ============ TOPIC 5 ============ -->
+  <section id="cad-and-mechanical">
+    <h2>CAD and Mechanical</h2>
+    <p class="lead">Every robot part starts as a model on a computer. This section follows a part from CAD design to a physical piece, then to a robot.</p>
+
+    <h3>The frame: the robot's skeleton</h3>
+    <p>The frame is the robot's skeleton. It holds every part, and it has to be light, stiff, and tough enough to survive a match.</p>
+
+    <h3>Is the frame the same every game?</h3>
+    <p>The base is mostly the same from year to year. Teams often reuse a drive base design or the kit drive base. The game changes the upper structure: where mechanisms mount, how tall the robot needs to be, and how the frame must stay inside the rules.</p>
+
+    <h3>Common frame types</h3>
+    <div class="frame-grid">
+      <div class="frame-card">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Box tube frame">
+          <rect x="40" y="30" width="140" height="90" rx="4" fill="none" stroke="#9aa5b1" stroke-width="16"/>
+          <rect x="40" y="70" width="140" height="10" fill="#9aa5b1"/>
+          <g fill="#fff"><circle cx="62" cy="75" r="3"/><circle cx="110" cy="75" r="3"/><circle cx="158" cy="75" r="3"/></g>
+        </svg>
+        <h4>Box tube frame</h4>
+        <p>Square aluminum tubes joined with brackets. Strong, simple, and the most common type.</p>
+      </div>
+      <div class="frame-card">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Bent sheet metal frame">
+          <path d="M30,40 H80 V110 H140 V40 H190" fill="none" stroke="#9aa5b1" stroke-width="14" stroke-linejoin="round"/>
+          <circle cx="55" cy="60" r="3" fill="#fff"/><circle cx="165" cy="60" r="3" fill="#fff"/>
+          <rect x="30" y="128" width="160" height="10" rx="2" fill="#c7d0d9"/>
+          <text x="110" y="148" text-anchor="middle" font-size="11" fill="#5b6770">cut flat, then bent</text>
+        </svg>
+        <h4>Bent sheet metal frame</h4>
+        <p>A flat sheet is cut, folded into channels, and riveted or bolted together. Light and quick to make.</p>
+      </div>
+      <div class="frame-card">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Aluminum extrusion frame with T-slots">
+          <rect x="20" y="60" width="180" height="36" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/>
+          <rect x="70" y="60" width="80" height="8" fill="#5b6770"/>
+          <rect x="70" y="88" width="80" height="8" fill="#5b6770"/>
+          <rect x="60" y="22" width="36" height="110" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/>
+          <rect x="83" y="22" width="8" height="110" fill="#5b6770"/>
+        </svg>
+        <h4>Extrusion frame</h4>
+        <p>Pre-made profiles with slots. Easy to adjust and rebuild, great for prototypes, but heavier for the same strength.</p>
+      </div>
+      <div class="frame-card">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Drive base with wheels outside the frame">
+          <rect x="50" y="48" width="120" height="18" rx="3" fill="#9aa5b1"/>
+          <rect x="50" y="84" width="120" height="18" rx="3" fill="#9aa5b1"/>
+          <circle cx="36" cy="78" r="24" fill="#1f2933"/>
+          <circle cx="184" cy="78" r="24" fill="#1f2933"/>
+          <circle cx="36" cy="78" r="7" fill="#c7d0d9"/>
+          <circle cx="184" cy="78" r="7" fill="#c7d0d9"/>
+        </svg>
+        <h4>Drive base (kit or custom)</h4>
+        <p>A chassis that holds the motors and wheels. Some designs keep wheels inside the frame; "West Coast" designs put them outside.</p>
+      </div>
+    </div>
+
+    <h3>What materials are used?</h3>
+    <div class="terms">
+      <div class="term"><strong>6061-T6 aluminum</strong><span>The most common choice. Strong, light, and easy to cut and machine. Used for tube, plate, and machined parts.</span></div>
+      <div class="term"><strong>Thin aluminum sheet (5052, 3003)</strong><span>Bends without cracking, so it is used for bent brackets and sheet parts.</span></div>
+      <div class="term"><strong>7075 aluminum</strong><span>Stronger than 6061 but harder to machine and bend. Used for high-load parts.</span></div>
+      <div class="term"><strong>Steel</strong><span>Stronger and heavier than aluminum. Used for shafts, gears, and high-load spots. It rusts.</span></div>
+      <div class="term"><strong>Polycarbonate (Lexan)</strong><span>Tough plastic for panels that stick out past the frame, since aluminum can bend there.</span></div>
+      <div class="term"><strong>Thickness rule of thumb</strong><span>Thin 1/16 in. tube is for non-structural parts. Outer drive tubes are usually 1/8 in. to handle collisions.</span></div>
+    </div>
+
+    <h3>How a frame is designed</h3>
+    <ol>
+      <li><strong>Set the goals:</strong> size, weight, and what the game needs the robot to reach.</li>
+      <li><strong>Draw it in CAD:</strong> sketch the flat outline first, then extrude it into 3D. Design one side of a symmetric drive base and mirror it.</li>
+      <li><strong>Check the rules:</strong> the frame must be fixed (no moving parts in the frame perimeter) and fit inside the bumper zone. Weight limits apply too. The 2026 limit was 115 lb, not counting bumpers and battery. Check the current manual.</li>
+      <li><strong>Plan clearance:</strong> on a flat floor, only the wheels should touch the carpet.</li>
+      <li><strong>Keep the weight low and centered:</strong> heavy parts like motors and batteries go low so the robot stays balanced.</li>
+      <li><strong>Make the drive base stiff:</strong> the drivetrain should flex the least of anything on the robot, so it holds its shape under impacts.</li>
+    </ol>
+
+    <h3>The frame and the bumper zone</h3>
+    <p>The frame sits inside the bumper zone. The bumpers cover the outside of that zone, so the frame is what the rules measure.</p>
+    <figure>
+      <svg viewBox="0 0 720 240" role="img" aria-label="Top view showing bumpers around the frame perimeter">
+        <rect x="150" y="20" width="420" height="200" rx="26" fill="#2f6fd6"/>
+        <rect x="186" y="56" width="348" height="128" rx="10" fill="#9aa5b1" stroke="#5b6770" stroke-width="3"/>
+        <rect x="240" y="88" width="90" height="64" rx="6" fill="#5b6770"/>
+        <rect x="350" y="88" width="90" height="64" rx="6" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+        <text x="360" y="234" text-anchor="middle" font-size="14" fill="#5b6770">Top view. Blue: bumpers. Grey: frame, which must stay inside the bumper zone.</text>
+      </svg>
+      <figcaption>The frame is the fixed structure. Bumpers wrap around it and show the alliance color.</figcaption>
+    </figure>
+
+    <h3>From raw stock to a usable part</h3>
+    <p>A frame part starts as plain material. Here is the path, step by step.</p>
+    <figure>
+      <svg viewBox="0 0 720 150" role="img" aria-label="Six steps from raw stock to inspected frame part">
+        <g stroke="#2f6fd6" stroke-width="3">
+          <line x1="100" y1="60" x2="140" y2="60"/>
+          <line x1="220" y1="60" x2="260" y2="60"/>
+          <line x1="340" y1="60" x2="380" y2="60"/>
+          <line x1="460" y1="60" x2="500" y2="60"/>
+          <line x1="580" y1="60" x2="620" y2="60"/>
+        </g>
+        <!-- 1 Raw stock -->
+        <circle cx="60" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(60,60)"><rect x="-20" y="-12" width="40" height="24" rx="3" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/></g>
+        <!-- 2 Cut -->
+        <circle cx="180" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(180,60)"><rect x="-20" y="-12" width="40" height="24" rx="3" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/><line x1="0" y1="-18" x2="0" y2="18" stroke="#d64545" stroke-width="3" stroke-dasharray="4 3"/></g>
+        <!-- 3 Bend -->
+        <circle cx="300" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(300,60)"><path d="M-18,-14 H0 V12 H18" fill="none" stroke="#5b6770" stroke-width="6" stroke-linejoin="round"/></g>
+        <!-- 4 Drill and mill -->
+        <circle cx="420" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(420,60)"><rect x="-20" y="-12" width="40" height="24" rx="3" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/><g fill="#fff"><circle cx="-10" cy="0" r="3.5"/><circle cx="0" cy="0" r="3.5"/><circle cx="10" cy="0" r="3.5"/></g></g>
+        <!-- 5 Assemble -->
+        <circle cx="540" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(540,60)"><rect x="-20" y="-14" width="22" height="28" rx="3" fill="#9aa5b1"/><rect x="0" y="-14" width="22" height="28" rx="3" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/><circle cx="0" cy="0" r="4" fill="#1f2933"/></g>
+        <!-- 6 Inspect -->
+        <circle cx="660" cy="60" r="38" fill="#eaf7ee" stroke="#2e9b57" stroke-width="3"/>
+        <g transform="translate(660,60)"><path d="M-14,0 L-4,10 L14,-10" fill="none" stroke="#2e9b57" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <!-- Labels -->
+        <g font-size="13" font-weight="700" fill="#1f2933" text-anchor="middle">
+          <text x="60" y="122">Raw stock</text>
+          <text x="180" y="122">Cut</text>
+          <text x="300" y="122">Bend</text>
+          <text x="420" y="122">Drill and mill</text>
+          <text x="540" y="122">Assemble</text>
+          <text x="660" y="122">Inspect</text>
+        </g>
+      </svg>
+      <figcaption>Six stages, from flat stock to a checked part on the robot.</figcaption>
+    </figure>
+    <ol>
+      <li><strong>Raw stock:</strong> Teams buy aluminum as sheets, plates, or tube. Tube often comes in 47-inch lengths.</li>
+      <li><strong>Cut:</strong> CNC routers, mills, waterjets, and laser cutters cut the shapes from CAD files. Hand saws work for rough cuts, but they are less accurate.</li>
+      <li><strong>Bend:</strong> A hand brake or CNC press brake folds sheet metal. Softer alloys like 3003 or 5052 bend better than 6061, which can crack.</li>
+      <li><strong>Drill and mill:</strong> Holes and pockets are added. Some tubing comes with bolt holes already punched.</li>
+      <li><strong>Assemble:</strong> Parts are bolted, riveted, or joined with brackets and gussets.</li>
+      <li><strong>Inspect:</strong> Measure the frame perimeter, weigh the robot, and check it against the inspection checklist before the event.</li>
+    </ol>
+
+    <h3>CAD: designing before cutting</h3>
+    <p>Almost every part starts as a 3D model in CAD software. Many teams use Onshape, a cloud-based tool where the whole team can work on one model at the same time. Others use Inventor or SolidWorks. Designers sketch a flat outline, extrude it into 3D, then add holes, bends, and mounting points.</p>
+    <figure>
+      <svg viewBox="0 0 460 320" role="img" aria-label="CAD drawing of an L-shaped bracket with holes and a dashed bend line">
+        <!-- Bracket body -->
+        <path d="M120,250 V120 H200 V190 H330 V250 Z" fill="#dbe9fb" stroke="#2f6fd6" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Holes -->
+        <circle cx="160" cy="150" r="10" fill="#fff" stroke="#2f6fd6" stroke-width="3"/>
+        <circle cx="300" cy="220" r="10" fill="#fff" stroke="#2f6fd6" stroke-width="3"/>
+        <!-- Bend line -->
+        <line x1="200" y1="112" x2="200" y2="262" stroke="#d64545" stroke-width="3" stroke-dasharray="8 6"/>
+        <!-- Width dimension -->
+        <line x1="120" y1="290" x2="330" y2="290" stroke="#5b6770" stroke-width="2"/>
+        <line x1="120" y1="282" x2="120" y2="298" stroke="#5b6770" stroke-width="2"/>
+        <line x1="330" y1="282" x2="330" y2="298" stroke="#5b6770" stroke-width="2"/>
+        <text x="225" y="312" text-anchor="middle" font-size="14" fill="#5b6770">width</text>
+        <!-- Height dimension -->
+        <line x1="90" y1="120" x2="90" y2="250" stroke="#5b6770" stroke-width="2"/>
+        <line x1="82" y1="120" x2="98" y2="120" stroke="#5b6770" stroke-width="2"/>
+        <line x1="82" y1="250" x2="98" y2="250" stroke="#5b6770" stroke-width="2"/>
+        <text x="60" y="190" text-anchor="middle" font-size="14" fill="#5b6770" transform="rotate(-90 60 190)">height</text>
+        <!-- Callouts -->
+        <text x="340" y="150" font-size="14" fill="#1f2933">Mounting hole</text>
+        <text x="340" y="226" font-size="14" fill="#1f2933">Mounting hole</text>
+        <text x="208" y="106" font-size="13" fill="#d64545">bend line</text>
+      </svg>
+      <figcaption>A simple bracket in CAD. The dashed red line marks where the sheet will bend. The circles are mounting holes.</figcaption>
+    </figure>
+
+    <h3>From CAD to a physical part</h3>
+    <p>The CAD model is turned into instructions that machines can follow.</p>
+    <figure>
+      <svg viewBox="0 0 720 150" role="img" aria-label="Pipeline from CAD model to finished part">
+        <g stroke="#2f6fd6" stroke-width="3">
+          <line x1="100" y1="60" x2="140" y2="60"/>
+          <line x1="220" y1="60" x2="260" y2="60"/>
+          <line x1="340" y1="60" x2="380" y2="60"/>
+          <line x1="460" y1="60" x2="500" y2="60"/>
+          <line x1="580" y1="60" x2="620" y2="60"/>
+        </g>
+        <!-- 1 CAD model (3D box) -->
+        <circle cx="60" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(60,60)"><path d="M-16,-4 L0,-14 L16,-4 L16,12 L0,22 L-16,12 Z" fill="#c7d0d9" stroke="#5b6770" stroke-width="2"/><path d="M-16,-4 L0,6 L16,-4 M0,6 V22" fill="none" stroke="#5b6770" stroke-width="2"/></g>
+        <!-- 2 Flat pattern -->
+        <circle cx="180" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(180,60)"><path d="M-20,-14 H20 V14 H-20 Z" fill="none" stroke="#5b6770" stroke-width="3" stroke-dasharray="6 4"/><path d="M-20,-14 H20 V14 H-20 Z" fill="#c7d0d9" fill-opacity="0.6"/></g>
+        <!-- 3 CAM toolpath -->
+        <circle cx="300" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(300,60)"><path d="M-20,12 C-10,-14 6,20 20,-12" fill="none" stroke="#d64545" stroke-width="3" stroke-dasharray="5 4"/><circle cx="-20" cy="12" r="3" fill="#d64545"/><circle cx="20" cy="-12" r="3" fill="#d64545"/></g>
+        <!-- 4 Cut and bend -->
+        <circle cx="420" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(420,60)"><rect x="-22" y="-8" width="44" height="22" rx="3" fill="#9aa5b1"/><rect x="-14" y="-22" width="28" height="14" rx="2" fill="#5b6770"/></g>
+        <!-- 5 Finished part -->
+        <circle cx="540" cy="60" r="38" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <g transform="translate(540,60)"><path d="M-18,-12 H0 V12 H18" fill="none" stroke="#5b6770" stroke-width="7" stroke-linejoin="round"/><circle cx="-8" cy="-12" r="0"/></g>
+        <!-- 6 Check -->
+        <circle cx="660" cy="60" r="38" fill="#eaf7ee" stroke="#2e9b57" stroke-width="3"/>
+        <g transform="translate(660,60)"><path d="M-14,0 L-4,10 L14,-10" fill="none" stroke="#2e9b57" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g font-size="13" font-weight="700" fill="#1f2933" text-anchor="middle">
+          <text x="60" y="122">CAD model</text>
+          <text x="180" y="122">Flat pattern</text>
+          <text x="300" y="122">CAM toolpath</text>
+          <text x="420" y="122">Cut and bend</text>
+          <text x="540" y="122">Finished part</text>
+          <text x="660" y="122">Check fit</text>
+        </g>
+      </svg>
+      <figcaption>From a 3D model to a checked part. Sheet metal is unfolded flat before it is cut and bent.</figcaption>
+    </figure>
+    <ol>
+      <li><strong>CAD model:</strong> the part is drawn in 3D with its exact size and holes.</li>
+      <li><strong>Flat pattern (sheet metal):</strong> the part is unfolded into a flat shape and exported, often as a DXF file, for cutting.</li>
+      <li><strong>CAM toolpath:</strong> CAM software turns the shape into the path a CNC machine follows. Some teams convert CAD files into G-code this way.</li>
+      <li><strong>Setup:</strong> the stock is clamped flat on the machine, and the right cutting tools are loaded.</li>
+      <li><strong>Cut and machine:</strong> a CNC router, mill, waterjet, or laser cuts the outline, and the mill adds pockets and holes.</li>
+      <li><strong>Bend:</strong> a brake folds sheet metal along the bend lines. Bends are less precise than cuts, so designers leave a little room for variation.</li>
+      <li><strong>Check fit:</strong> measure holes and bends against the drawing. If something is off, fix the CAD and make the part again.</li>
+    </ol>
+
+    <h3>Assembly: putting the robot together</h3>
+    <p>In CAD, parts are locked together with "mates," such as a fastened mate for bolts or a cylindrical mate for a shaft in a hole. On the real robot, the same parts are joined with bolts, rivets, brackets, and standoffs. Teams usually build in this order:</p>
+    <figure>
+      <svg viewBox="0 0 720 170" role="img" aria-label="Four assembly stages: frame, drivetrain, mechanism, electronics">
+        <!-- Stage 1: frame -->
+        <rect x="30" y="40" width="130" height="90" rx="10" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <rect x="50" y="60" width="90" height="50" rx="4" fill="none" stroke="#9aa5b1" stroke-width="10"/>
+        <!-- Stage 2: drivetrain -->
+        <rect x="200" y="40" width="130" height="90" rx="10" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <rect x="220" y="60" width="90" height="50" rx="4" fill="none" stroke="#9aa5b1" stroke-width="10"/>
+        <circle cx="225" cy="112" r="11" fill="#1f2933"/><circle cx="305" cy="112" r="11" fill="#1f2933"/>
+        <!-- Stage 3: mechanism -->
+        <rect x="370" y="40" width="130" height="90" rx="10" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <rect x="390" y="60" width="90" height="50" rx="4" fill="none" stroke="#9aa5b1" stroke-width="10"/>
+        <line x1="420" y1="60" x2="450" y2="36" stroke="#f2b233" stroke-width="7" stroke-linecap="round"/>
+        <!-- Stage 4: electronics -->
+        <rect x="540" y="40" width="150" height="90" rx="10" fill="#eef6ff" stroke="#2f6fd6" stroke-width="3"/>
+        <rect x="560" y="60" width="50" height="40" rx="4" fill="#2e9b57"/>
+        <rect x="620" y="60" width="54" height="40" rx="4" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+        <g font-size="13" font-weight="700" fill="#1f2933" text-anchor="middle">
+          <text x="95" y="152">1. Frame</text>
+          <text x="265" y="152">2. Drivetrain</text>
+          <text x="435" y="152">3. Mechanism</text>
+          <text x="615" y="152">4. Electronics</text>
+        </g>
+      </svg>
+      <figcaption>A simple build order: frame, then drivetrain, then the mechanism, then the electronics and wiring.</figcaption>
+    </figure>
+    <ol>
+      <li><strong>Frame first:</strong> square it up and check its fit against the CAD.</li>
+      <li><strong>Drivetrain next:</strong> add the gearboxes, motors, and wheels.</li>
+      <li><strong>Mechanisms:</strong> mount the arms, shooters, or climbers to the frame.</li>
+      <li><strong>Electronics last:</strong> install the battery and controller, then route and label the wires.</li>
+    </ol>
+
+    <h3>Interactive: take the robot apart</h3>
+    <p>Click a part in the drawing or in the list to select it. Remove it to see what is underneath, then add it back.</p>
+    <div class="sim">
+      <div class="sim-view">
+        <svg id="simSvg" viewBox="0 0 720 400" role="img" aria-label="Side view of a robot with removable parts">
+          <line x1="40" y1="372" x2="680" y2="372" stroke="#c7d0d9" stroke-width="3"/>
+          <!-- Drawn bottom to top -->
+          <g class="part" data-id="drivetrain">
+            <rect x="165" y="296" width="60" height="34" rx="4" fill="#5b6770"/>
+            <rect x="495" y="296" width="60" height="34" rx="4" fill="#5b6770"/>
+            <rect x="200" y="326" width="320" height="8" fill="#3b444c"/>
+            <circle cx="200" cy="344" r="28" fill="#1f2933"/><circle cx="200" cy="344" r="9" fill="#c7d0d9"/>
+            <circle cx="520" cy="344" r="28" fill="#1f2933"/><circle cx="520" cy="344" r="9" fill="#c7d0d9"/>
+          </g>
+          <g class="part" data-id="frame">
+            <rect x="170" y="220" width="390" height="90" rx="8" fill="#9aa5b1" stroke="#5b6770" stroke-width="3"/>
+          </g>
+          <g class="part" data-id="bumpers">
+            <rect x="160" y="292" width="410" height="14" rx="6" fill="#2f6fd6"/>
+          </g>
+          <g class="part" data-id="battery">
+            <rect x="260" y="238" width="110" height="44" rx="5" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+          </g>
+          <g class="part" data-id="electronics">
+            <rect x="390" y="178" width="140" height="42" rx="6" fill="#3b444c"/>
+            <rect x="400" y="186" width="52" height="26" rx="4" fill="#2e9b57"/>
+            <rect x="460" y="186" width="62" height="26" rx="4" fill="#5b6770"/>
+          </g>
+          <g class="part" data-id="mechanism">
+            <line x1="420" y1="178" x2="560" y2="70" stroke="#5b6770" stroke-width="12" stroke-linecap="round"/>
+            <path d="M548,58 l22,-4 l-8,20" fill="none" stroke="#c98a0b" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="420" cy="178" r="9" fill="#f2b233"/>
+          </g>
+        </svg>
+      </div>
+      <div class="sim-panel">
+        <div id="simList"></div>
+        <div class="sim-actions">
+          <button id="btnRemove" type="button">Remove selected</button>
+          <button id="btnAdd" type="button">Add back selected</button>
+          <button id="btnReset" type="button">Reset</button>
+        </div>
+        <div class="sim-info" id="simInfo"><p>Select a part to see what it does.</p></div>
+      </div>
+    </div>
+    <p class="credit">Parts are stacked from outside to inside: mechanism, electronics, battery, bumpers, frame, then drivetrain. "Directly underneath" shows the next part down.</p>
+
+    <h3>Real robot CAD to explore</h3>
+    <p>Some teams publish their robot CAD so you can open the models and see how the parts fit. These pages link to public models:</p>
+    <ul>
+      <li>Red Hawk Robotics (Team 2713), 2023 robot "Rainbow Dash": <a href="https://www.onshape.com/en/blog/red-hawk-robotics-world-championship">Onshape blog post</a></li>
+      <li>Team SCREAM, robot AXL: <a href="https://www.onshape.com/en/blog/first-robotics-competition-team-scream">Onshape blog post</a></li>
+      <li>Spectre, 2025 FIRST World Championship robot: <a href="https://www.onshape.com/en/blog/spectre-2025-first-world-championship-robot-built-in-cloud-native-cad">Onshape blog post</a></li>
+    </ul>
+    <p class="credit">Photos of these CAD models and built robots are not embedded yet. The source pages didn't expose image files I could verify from here.</p>
+
+    <div class="tip"><strong>Remember:</strong> CAD is a plan, not a guarantee. Teams check fit on the real parts, because a model and a built robot can differ.</div>
+
+    <div class="tip"><strong>In short:</strong> the frame is made of light aluminum, cut and bent by machines, and bolted into a stiff shape that fits inside the bumper zone.</div>
+  </section>
+
+  <footer>
+    Simplified for learning. For official rules, see the FIRST Robotics Competition Game Manual at firstinspires.org.
+  </footer>
+</main>
+
+<script>
+  // Highlight the nav item for the section currently in view.
+  const links = document.querySelectorAll('nav.side a');
+  const sections = [...links].map(a => document.querySelector(a.getAttribute('href')));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => s && observer.observe(s));
+</script>
+<script>
+(function () {
+  // Stack order: top (outermost) to bottom (innermost)
+  const PARTS = [
+    { id: 'mechanism', name: 'Mechanism', desc: 'The tool that does the game task, such as an arm, shooter, or climber. It changes every year.' },
+    { id: 'electronics', name: 'Electronics', desc: 'Controller, power distribution, and radio. Usually mounted on top of the frame.' },
+    { id: 'battery', name: 'Battery', desc: 'Powers the whole robot. Usually sits low and inside the frame.' },
+    { id: 'bumpers', name: 'Bumpers', desc: 'Padded guards around the frame. They show the alliance color.' },
+    { id: 'frame', name: 'Frame', desc: 'The skeleton. It holds the parts and sets the frame perimeter.' },
+    { id: 'drivetrain', name: 'Drivetrain', desc: 'Motors, gearboxes, and wheels that drive the robot.' }
+  ];
+
+  const hidden = new Set();
+  let selected = null;
+  const list = document.getElementById('simList');
+  const info = document.getElementById('simInfo');
+  const groupEl = id => document.querySelector('#simSvg g.part[data-id="' + id + '"]');
+
+  function select(id) { selected = id; render(); }
+
+  function render() {
+    PARTS.forEach(p => {
+      const g = groupEl(p.id);
+      g.style.display = hidden.has(p.id) ? 'none' : '';
+      g.classList.toggle('sel', selected === p.id);
+    });
+
+    list.innerHTML = '';
+    PARTS.forEach(p => {
+      const row = document.createElement('div');
+      row.className = 'sim-part' + (selected === p.id ? ' sel' : '') + (hidden.has(p.id) ? ' gone' : '');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !hidden.has(p.id);
+      cb.setAttribute('aria-label', 'Show ' + p.name);
+      cb.addEventListener('change', () => {
+        if (cb.checked) hidden.delete(p.id); else hidden.add(p.id);
+        select(p.id);
+      });
+      const label = document.createElement('span');
+      label.textContent = p.name + (hidden.has(p.id) ? ' (removed)' : '');
+      row.append(cb, label);
+      row.addEventListener('click', e => { if (e.target !== cb) select(p.id); });
+      list.appendChild(row);
+    });
+
+    if (!selected) {
+      info.innerHTML = '<p>Select a part to see what it does.</p>';
+      return;
+    }
+    const i = PARTS.findIndex(p => p.id === selected);
+    const p = PARTS[i];
+    const below = PARTS[i + 1];
+    const under = below
+      ? below.name + (hidden.has(below.id) ? ' (removed)' : '')
+      : 'nothing. This is the bottom layer.';
+    info.innerHTML =
+      '<h4>' + p.name + '</h4>' +
+      '<p>' + p.desc + '</p>' +
+      '<p><strong>Status:</strong> ' + (hidden.has(p.id) ? 'removed' : 'in place') + '.</p>' +
+      '<p><strong>Directly underneath:</strong> ' + under + '</p>';
+  }
+
+  PARTS.forEach(p => groupEl(p.id).addEventListener('click', e => { e.stopPropagation(); select(p.id); }));
+  document.getElementById('btnRemove').onclick = () => { if (selected) { hidden.add(selected); render(); } };
+  document.getElementById('btnAdd').onclick = () => { if (selected) { hidden.delete(selected); render(); } };
+  document.getElementById('btnReset').onclick = () => { hidden.clear(); render(); };
+
+  render();
+})();
+</script>
+</body>
+</html>
