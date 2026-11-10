@@ -1147,64 +1147,21 @@
     </div>
 
     <h3>Frameworks you can start from</h3>
-    <p>Most of these come with an example project. Start from it, change a few settings, and check the license and release with a mentor.</p>
     <table class="tools-table">
       <thead>
-        <tr><th>Framework</th><th>Language</th><th>What it does</th><th>Little customization needed</th><th>Where to look</th></tr>
+        <tr><th>Framework</th><th>Language</th><th>Use it for</th><th>Link</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td><strong>YAGSL</strong> (Yet Another Swerve Library)</td>
-          <td>Java</td>
-          <td>Runs a swerve drive from a config file that describes each module.</td>
-          <td>Edit the JSON module settings for your robot, and start from the example project.</td>
-          <td><a href="https://github.com/BroncBotz3481/YAGSL">library</a>, <a href="https://docs.yagsl.com/">docs</a>, <a href="https://github.com/BroncBotz3481/YAGSL-Example">example project</a>, <a href="https://broncbotz3481.github.io/YAGSL-Example/">config generator</a></td>
-        </tr>
-        <tr>
-          <td><strong>PhotonVision</strong></td>
-          <td>Web interface; Java, C++, and Python libraries</td>
-          <td>Vision software for robot cameras, including AprilTag detection. It runs on a separate coprocessor, not the roboRIO.</td>
-          <td>Set up cameras and detection in its web interface before writing any code.</td>
-          <td><a href="https://github.com/PhotonVision/photonvision">repository</a>, <a href="https://docs.photonvision.org">docs</a></td>
-        </tr>
-        <tr>
-          <td><strong>AdvantageKit</strong></td>
-          <td>Java</td>
-          <td>Logging and replay framework from Team 6328. It records inputs and outputs so a match can be replayed later.</td>
-          <td>Moderate. Wrap each hardware device in an IO class, following the examples.</td>
-          <td><a href="https://github.com/Mechanical-Advantage/AdvantageKit">repository</a>, <a href="https://docs.advantagekit.org">docs</a></td>
-        </tr>
-        <tr>
-          <td><strong>AdvantageScope</strong></td>
-          <td>Desktop app (no code)</td>
-          <td>Opens robot log files and graphs the signals inside them. Used with AdvantageKit logs.</td>
-          <td>None. Open a log file and pick the signals to graph.</td>
-          <td><a href="https://github.com/Mechanical-Advantage/AdvantageScope">repository</a></td>
-        </tr>
-        <tr>
-          <td><strong>PathPlanner</strong></td>
-          <td>Java (paths drawn in a desktop app)</td>
-          <td>Draws autonomous paths on a field picture and follows them with the robot's drive code.</td>
-          <td>Low. Draw paths in the app, then add the library and call the path from the code.</td>
-          <td><a href="https://github.com/mjansen4857/pathplanner">repository</a>, <a href="https://pathplanner.dev">docs</a></td>
-        </tr>
-        <tr>
-          <td><strong>RobotPy</strong> and <strong>pyfrc</strong></td>
-          <td>Python</td>
-          <td>Lets teams write robot code in Python. pyfrc adds a simulator for testing on a laptop.</td>
-          <td>Low. Start from the template project, then edit the robot class.</td>
-          <td><a href="https://github.com/robotpy">RobotPy</a>, <a href="https://robotpy.readthedocs.io">docs</a>, <a href="https://github.com/robotpy/pyfrc">pyfrc repository</a></td>
-        </tr>
-        <tr>
-          <td><strong>WPILib</strong></td>
-          <td>Java, C++, Python</td>
-          <td>The official robot framework and toolchain. Its examples appear in the New Project wizard in VS Code.</td>
-          <td>Low. Pick the example closest to your robot and build from it.</td>
-          <td><a href="https://github.com/wpilibsuite/allwpilib">repository</a>, <a href="https://docs.wpilib.org">docs</a></td>
-        </tr>
+        <tr><td><strong>YAGSL</strong></td><td>Java</td><td>Swerve drive</td><td><a href="https://docs.yagsl.com/">docs</a></td></tr>
+        <tr><td><strong>PhotonVision</strong></td><td>Web, Java, Python</td><td>Camera vision</td><td><a href="https://docs.photonvision.org">docs</a></td></tr>
+        <tr><td><strong>AdvantageKit</strong></td><td>Java</td><td>Logging and replay</td><td><a href="https://docs.advantagekit.org">docs</a></td></tr>
+        <tr><td><strong>AdvantageScope</strong></td><td>Desktop app</td><td>Viewing robot logs</td><td><a href="https://github.com/Mechanical-Advantage/AdvantageScope">repository</a></td></tr>
+        <tr><td><strong>PathPlanner</strong></td><td>Java</td><td>Autonomous paths</td><td><a href="https://pathplanner.dev">docs</a></td></tr>
+        <tr><td><strong>RobotPy</strong></td><td>Python</td><td>Python robot code</td><td><a href="https://robotpy.readthedocs.io">docs</a></td></tr>
+        <tr><td><strong>WPILib</strong></td><td>Java, C++, Python</td><td>Official toolkit</td><td><a href="https://docs.wpilib.org">docs</a></td></tr>
       </tbody>
     </table>
-    <p class="credit">Links came from a web search. Visit each project before you rely on it.</p>
+    <p class="credit">Check each project's license and release before use.</p>
 
     <div class="tip"><strong>In short:</strong> the laptop sends the driver's wishes, the controller decides, and the sensors report back.</div>
   </section>
