@@ -233,6 +233,15 @@
     .photos figure { width: 150px; }
     .photos img { width: 150px; height: 115px; }
   }
+  /* Video: full section width; floats to the top right when scrolled past */
+  .video-slot { aspect-ratio: 16 / 9; width: 100%; margin: 24px 0 32px; }
+  .video-box { width: 100%; height: 100%; }
+  .video-box iframe { width: 100%; height: 100%; border: 0; border-radius: 12px; display: block; }
+  .video-box.floating { position: fixed; top: 16px; right: 16px; width: 340px; height: auto; aspect-ratio: 16 / 9; z-index: 20; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25); }
+  .video-box.floating iframe { border-radius: 12px; }
+  @media (max-width: 900px) {
+    .video-box.floating { width: min(300px, 70vw); }
+  }
 </style>
 </head>
 <body>
@@ -253,6 +262,12 @@
   <section id="what-is-frc">
     <h2>What is <abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr>?</h2>
     <p class="lead">A high school robot sport. Teams design, build, and program a robot to play a new game each year.</p>
+
+    <div class="video-slot" id="videoSlot">
+      <div class="video-box" id="videoBox">
+        <iframe src="https://www.youtube.com/embed/fSMtUes-jDY" title="FIRST Robotics Competition video" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
 
     <h3>The season at a glance</h3>
     <figure>
@@ -2333,6 +2348,19 @@ class MyRobot(wpilib.TimedRobot):
     });
   });
   render();
+})();
+</script>
+<script>
+(function () {
+  // Float the video to the top right once the page is scrolled past it; return it when scrolled back up.
+  const slot = document.getElementById('videoSlot');
+  const box = document.getElementById('videoBox');
+  if (!slot || !box) return;
+  const io = new IntersectionObserver(([entry]) => {
+    const scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+    box.classList.toggle('floating', scrolledPast);
+  }, { threshold: 0 });
+  io.observe(slot);
 })();
 </script>
 </body>
