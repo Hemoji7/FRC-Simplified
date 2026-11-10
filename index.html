@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><abbr class="acro" tabindex="0" data-full="FIRST Robotics Competition" data-desc="A high school robotics competition run by FIRST. Teams build a new robot each season to play that year&#x27;s game.">FRC</abbr> Simplified</title>
+<title>FRC Simplified</title>
 <style>
   :root {
     --red: #d64545;
@@ -673,8 +673,40 @@
       <figcaption>A simplified wiring diagram. Real robots have more wires, but the same paths: power from the battery, through the breaker and hub, then out to each part; and signals on the <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> bus and Ethernet.</figcaption>
     </figure>
 
+    <h3>Types of wire</h3>
+    <p>Robots use a few kinds of wire, each for a different job. These are real photos from our robot.</p>
+    <div class="photos">
+      <figure>
+        <img src="images/wiring/power-wire-red.jpg" alt="Red and black power wire from the battery">
+        <figcaption><strong>Power wire.</strong> Thick red and black pairs carry high current from the battery. They are heavy-gauge and insulated.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/wiring/can-wire-bundle.jpg" alt="Twisted yellow and green CAN wire bundle">
+        <figcaption><strong><abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> wire.</strong> A twisted yellow and green pair. The twists reduce electrical noise, and the pair carries the <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> bus.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/wiring/ethernet-cable.jpg" alt="White Ethernet cable running from the radio">
+        <figcaption><strong>Ethernet cable.</strong> A white network cable with a plug on each end. It links the controller and the radio.</figcaption>
+      </figure>
+    </div>
+
     <h3>Wire connectors</h3>
-    <p>Connectors let a team unplug parts for repair and keep wires neat. Each type fits a job. Check the manual for your controller and each part to confirm the exact connector.</p>
+    <p>Connectors let a team unplug parts for repair and keep wires neat. These are real connectors from our robot. Check the manual for your controller and each part to confirm the exact connector.</p>
+    <div class="photos">
+      <figure>
+        <img src="images/wiring/power-connector.jpg" alt="Pink large power connector at the battery">
+        <figcaption><strong>Large power connector (pink).</strong> Joins the battery to the power hub and carries heavy current.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/wiring/push-in-terminals.jpg" alt="Orange push-in terminal blocks on the power hub">
+        <figcaption><strong>Push-in terminal blocks (orange).</strong> Push a stripped wire in. No screw is needed.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/wiring/can-connector.jpg" alt="Small CAN connector on the controller, with yellow and red wires">
+        <figcaption><strong><abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> connector.</strong> A small locking plug. Its shape keeps it from going in the wrong way.</figcaption>
+      </figure>
+    </div>
+    <p>The rest of the connectors are listed below.</p>
     <div class="terms">
       <div class="term"><strong>Large power connector</strong><span>Carries heavy current between the battery, main breaker, and power hub. The pink connector in the photos is one example.</span></div>
       <div class="term"><strong>Push-in terminal blocks</strong><span>Click a wire in without a screw. The orange blocks on the power hub are an example.</span></div>
@@ -683,6 +715,41 @@
       <div class="term"><strong>Ethernet (<abbr class="acro" tabindex="0" data-full="Registered Jack 45" data-desc="An 8-pin plug for Ethernet network cable, the same kind used for home internet. It links the controller and the radio.">RJ45</abbr>)</strong><span>The same plug as home network cable. It links the controller to the radio and other network devices.</span></div>
       <div class="term"><strong><abbr class="acro" tabindex="0" data-full="Universal Serial Bus" data-desc="A standard plug for connecting devices, such as a laptop to the controller for loading code.">USB</abbr> and <abbr class="acro" tabindex="0" data-full="Secure Digital" data-desc="A memory card format. On the controller, it stores logs and files.">SD</abbr> slots</strong><span>On the controller and coprocessor, for loading code and saving logs.</span></div>
     </div>
+
+    <h3>How two wires connect</h3>
+    <p>Most connections follow the same pattern: strip the wire, insert it into a terminal or pin, then join the two halves of the connector until the latch clicks.</p>
+    <figure>
+      <svg viewBox="0 0 720 230" role="img" aria-label="Diagram of two wires joined by a connector: stripped wire inserted into housing A, housings mated, latch clicks">
+        <!-- Wire A -->
+        <rect x="30" y="92" width="180" height="18" rx="8" fill="#c62828"/>
+        <rect x="200" y="98" width="46" height="6" fill="#b87333"/>
+        <!-- Housing A -->
+        <rect x="246" y="66" width="120" height="66" rx="8" fill="#2b333b"/>
+        <rect x="262" y="82" width="10" height="34" rx="3" fill="#b87333"/>
+        <rect x="296" y="82" width="10" height="34" rx="3" fill="#b87333"/>
+        <rect x="330" y="82" width="10" height="34" rx="3" fill="#b87333"/>
+        <rect x="280" y="54" width="36" height="12" rx="3" fill="#f2b233"/>
+        <!-- Mating arrow -->
+        <path d="M372 99 H404" stroke="#1f2933" stroke-width="3"/>
+        <path d="M398 92 L408 99 L398 106" fill="none" stroke="#1f2933" stroke-width="3"/>
+        <!-- Housing B -->
+        <rect x="414" y="66" width="120" height="66" rx="8" fill="#3b444c"/>
+        <rect x="428" y="82" width="10" height="34" rx="3" fill="#e6e6e6"/>
+        <rect x="462" y="82" width="10" height="34" rx="3" fill="#e6e6e6"/>
+        <rect x="496" y="82" width="10" height="34" rx="3" fill="#e6e6e6"/>
+        <!-- Wire B -->
+        <rect x="534" y="92" width="160" height="18" rx="8" fill="#111418"/>
+        <rect x="534" y="98" width="30" height="6" fill="#b87333"/>
+        <!-- Step labels -->
+        <g font-size="14" font-weight="700" fill="#1f2933" text-anchor="middle">
+          <text x="120" y="182">1. Strip the wire</text>
+          <text x="306" y="182">2. Insert into terminal</text>
+          <text x="474" y="182">3. Mate the halves</text>
+          <text x="600" y="210">4. Latch clicks</text>
+        </g>
+      </svg>
+      <figcaption>A simplified connector. The wire's insulation is stripped and the bare copper goes into the terminal. Then the housings are pushed together until the latch clicks.</figcaption>
+    </figure>
 
     <h3>Labeling wires</h3>
     <p>A robot with no labels is hard to fix in a hurry. Good labels turn a tangle into a plan.</p>
