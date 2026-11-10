@@ -206,6 +206,7 @@
     <li><a href="#what-is-the-game">What is the Game?</a></li>
     <li><a href="#how-the-robot-changes">How the Robot Changes</a></li>
     <li><a href="#robot-parts">Robot Parts</a></li>
+    <li><a href="#software-and-controls">Software and Controls</a></li>
     <li><a href="#cad-and-mechanical"><abbr class="acro" tabindex="0" data-full="Computer-Aided Design" data-desc="Software for designing parts and robots on a computer, in 2D or 3D, before anything is built or cut.">CAD</abbr> and Mechanical</a></li>
   </ul>
 </nav>
@@ -775,6 +776,95 @@
     <p class="credit">Part photos are from the <abbr class="acro" tabindex="0" data-full="WPI Library" data-desc="Free software for writing FRC robot code. It comes from Worcester Polytechnic Institute.">WPILib</abbr> documentation (docs.wpilib.org), which shows manufacturer product images. Check each image's license before reusing it outside this page.</p>
 
     <div class="tip"><strong>Remember:</strong> The parts are the same in most robots. How teams arrange them, and which mechanism they choose, is what makes each robot unique.</div>
+  </section>
+
+  <!-- ============ SOFTWARE AND CONTROLS ============ -->
+  <section id="software-and-controls">
+    <h2>Software and Controls</h2>
+    <p class="lead">The hardware does nothing on its own. Software reads what the driver wants and what the sensors see, decides what each motor should do, and sends those commands over the wires from the last section.</p>
+
+    <h3>The big picture</h3>
+    <p>Commands start at the driver's laptop and end at the motors. Sensor readings flow back the other way, so the code can check its work.</p>
+    <figure>
+      <svg viewBox="0 0 720 300" role="img" aria-label="Control flow: driver laptop sends input by radio to the controller, which sends commands over the CAN bus to motor controllers and motors, while sensors report back to the controller">
+        <!-- Boxes -->
+        <rect x="20" y="115" width="150" height="70" rx="8" fill="#2b333b"/>
+        <text x="95" y="145" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Driver Station</text>
+        <text x="95" y="165" text-anchor="middle" font-size="12" fill="#ffffff">laptop with joysticks</text>
+        <rect x="230" y="125" width="110" height="50" rx="8" fill="#e9edf1" stroke="#5d656c" stroke-width="2"/>
+        <text x="285" y="155" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2933">Radio</text>
+        <rect x="400" y="105" width="150" height="90" rx="8" fill="#2a4d8a"/>
+        <text x="475" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Controller</text>
+        <text x="475" y="160" text-anchor="middle" font-size="12" fill="#ffffff">runs robot code</text>
+        <rect x="590" y="22" width="120" height="50" rx="8" fill="#3b444c"/>
+        <text x="650" y="52" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Motor controllers</text>
+        <rect x="590" y="110" width="120" height="50" rx="8" fill="#1f2933"/>
+        <text x="650" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Motors</text>
+        <rect x="590" y="220" width="120" height="50" rx="8" fill="#f2b233" stroke="#c98a0b" stroke-width="2"/>
+        <text x="650" y="250" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2933">Sensors</text>
+
+        <!-- Driver to radio to controller, and status back -->
+        <path d="M170 150 H230" stroke="#1f2933" stroke-width="3"/>
+        <path d="M224 144 L232 150 L224 156" fill="none" stroke="#1f2933" stroke-width="3"/>
+        <text x="200" y="118" text-anchor="middle" font-size="12" fill="#1f2933">joystick data</text>
+        <path d="M340 145 H400" stroke="#1f2933" stroke-width="3"/>
+        <path d="M394 139 L402 145 L394 151" fill="none" stroke="#1f2933" stroke-width="3"/>
+        <text x="370" y="128" text-anchor="middle" font-size="12" fill="#1f2933">commands</text>
+        <path d="M400 170 H340 M346 164 L338 170 L346 176" fill="none" stroke="#2f6fd6" stroke-width="2.5" stroke-dasharray="6 4"/>
+        <text x="370" y="192" text-anchor="middle" font-size="12" fill="#2f6fd6">status</text>
+
+        <!-- Controller to motor controllers over CAN, then to motors -->
+        <path d="M550 118 H560 V47 H590" fill="none" stroke="#e6d43a" stroke-width="3"/>
+        <path d="M550 126 H568 V58 H590" fill="none" stroke="#2e9b57" stroke-width="3"/>
+        <text x="572" y="34" text-anchor="middle" font-size="12" fill="#1f2933">CAN bus<title>Controller Area Network: a two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.</title></text>
+        <path d="M650 72 V110" stroke="#1f2933" stroke-width="3"/>
+
+        <!-- Sensors back to the controller -->
+        <path d="M590 245 H500 V195" fill="none" stroke="#c98a0b" stroke-width="3"/>
+        <path d="M494 201 L500 193 L506 201" fill="none" stroke="#c98a0b" stroke-width="3"/>
+        <text x="545" y="262" text-anchor="middle" font-size="12" fill="#1f2933">encoder and gyro readings</text>
+      </svg>
+      <figcaption>Commands flow from the driver's laptop, through the radio, to the controller, then over the CAN bus to the motor controllers and motors. Sensor readings flow back to the controller.</figcaption>
+    </figure>
+
+    <h3>What goes in</h3>
+    <p>Several programs and libraries work together. Each one has a single job.</p>
+    <div class="terms">
+      <div class="term"><strong>Robot code</strong><span>The decisions. Students write it, typically in Java, C++, or Python with RobotPy. It runs on the controller.</span></div>
+      <div class="term"><strong>WPILib</strong><span>The free library and tools for FRC robot code. It includes the Driver Station and a simulator.</span></div>
+      <div class="term"><strong>Driver Station</strong><span>The app on the driver's laptop. It sends joystick input and enable or disable commands to the robot, and it shows the robot's status.</span></div>
+      <div class="term"><strong>Vendor libraries</strong><span>Motor controller and sensor makers provide code libraries, such as CTRE Phoenix or REV's libraries, to set motor output and read sensors.</span></div>
+      <div class="term"><strong>Dashboards</strong><span>Show sensor values, settings, and camera feeds on the laptop. Shuffleboard, from WPILib, is one example.</span></div>
+      <div class="term"><strong>Vision software</strong><span>Runs on a camera or coprocessor, finds targets, and sends the results to the robot code.</span></div>
+      <div class="term"><strong>Device setup</strong><span>Each <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> device gets an ID and settings from the vendor's configuration tool. The code uses that ID to find the device.</span></div>
+    </div>
+
+    <h3>How it works</h3>
+    <ol>
+      <li><strong>Input.</strong> The driver moves a joystick or presses a button. The Driver Station sends that input to the robot over the radio, many times a second.</li>
+      <li><strong>Read.</strong> The robot code reads the input and the sensors. Encoders count wheel turns, and a gyro measures how the robot is turning.</li>
+      <li><strong>Decide.</strong> The code works out what each motor should do. The main loop repeats about every 20 milliseconds, so the robot responds quickly.</li>
+      <li><strong>Command.</strong> The code sends each motor controller its command over the <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> bus, addressed by device ID. The motor controller turns that command into power from the power hub.</li>
+      <li><strong>Feedback.</strong> Sensors report back, and the loop starts again. The power hub also reports current, which helps spot a stuck or overloaded motor.</li>
+      <li><strong>Safety.</strong> When the robot is disabled, the code stops commanding the motors. The signal light shows whether the robot is enabled.</li>
+    </ol>
+
+    <h3>Example: driving one wheel</h3>
+    <p>Here is one path, step by step. The device ID is an example.</p>
+    <ol>
+      <li>The driver pushes the joystick forward.</li>
+      <li>The robot code turns that push into a speed for the drive motor on one swerve module, which is device ID 5.</li>
+      <li>The code sends that speed to motor controller 5 over the <abbr class="acro" tabindex="0" data-full="Controller Area Network" data-desc="A two-wire network, usually a twisted yellow and green pair on FRC robots. It lets the controller talk to motor controllers, sensors, and the power hub.">CAN</abbr> bus.</li>
+      <li>The wheel turns. Its encoder reports how far it has turned, and the code checks that the speed matches the request.</li>
+    </ol>
+
+    <h3>Testing without the robot</h3>
+    <p>WPILib includes a simulator, so students can run robot code on a laptop, watch virtual parts move, and find bugs before the robot is built. Teams still test on the real robot, because a simulator can't copy every detail.</p>
+
+    <h3>Keep the code under version control</h3>
+    <p>Store the code and device settings in Git. That gives the team a record of what changed, when, and by whom. It's the same kind of record as the repository you're reading.</p>
+
+    <div class="tip"><strong>In short:</strong> the laptop sends what the driver wants, the controller decides what to do, the motor controllers deliver the power, and the sensors report back so the next decision is better.</div>
   </section>
 
   <!-- ============ TOPIC 5 ============ -->
