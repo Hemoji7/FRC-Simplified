@@ -133,6 +133,8 @@
   .sim { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 12px; }
   .sim-toggles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
   .sim-toggles .sim-part { margin-bottom: 0; }
+  .sim-view { position: relative; }
+  .sim-label { position: absolute; pointer-events: none; background: #1f2933; color: #fff; padding: 4px 9px; border-radius: 6px; font-size: 13px; white-space: nowrap; }
   .sim-view canvas { width: 100%; height: auto; display: block; background: #f3f6f9; border-radius: 12px; cursor: grab; touch-action: none; }
   .sim-view canvas:active { cursor: grabbing; }
   .sim-part {
@@ -863,6 +865,7 @@
     <div class="sim">
       <div class="sim-view">
         <canvas id="simCanvas" width="960" height="600" role="img" aria-label="3D model of a robot with removable parts"></canvas>
+        <div class="sim-label" id="simLabel" hidden></div>
         <div class="sim-actions">
           <button type="button" data-view="iso">3/4 view</button>
           <button type="button" data-view="top">Top</button>
@@ -870,6 +873,9 @@
           <button type="button" data-view="side">Side</button>
           <button type="button" data-view="bottom">Bottom</button>
           <button type="button" id="btnSpin">Spin</button>
+          <button type="button" id="btnZoomIn">Zoom in</button>
+          <button type="button" id="btnZoomOut">Zoom out</button>
+          <button type="button" id="btnZoomReset">Reset zoom</button>
         </div>
       </div>
       <div class="sim-panel">
@@ -950,7 +956,9 @@
     let n = norm(cross(sub(pts[1], pts[0]), sub(pts[2], pts[0])));
     if (dot(n, sub(cen, center)) < 0) n = n.map(v => -v);
     const shade = 0.5 + 0.5 * Math.max(0, dot(n, LIGHT));
-    FACES.push({ part, color, pts, n, shade });
+    const hex = parseInt(color.slice(1), 16);
+    const rgb = [(hex >> 16) & 255, (hex >> 8) & 255, hex & 255].map(v => Math.round(v * shade));
+    FACES.push({ part, color, pts, n, shade, rgb });
   }
 
   function box(part, color, x0, x1, y0, y1, z0, z1) {
@@ -1094,19 +1102,30 @@
   let selected = null;
   let yaw = -40 * Math.PI / 180;     // rotation around the vertical axis
   let pitch = 30 * Math.PI / 180;    // tilt: 0 = side, 90 = top, -90 = bottom
-  let drawn = [];
-  let spinning = false;
-  let rafId = 0;
-
+  let zoom = 1;
+  const BASE = 9.5;
   const VIEWS = { iso: [-40, 30], top: [0, 90], bottom: [0, -90], front: [0, 0], side: [90, 0] };
 
   const canvas = document.getElementById('simCanvas');
   const ctx = canvas.getContext('2d');
+  const wrap = canvas.parentElement;
+  const labelEl = document.getElementById('simLabel');
   const list = document.getElementById('simList');
   const info = document.getElementById('simInfo');
   const spinBtn = document.getElementById('btnSpin');
   const W = canvas.width, H = canvas.height;
-  const SCALE = 9.5, OX = W / 2, OY = H / 2 + 70;
+  const OX = W / 2, OY = H / 2 + 70;
+  const PART_INDEX = {};
+  PARTS.forEach((p, i) => { PART_INDEX[p.id] = i; });
+
+  // Per-pixel buffers: depth (nearest wins), part id, and the picture itself
+  const zbuf = new Float32Array(W * H);
+  const idbuf = new Int16Array(W * H);
+  const img = ctx.createImageData(W, H);
+  const bgTemplate = new Uint8ClampedArray(W * H * 4);
+  for (let i = 0; i < W * H; i++) {
+    bgTemplate[i * 4] = 243; bgTemplate[i * 4 + 1] = 246; bgTemplate[i * 4 + 2] = 249; bgTemplate[i * 4 + 3] = 255;
+  }
 
   // Rotate a point (or direction) into view space: xv = screen right, dv = depth (smaller = nearer viewer), zv = screen up
   function rot(p, a, b) {
@@ -1116,67 +1135,71 @@
     return [x1, y1 * Math.cos(b) - z1 * Math.sin(b), y1 * Math.sin(b) + z1 * Math.cos(b)];
   }
 
-  function shade(hex, k) {
-    const n = parseInt(hex.slice(1), 16);
-    const ch = s => Math.min(255, Math.round(((n >> s) & 255) * k));
-    return 'rgb(' + ch(16) + ',' + ch(8) + ',' + ch(0) + ')';
-  }
-
-  function drawGround() {
-    const g = ctx.createRadialGradient(OX, OY + 6, 10, OX, OY + 6, 330);
-    g.addColorStop(0, 'rgba(40,50,60,0.22)');
-    g.addColorStop(1, 'rgba(40,50,60,0)');
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(OX, OY + 6, 330, 110, 0, 0, Math.PI * 2);
-    ctx.fill();
+  // Fill one screen triangle into the buffers, keeping only the nearest pixels
+  function rasterTri(a, b, c, rgb, id) {
+    const minX = Math.max(0, Math.floor(Math.min(a[0], b[0], c[0])));
+    const maxX = Math.min(W - 1, Math.ceil(Math.max(a[0], b[0], c[0])));
+    const minY = Math.max(0, Math.floor(Math.min(a[1], b[1], c[1])));
+    const maxY = Math.min(H - 1, Math.ceil(Math.max(a[1], b[1], c[1])));
+    const den = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1]);
+    if (Math.abs(den) < 1e-9) return;
+    const d = img.data;
+    for (let y = minY; y <= maxY; y++) {
+      for (let x = minX; x <= maxX; x++) {
+        const px = x + 0.5, py = y + 0.5;
+        const w1 = ((b[1] - c[1]) * (px - c[0]) + (c[0] - b[0]) * (py - c[1])) / den;
+        const w2 = ((c[1] - a[1]) * (px - c[0]) + (a[0] - c[0]) * (py - c[1])) / den;
+        const w3 = 1 - w1 - w2;
+        if (w1 < -1e-6 || w2 < -1e-6 || w3 < -1e-6) continue;
+        const z = w1 * a[2] + w2 * b[2] + w3 * c[2];
+        const i = y * W + x;
+        if (z < zbuf[i]) {
+          zbuf[i] = z;
+          idbuf[i] = id;
+          const o = i * 4;
+          d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = 255;
+        }
+      }
+    }
   }
 
   function draw() {
-    ctx.clearRect(0, 0, W, H);
-    drawGround();
-    const items = [];
+    zbuf.fill(Infinity);
+    idbuf.fill(-1);
+    img.data.set(bgTemplate);
+    const S = BASE * zoom;
     for (const f of FACES) {
       if (hidden.has(f.part)) continue;
-      if (rot(f.n, yaw, pitch)[1] >= 0) continue;          // facing away from the viewer
-      const pv = f.pts.map(p => rot(p, yaw, pitch));
-      const depth = pv.reduce((s, p) => s + p[1], 0) / pv.length;
-      items.push({ f, pv, depth });
-    }
-    items.sort((a, b) => b.depth - a.depth);                // draw far faces first
-    for (const it of items) {
-      ctx.beginPath();
-      it.pv.forEach((p, i) => {
-        const x = OX + p[0] * SCALE, y = OY - p[2] * SCALE;
-        if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+      const id = PART_INDEX[f.part];
+      const sp = f.pts.map(p => {
+        const v = rot(p, yaw, pitch);
+        return [OX + v[0] * S, OY - v[2] * S, v[1]];
       });
-      ctx.closePath();
-      const isSel = it.f.part === selected;
-      ctx.fillStyle = shade(it.f.color, it.f.shade);
-      ctx.fill();
-      ctx.strokeStyle = isSel ? '#f2b233' : 'rgba(10,14,18,0.45)';
-      ctx.lineWidth = isSel ? 1.8 : 0.4;
-      ctx.stroke();
+      for (let k = 1; k < sp.length - 1; k++) rasterTri(sp[0], sp[k], sp[k + 1], f.rgb, id);
     }
-    drawn = items;
+    // Orange outline around the selected part
+    const sel = selected ? PART_INDEX[selected] : -1;
+    if (sel >= 0) {
+      const d = img.data;
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          const i = y * W + x;
+          if (idbuf[i] !== sel) continue;
+          const edge = (x + 1 < W && idbuf[i + 1] !== sel) || (y + 1 < H && idbuf[i + W] !== sel) ||
+                       (x > 0 && idbuf[i - 1] !== sel) || (y > 0 && idbuf[i - W] !== sel);
+          if (edge) { const o = i * 4; d[o] = 242; d[o + 1] = 178; d[o + 2] = 51; }
+        }
+      }
+    }
+    ctx.putImageData(img, 0, 0);
   }
 
-  function inside(poly, x, y) {
-    let c = false;
-    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-      const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
-      if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
-    }
-    return c;
-  }
-
-  // Returns the nearest visible part under a canvas point
-  function pick(x, y) {
-    for (let k = drawn.length - 1; k >= 0; k--) {
-      const poly = drawn[k].pv.map(p => [OX + p[0] * SCALE, OY - p[2] * SCALE]);
-      if (inside(poly, x, y)) return drawn[k].f.part;
-    }
-    return null;
+  // Part id under a canvas point, from the last drawn frame
+  function pickAt(x, y) {
+    const xi = Math.floor(x), yi = Math.floor(y);
+    if (xi < 0 || yi < 0 || xi >= W || yi >= H) return null;
+    const id = idbuf[yi * W + xi];
+    return id >= 0 ? PARTS[id].id : null;
   }
 
   function toCanvas(e) {
@@ -1213,35 +1236,63 @@
         '<p>' + p.desc + '</p>' +
         '<p><strong>Status:</strong> ' + (hidden.has(p.id) ? 'removed' : 'in place') + '.</p>' +
         '<p>Remove it, then drag the model to see what it was covering.</p>'
-      : '<p>Select a part to see what it does. Drag the model to rotate it.</p>';
+      : '<p>Select a part to see what it does. Drag to rotate, scroll or use the zoom buttons to zoom.</p>';
     draw();
   }
 
-  // ---------- Mouse and touch ----------
+  // ---------- Mouse, touch, and hover labels ----------
   let drag = null;
   canvas.addEventListener('pointerdown', e => {
     drag = { x: e.clientX, y: e.clientY, moved: false };
     canvas.setPointerCapture(e.pointerId);
+    labelEl.hidden = true;
     stopSpin();
   });
   canvas.addEventListener('pointermove', e => {
-    if (!drag) return;
-    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-    if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
-    if (!drag.moved) return;
-    yaw += dx * 0.01;
-    pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch + dy * 0.01));
-    drag.x = e.clientX; drag.y = e.clientY;
-    draw();
+    if (drag) {
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+      if (!drag.moved) return;
+      yaw += dx * 0.01;
+      pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch + dy * 0.01));
+      drag.x = e.clientX; drag.y = e.clientY;
+      draw();
+      return;
+    }
+    const [x, y] = toCanvas(e);
+    const id = pickAt(x, y);
+    if (id) {
+      const p = PARTS.find(q => q.id === id);
+      const r = wrap.getBoundingClientRect();
+      labelEl.textContent = p.name + (hidden.has(id) ? ' (removed)' : '');
+      labelEl.style.left = (e.clientX - r.left + 14) + 'px';
+      labelEl.style.top = (e.clientY - r.top + 14) + 'px';
+      labelEl.hidden = false;
+      canvas.style.cursor = 'pointer';
+    } else {
+      labelEl.hidden = true;
+      canvas.style.cursor = 'grab';
+    }
   });
   canvas.addEventListener('pointerup', e => {
     if (drag && !drag.moved) {
       const [x, y] = toCanvas(e);
-      const id = pick(x, y);
+      const id = pickAt(x, y);
       if (id) select(id); else { selected = null; render(); }
     }
     drag = null;
   });
+  canvas.addEventListener('pointerleave', () => { labelEl.hidden = true; });
+
+  // ---------- Zoom ----------
+  function setZoom(z) { zoom = Math.max(0.6, Math.min(4, z)); draw(); }
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    setZoom(zoom * (e.deltaY < 0 ? 1.1 : 1 / 1.1));
+  }, { passive: false });
+  document.getElementById('btnZoomIn').onclick = () => setZoom(zoom * 1.25);
+  document.getElementById('btnZoomOut').onclick = () => setZoom(zoom / 1.25);
+  document.getElementById('btnZoomReset').onclick = () => setZoom(1);
 
   // ---------- Preset views and spin ----------
   document.querySelectorAll('[data-view]').forEach(btn => {
