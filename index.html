@@ -265,7 +265,7 @@
 
     <div class="video-slot" id="videoSlot">
       <div class="video-box" id="videoBox">
-        <iframe src="https://www.youtube.com/embed/fSMtUes-jDY" title="FIRST Robotics Competition video" loading="lazy" allowfullscreen></iframe>
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/fSMtUes-jDY?enablejsapi=1" title="FIRST Robotics Competition video" allowfullscreen></iframe>
       </div>
     </div>
 
@@ -2350,17 +2350,28 @@ class MyRobot(wpilib.TimedRobot):
   render();
 })();
 </script>
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 (function () {
-  // Float the video to the top right once the page is scrolled past it; return it when scrolled back up.
+  // The video floats to the top right only while it is playing and the page has scrolled past it.
+  // It returns to its place when it is paused or ended, or when the page is scrolled back up.
   const slot = document.getElementById('videoSlot');
   const box = document.getElementById('videoBox');
   if (!slot || !box) return;
-  const io = new IntersectionObserver(([entry]) => {
-    const scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-    box.classList.toggle('floating', scrolledPast);
-  }, { threshold: 0 });
-  io.observe(slot);
+  let scrolledPast = false;
+  let playing = false;
+  const update = () => box.classList.toggle('floating', scrolledPast && playing);
+  new IntersectionObserver(([entry]) => {
+    scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+    update();
+  }, { threshold: 0 }).observe(slot);
+  window.onYouTubeIframeAPIReady = function () {
+    new YT.Player('ytPlayer', {
+      events: {
+        onStateChange: (e) => { playing = e.data === YT.PlayerState.PLAYING; update(); }
+      }
+    });
+  };
 })();
 </script>
 </body>
